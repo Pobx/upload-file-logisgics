@@ -1,0 +1,1020 @@
+Issue id,Issue Type,Summary,Description,Parent id,Epic Name,Epic Link,Labels,Labels,Labels,Labels,Priority,Sprint,Fix Version,Original Estimate,Estimate Days,Blocked By
+1,Epic,B0 — Foundation,"h4. เป้าหมาย
+โครงโปรเจกต์และสภาพแวดล้อมพร้อมให้ทีมทำงานต่อเนื่อง
+
+สัปดาห์: W1 · Sprint: Sprint 0 · Fix Version: v0.0.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B0 Foundation,,,,,,Medium,,v0.0.0,,20,
+2,Epic,B1a — Auth & Local Users,"h4. เป้าหมาย
+ล็อกอินและจัดการผู้ใช้แบบ Local (Keycloak DB), logout พร้อม denylist
+
+สัปดาห์: W2–W3 · Sprint: Sprint 1 · Fix Version: v0.1.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B1a Auth & Local Users,,,,,,Medium,,v0.1.0,,26.5,
+3,Epic,B1b — LDAP/AD Federation,"h4. เป้าหมาย
+ผู้ใช้ LDAP/AD ล็อกอินผ่าน Keycloak (พัฒนาด้วย OpenLDAP จำลอง)
+
+สัปดาห์: W4 · Sprint: Sprint 2 · Fix Version: v0.1.1
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B1b LDAP/AD Federation,,,,,,Medium,,v0.1.1,,9,
+4,Epic,B2 — Customer & Master Data,"h4. เป้าหมาย
+จัดการ Customer, Job Order (B/L, Invoice) ด้วยมือและฟอร์ม
+
+สัปดาห์: W4–W5 · Sprint: Sprint 2–3 · Fix Version: v0.2.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B2 Customer & Master Data,,,,,,Medium,,v0.2.0,,19,
+5,Epic,B3 — CSV Import,"h4. เป้าหมาย
+นำเข้า CSV เป็น batch, ตรวจเทียบกับข้อมูลเดิม, ย้อนดูผลได้
+
+สัปดาห์: W6–W7 · Sprint: Sprint 3–4 · Fix Version: v0.3.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B3 CSV Import,,,,,,Medium,,v0.3.0,,25,
+6,Epic,B4 — Document Upload,"h4. เป้าหมาย
+อัปโหลด/ดาวน์โหลดเอกสารผูก Job Order ผ่าน storage ภายนอก
+
+สัปดาห์: W8–W9 · Sprint: Sprint 4–5 · Fix Version: v0.4.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B4 Document Upload,,,,,,Medium,,v0.4.0,,22.5,
+7,Epic,B5 — Search & Report,"h4. เป้าหมาย
+ค้นหาเร็วด้วย Job Order/B/L/Invoice, รายงาน และ dashboard
+
+สัปดาห์: W10–W11 · Sprint: Sprint 5–6 · Fix Version: v0.5.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B5 Search & Report,,,,,,Medium,,v0.5.0,,22,
+8,Epic,B6 — Scale & Deploy,"h4. เป้าหมาย
+รัน production-like บน Colima พร้อม auto recovery
+
+สัปดาห์: W12–W13 · Sprint: Sprint 6–7 · Fix Version: v0.6.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B6 Scale & Deploy,,,,,,Medium,,v0.6.0,,14,
+9,Epic,B7 — Observability,"h4. เป้าหมาย
+เห็น logs/metrics/traces ครบด้วย LGTM
+
+สัปดาห์: W13–W14 · Sprint: Sprint 7 · Fix Version: v0.7.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B7 Observability,,,,,,Medium,,v0.7.0,,12.5,
+10,Epic,B8 — Hardening & UAT,"h4. เป้าหมาย
+พร้อมใช้งานจริง — ผ่าน Acceptance Criteria ใน SPEC หัวข้อ 17
+
+สัปดาห์: W15–W17 · Sprint: Sprint 8–9 · Fix Version: v0.8.0
+อ้างอิง: DEVELOPMENT_PLAN.md / SPEC.md",,B8 Hardening & UAT,,,,,,Medium,,v0.8.0,,23,
+11,Story,"[B0-01] Repo, monorepo และ Makefile","h4. Acceptance Criteria
+* โครงโฟลเดอร์ตาม SPEC 15
+* `make up/down/test/lint/migrate` ทำงานได้
+
+Blocked by: ไม่มี
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,infra,,,,Medium,Sprint 0,v0.0.0,8h,1,
+12,Sub-task,[Infra] สร้างโครง monorepo,"งานย่อยของ [B0-01] Repo, monorepo และ Makefile",11,,,,,,,Medium,,,,,
+13,Sub-task,[Infra] เขียน Makefile,"งานย่อยของ [B0-01] Repo, monorepo และ Makefile",11,,,,,,,Medium,,,,,
+14,Sub-task,[Infra] README เริ่มต้น + วิธีรัน,"งานย่อยของ [B0-01] Repo, monorepo และ Makefile",11,,,,,,,Medium,,,,,
+15,Story,"[B0-02] BE skeleton: Echo, config, logging, health endpoints","h4. Acceptance Criteria
+* `/healthz` ตอบเสมอ, `/readyz` เช็ก DB
+* log เป็น JSON พร้อม `X-Request-ID`
+* config อ่านจาก env
+
+Blocked by: B0-01
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,be,,,,Medium,Sprint 0,v0.0.0,16h,2,B0-01
+16,Sub-task,[BE] Go module + Echo,"งานย่อยของ [B0-02] BE skeleton: Echo, config, logging, health endpoints",15,,,,,,,Medium,,,,,
+17,Sub-task,[BE] config (env),"งานย่อยของ [B0-02] BE skeleton: Echo, config, logging, health endpoints",15,,,,,,,Medium,,,,,
+18,Sub-task,[BE] slog + request-id middleware,"งานย่อยของ [B0-02] BE skeleton: Echo, config, logging, health endpoints",15,,,,,,,Medium,,,,,
+19,Sub-task,[BE] `/healthz` `/readyz`,"งานย่อยของ [B0-02] BE skeleton: Echo, config, logging, health endpoints",15,,,,,,,Medium,,,,,
+20,Sub-task,[BE] unit test,"งานย่อยของ [B0-02] BE skeleton: Echo, config, logging, health endpoints",15,,,,,,,Medium,,,,,
+21,Story,"[B0-03] BE resilience: DB connect retry, timeout ทุกชั้น, circuit breaker","h4. Acceptance Criteria
+* retry+backoff ~2 นาทีแล้ว exit ให้ compose restart
+* timeout: connect 3 วิ / acquire 2 วิ / query 5 วิ
+* DB ล่ม → HTTP 503 code `5030` + `Retry-After`; breaker เปิดหลังล้ม 5 ครั้ง/10 วิ
+
+Blocked by: B0-02
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,be,,,,Medium,Sprint 0,v0.0.0,16h,2,B0-02
+22,Sub-task,[BE] connect retry + backoff,"งานย่อยของ [B0-03] BE resilience: DB connect retry, timeout ทุกชั้น, circuit breaker",21,,,,,,,Medium,,,,,
+23,Sub-task,[BE] pool timeouts,"งานย่อยของ [B0-03] BE resilience: DB connect retry, timeout ทุกชั้น, circuit breaker",21,,,,,,,Medium,,,,,
+24,Sub-task,[BE] circuit breaker,"งานย่อยของ [B0-03] BE resilience: DB connect retry, timeout ทุกชั้น, circuit breaker",21,,,,,,,Medium,,,,,
+25,Sub-task,[BE] metric `db_up`,"งานย่อยของ [B0-03] BE resilience: DB connect retry, timeout ทุกชั้น, circuit breaker",21,,,,,,,Medium,,,,,
+26,Sub-task,[BE] integration test (pause DB),"งานย่อยของ [B0-03] BE resilience: DB connect retry, timeout ทุกชั้น, circuit breaker",21,,,,,,,Medium,,,,,
+27,Story,[B0-04] BE response envelope + pagination helper + error mapping (SPEC 9),"h4. Acceptance Criteria
+* ทุก endpoint ตอบ `{code,message,data}` (+`meta` ใน list)
+* error ถูก map เป็น code ตามตาราง; list ว่างคืน `[]`; DELETE/logout ตอบ 200 + null
+* pagination 2 แบบตาม SPEC 9.2: offset (`page/size/total`, ลึกสุด 10,000 แถว) และ keyset (`cursor`, `next_cursor/has_next`, ไม่มี `total`; cursor ผิด → `4000`)
+* keyset ดึง `size+1` แถวเพื่อหา `has_next` แล้วตัดแถวเกินออก (ไม่ใช้ COUNT)
+
+Blocked by: B0-02
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,be,,,,Medium,Sprint 0,v0.0.0,20h,2.5,B0-02
+28,Sub-task,[BE] helper กลาง,งานย่อยของ [B0-04] BE response envelope + pagination helper + error mapping (SPEC 9),27,,,,,,,Medium,,,,,
+29,Sub-task,[BE] error mapping จุดเดียว,งานย่อยของ [B0-04] BE response envelope + pagination helper + error mapping (SPEC 9),27,,,,,,,Medium,,,,,
+30,Sub-task,"[BE] helper pagination (offset/keyset, cursor opaque)",งานย่อยของ [B0-04] BE response envelope + pagination helper + error mapping (SPEC 9),27,,,,,,,Medium,,,,,
+31,Sub-task,[BE] schema `PageMeta`/`CursorMeta` ใน OpenAPI,งานย่อยของ [B0-04] BE response envelope + pagination helper + error mapping (SPEC 9),27,,,,,,,Medium,,,,,
+32,Sub-task,[BE] unit test,งานย่อยของ [B0-04] BE response envelope + pagination helper + error mapping (SPEC 9),27,,,,,,,Medium,,,,,
+33,Story,[B0-05] วางโครง feature-based + generate TypeScript client จาก OpenAPI,"h4. Acceptance Criteria
+* BE: handler/service/repository/ports ตาม SPEC 5.4
+* swaggo → OpenAPI → TS client สร้างใน CI
+
+Blocked by: B0-04
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,be,fe,,,Medium,Sprint 0,v0.0.0,16h,2,B0-04
+34,Sub-task,โครง BE features,งานย่อยของ [B0-05] วางโครง feature-based + generate TypeScript client จาก OpenAPI,33,,,,,,,Medium,,,,,
+35,Sub-task,โครง FE features/*,งานย่อยของ [B0-05] วางโครง feature-based + generate TypeScript client จาก OpenAPI,33,,,,,,,Medium,,,,,
+36,Sub-task,swaggo + generator,งานย่อยของ [B0-05] วางโครง feature-based + generate TypeScript client จาก OpenAPI,33,,,,,,,Medium,,,,,
+37,Sub-task,step ใน CI,งานย่อยของ [B0-05] วางโครง feature-based + generate TypeScript client จาก OpenAPI,33,,,,,,,Medium,,,,,
+38,Story,"[B0-06] FE skeleton: Vite, React, TS, Tailwind, shadcn/ui","h4. Acceptance Criteria
+* router, TanStack Query, i18n (TH/EN), layout เปล่า
+* build และ lint ผ่าน
+
+Blocked by: B0-01
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,fe,,,,Medium,Sprint 0,v0.0.0,16h,2,B0-01
+39,Sub-task,[FE] Vite + TS,"งานย่อยของ [B0-06] FE skeleton: Vite, React, TS, Tailwind, shadcn/ui",38,,,,,,,Medium,,,,,
+40,Sub-task,[FE] Tailwind + shadcn/ui,"งานย่อยของ [B0-06] FE skeleton: Vite, React, TS, Tailwind, shadcn/ui",38,,,,,,,Medium,,,,,
+41,Sub-task,[FE] router + Query,"งานย่อยของ [B0-06] FE skeleton: Vite, React, TS, Tailwind, shadcn/ui",38,,,,,,,Medium,,,,,
+42,Sub-task,[FE] i18n,"งานย่อยของ [B0-06] FE skeleton: Vite, React, TS, Tailwind, shadcn/ui",38,,,,,,,Medium,,,,,
+43,Sub-task,[FE] layout,"งานย่อยของ [B0-06] FE skeleton: Vite, React, TS, Tailwind, shadcn/ui",38,,,,,,,Medium,,,,,
+44,Story,[B0-07] FE axios interceptor + error UX,"h4. Acceptance Criteria
+* unwrap `data`/`meta`
+* `code` → ข้อความ i18n
+* `4010`/`4011` → หน้า login, `5030`/`5031` → แบนเนอร์
+
+Blocked by: B0-04, B0-06
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,fe,,,,Medium,Sprint 0,v0.0.0,12h,1.5,"B0-04, B0-06"
+45,Sub-task,[FE] interceptor,งานย่อยของ [B0-07] FE axios interceptor + error UX,44,,,,,,,Medium,,,,,
+46,Sub-task,[FE] mapping code → i18n,งานย่อยของ [B0-07] FE axios interceptor + error UX,44,,,,,,,Medium,,,,,
+47,Sub-task,[FE] แบนเนอร์ระบบไม่พร้อม,งานย่อยของ [B0-07] FE axios interceptor + error UX,44,,,,,,,Medium,,,,,
+48,Sub-task,[FE] MSW test,งานย่อยของ [B0-07] FE axios interceptor + error UX,44,,,,,,,Medium,,,,,
+49,Story,[B0-08] DB: golang-migrate + sqlc + migration แรก,"h4. Acceptance Criteria
+* migration แรกมี extension `pg_trgm`, `pg_stat_statements` และตาราง base
+* sqlc generate ใน CI
+
+Blocked by: B0-02
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,be,,,,Medium,Sprint 0,v0.0.0,8h,1,B0-02
+50,Sub-task,[BE] ตั้ง golang-migrate,งานย่อยของ [B0-08] DB: golang-migrate + sqlc + migration แรก,49,,,,,,,Medium,,,,,
+51,Sub-task,[BE] ตั้ง sqlc,งานย่อยของ [B0-08] DB: golang-migrate + sqlc + migration แรก,49,,,,,,,Medium,,,,,
+52,Sub-task,[BE] migration แรก,งานย่อยของ [B0-08] DB: golang-migrate + sqlc + migration แรก,49,,,,,,,Medium,,,,,
+53,Story,[B0-09] Compose dev + Keycloak realm import,"h4. Acceptance Criteria
+* `make up` เข้า Keycloak ได้
+* services: postgres (ระบุ encoding UTF8 และ locale/collation ชัดเจน ปรับตามผล B2-00; ตั้ง `shared_preload_libraries=pg_stat_statements`), keycloak, SFTP จำลอง, worker, `migrate` (one-shot)
+* realm `docsearch` + clients + roles import ได้
+
+Blocked by: B0-01
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,infra,,,,Medium,Sprint 0,v0.0.0,16h,2,B0-01
+54,Sub-task,[Infra] docker-compose.yml dev,งานย่อยของ [B0-09] Compose dev + Keycloak realm import,53,,,,,,,Medium,,,,,
+55,Sub-task,[Infra] realm export/import,งานย่อยของ [B0-09] Compose dev + Keycloak realm import,53,,,,,,,Medium,,,,,
+56,Sub-task,[Infra] service migrate,งานย่อยของ [B0-09] Compose dev + Keycloak realm import,53,,,,,,,Medium,,,,,
+57,Sub-task,[Infra] service worker (placeholder),งานย่อยของ [B0-09] Compose dev + Keycloak realm import,53,,,,,,,Medium,,,,,
+58,Story,[B0-10] Test infra: compose profile `testinfra`,"h4. Acceptance Criteria
+* OpenLDAP + Samba + SFTP ขึ้นด้วย `--profile testinfra`
+* `seed-testinfra.sh` สร้างผู้ใช้/กลุ่ม/CSV/เอกสารตัวอย่าง
+* `mount-docstore.sh` mount SMB ใน Colima VM ได้
+
+Blocked by: B0-09
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,infra,qa,,,Medium,Sprint 0,v0.0.0,16h,2,B0-09
+59,Sub-task,OpenLDAP + LDIF,งานย่อยของ [B0-10] Test infra: compose profile `testinfra`,58,,,,,,,Medium,,,,,
+60,Sub-task,Samba + share,งานย่อยของ [B0-10] Test infra: compose profile `testinfra`,58,,,,,,,Medium,,,,,
+61,Sub-task,SFTP,งานย่อยของ [B0-10] Test infra: compose profile `testinfra`,58,,,,,,,Medium,,,,,
+62,Sub-task,seed script,งานย่อยของ [B0-10] Test infra: compose profile `testinfra`,58,,,,,,,Medium,,,,,
+63,Sub-task,mount script,งานย่อยของ [B0-10] Test infra: compose profile `testinfra`,58,,,,,,,Medium,,,,,
+64,Story,[B0-11] CI pipeline,"h4. Acceptance Criteria
+* lint → unit → integration → build image
+* CI ผ่านด้วย test ตัวอย่างทั้ง BE/FE
+
+Blocked by: B0-02, B0-06
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,infra,,,,Medium,Sprint 0,v0.0.0,12h,1.5,"B0-02, B0-06"
+65,Sub-task,[Infra] pipeline,งานย่อยของ [B0-11] CI pipeline,64,,,,,,,Medium,,,,,
+66,Sub-task,[Infra] cache,งานย่อยของ [B0-11] CI pipeline,64,,,,,,,Medium,,,,,
+67,Sub-task,[Infra] test ตัวอย่าง BE/FE,งานย่อยของ [B0-11] CI pipeline,64,,,,,,,Medium,,,,,
+68,Sub-task,[Infra] integration ตัวอย่าง (testcontainers + Postgres),งานย่อยของ [B0-11] CI pipeline,64,,,,,,,Medium,,,,,
+69,Task,[B0-12] ขอข้อมูลภายนอกและตรวจสภาพแวดล้อม,"h4. Acceptance Criteria
+* ส่งคำขอข้อมูล LDAP/AD ถึงทีม IT และข้อมูล NAS ถึงทีมดูแล (ใช้ตอน UAT ไม่บล็อกการพัฒนา)
+* ตรวจเครือข่าย Colima → AD/NAS และสเปคเครื่อง Colima จริง
+
+Blocked by: ไม่มี
+Epic: B0 — Foundation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",1,,B0 Foundation,ops,,,,Medium,Sprint 0,v0.0.0,4h,0.5,
+70,Sub-task,[Ops] ส่งอีเมล/คำขอ,งานย่อยของ [B0-12] ขอข้อมูลภายนอกและตรวจสภาพแวดล้อม,69,,,,,,,Medium,,,,,
+71,Sub-task,[Ops] ตรวจเครือข่าย,งานย่อยของ [B0-12] ขอข้อมูลภายนอกและตรวจสภาพแวดล้อม,69,,,,,,,Medium,,,,,
+72,Sub-task,[Ops] บันทึกสเปคเครื่อง,งานย่อยของ [B0-12] ขอข้อมูลภายนอกและตรวจสภาพแวดล้อม,69,,,,,,,Medium,,,,,
+73,Story,[B1a-01] BE: JWT middleware + RBAC + `/me`,"h4. Acceptance Criteria
+* ตรวจลายเซ็น (JWKS cache), `iss`, `aud`, `exp`
+* RBAC ต่อ route (admin/staff/viewer): ไม่ผ่าน → `4010`/`4030`
+
+Blocked by: B0-02, B0-09
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,be,auth,,,Medium,Sprint 1,v0.1.0,16h,2,"B0-02, B0-09"
+74,Sub-task,[BE] JWKS cache,งานย่อยของ [B1a-01] BE: JWT middleware + RBAC + `/me`,73,,,,,,,Medium,,,,,
+75,Sub-task,[BE] middleware ตรวจ token,งานย่อยของ [B1a-01] BE: JWT middleware + RBAC + `/me`,73,,,,,,,Medium,,,,,
+76,Sub-task,[BE] RBAC ต่อ route,งานย่อยของ [B1a-01] BE: JWT middleware + RBAC + `/me`,73,,,,,,,Medium,,,,,
+77,Sub-task,[BE] `/me`,งานย่อยของ [B1a-01] BE: JWT middleware + RBAC + `/me`,73,,,,,,,Medium,,,,,
+78,Sub-task,[BE] unit test,งานย่อยของ [B1a-01] BE: JWT middleware + RBAC + `/me`,73,,,,,,,Medium,,,,,
+79,Story,[B1a-02] BE: `UserStore` interface + `keycloakstore`,"h4. Acceptance Criteria
+* Admin API: create/update/reset password/enable-disable/assign role
+* เปลี่ยน implementation ได้โดยไม่แตะ handler
+
+Blocked by: B1a-01
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,be,auth,,,Medium,Sprint 1,v0.1.0,16h,2,B1a-01
+80,Sub-task,[BE] interface,งานย่อยของ [B1a-02] BE: `UserStore` interface + `keycloakstore`,79,,,,,,,Medium,,,,,
+81,Sub-task,[BE] gocloak client + service account,งานย่อยของ [B1a-02] BE: `UserStore` interface + `keycloakstore`,79,,,,,,,Medium,,,,,
+82,Sub-task,[BE] implementation,งานย่อยของ [B1a-02] BE: `UserStore` interface + `keycloakstore`,79,,,,,,,Medium,,,,,
+83,Sub-task,[BE] integration test (Keycloak),งานย่อยของ [B1a-02] BE: `UserStore` interface + `keycloakstore`,79,,,,,,,Medium,,,,,
+84,Story,"[B1a-03] BE: `/users` CRUD, roles, ตรวจชื่อ/`employee_id` ซ้ำ","h4. Acceptance Criteria
+* ซ้ำ → `409` code `4090` พร้อม id เดิม
+* user ใหม่ถูกบังคับเปลี่ยนรหัสผ่านครั้งแรก
+
+Blocked by: B1a-02, B0-04
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,be,auth,,,Medium,Sprint 1,v0.1.0,16h,2,"B1a-02, B0-04"
+85,Sub-task,[BE] endpoints,"งานย่อยของ [B1a-03] BE: `/users` CRUD, roles, ตรวจชื่อ/`employee_id` ซ้ำ",84,,,,,,,Medium,,,,,
+86,Sub-task,[BE] validation + duplicate check,"งานย่อยของ [B1a-03] BE: `/users` CRUD, roles, ตรวจชื่อ/`employee_id` ซ้ำ",84,,,,,,,Medium,,,,,
+87,Sub-task,[BE] required action UPDATE_PASSWORD,"งานย่อยของ [B1a-03] BE: `/users` CRUD, roles, ตรวจชื่อ/`employee_id` ซ้ำ",84,,,,,,,Medium,,,,,
+88,Sub-task,[BE] test,"งานย่อยของ [B1a-03] BE: `/users` CRUD, roles, ตรวจชื่อ/`employee_id` ซ้ำ",84,,,,,,,Medium,,,,,
+89,Story,"[B1a-04] Keycloak: User Profile attribute, mappers, password policy, brute-force","h4. Acceptance Criteria
+* attribute `position`, `department`, `employeeId` (แก้ได้เฉพาะ admin)
+* claim ใน token, นโยบายรหัสผ่าน ≥ 12 ตัว, brute-force เปิด
+
+Blocked by: B0-09
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,infra,auth,,,Medium,Sprint 1,v0.1.0,12h,1.5,B0-09
+90,Sub-task,[Infra] User Profile,"งานย่อยของ [B1a-04] Keycloak: User Profile attribute, mappers, password policy, brute-force",89,,,,,,,Medium,,,,,
+91,Sub-task,[Infra] protocol mappers,"งานย่อยของ [B1a-04] Keycloak: User Profile attribute, mappers, password policy, brute-force",89,,,,,,,Medium,,,,,
+92,Sub-task,[Infra] password policy,"งานย่อยของ [B1a-04] Keycloak: User Profile attribute, mappers, password policy, brute-force",89,,,,,,,Medium,,,,,
+93,Sub-task,[Infra] brute-force,"งานย่อยของ [B1a-04] Keycloak: User Profile attribute, mappers, password policy, brute-force",89,,,,,,,Medium,,,,,
+94,Sub-task,[Infra] อัปเดต realm export,"งานย่อยของ [B1a-04] Keycloak: User Profile attribute, mappers, password policy, brute-force",89,,,,,,,Medium,,,,,
+95,Story,[B1a-05] Worker: River setup + periodic job scaffold,"h4. Acceptance Criteria
+* `cmd/worker` ทำงาน, คิว `import` และคิวอื่นแยกกัน
+* periodic job ตัวอย่างรันได้, BE ตั้ง `RUN_WORKERS=false`
+
+Blocked by: B0-09
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,be,,,,Medium,Sprint 1,v0.1.0,12h,1.5,B0-09
+96,Sub-task,[BE] เพิ่ม River + migration,งานย่อยของ [B1a-05] Worker: River setup + periodic job scaffold,95,,,,,,,Medium,,,,,
+97,Sub-task,[BE] worker binary,งานย่อยของ [B1a-05] Worker: River setup + periodic job scaffold,95,,,,,,,Medium,,,,,
+98,Sub-task,[BE] คิว/concurrency config,งานย่อยของ [B1a-05] Worker: River setup + periodic job scaffold,95,,,,,,,Medium,,,,,
+99,Sub-task,[BE] `/healthz` ของ worker,งานย่อยของ [B1a-05] Worker: River setup + periodic job scaffold,95,,,,,,,Medium,,,,,
+100,Story,[B1a-06] BE: `user_profiles` + upsert จาก claim + sync รายวัน + `POST /users/sync`,"h4. Acceptance Criteria
+* upsert ตอน login (ไม่ถี่เกิน 1 ครั้ง/5 นาที/user)
+* job sync 02:00 ผ่าน Admin API; ผู้ใช้ที่หายไป → `is_active=false` ไม่ลบแถว
+
+Blocked by: B1a-01, B1a-04, B1a-05
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,be,auth,,,Medium,Sprint 1,v0.1.0,16h,2,"B1a-01, B1a-04, B1a-05"
+101,Sub-task,[BE] ตาราง + upsert,งานย่อยของ [B1a-06] BE: `user_profiles` + upsert จาก claim + sync รายวัน + `POST /users/sync`,100,,,,,,,Medium,,,,,
+102,Sub-task,[BE] periodic job,งานย่อยของ [B1a-06] BE: `user_profiles` + upsert จาก claim + sync รายวัน + `POST /users/sync`,100,,,,,,,Medium,,,,,
+103,Sub-task,[BE] sync endpoint,งานย่อยของ [B1a-06] BE: `user_profiles` + upsert จาก claim + sync รายวัน + `POST /users/sync`,100,,,,,,,Medium,,,,,
+104,Sub-task,[BE] test,งานย่อยของ [B1a-06] BE: `user_profiles` + upsert จาก claim + sync รายวัน + `POST /users/sync`,100,,,,,,,Medium,,,,,
+105,Story,[B1a-07] FE: login/logout/refresh + route guard,"h4. Acceptance Criteria
+* `react-oidc-context` (PKCE), token อยู่ใน memory เท่านั้น
+* guard ตาม role; refresh อัตโนมัติ
+
+Blocked by: B0-06, B1a-01
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,fe,auth,,,Medium,Sprint 1,v0.1.0,20h,2.5,"B0-06, B1a-01"
+106,Sub-task,[FE] oidc setup,งานย่อยของ [B1a-07] FE: login/logout/refresh + route guard,105,,,,,,,Medium,,,,,
+107,Sub-task,[FE] login/callback,งานย่อยของ [B1a-07] FE: login/logout/refresh + route guard,105,,,,,,,Medium,,,,,
+108,Sub-task,[FE] refresh,งานย่อยของ [B1a-07] FE: login/logout/refresh + route guard,105,,,,,,,Medium,,,,,
+109,Sub-task,[FE] route guard + `<Can>`,งานย่อยของ [B1a-07] FE: login/logout/refresh + route guard,105,,,,,,,Medium,,,,,
+110,Sub-task,[FE] MSW test,งานย่อยของ [B1a-07] FE: login/logout/refresh + route guard,105,,,,,,,Medium,,,,,
+111,Story,[B1a-08] FE: หน้า User (list/create/edit/reset password/role),"h4. Acceptance Criteria
+* admin จัดการผู้ใช้ได้ครบ; staff/viewer เข้าไม่ได้
+* แสดงคอลัมน์ source (`local`/`ldap`)
+
+Blocked by: B1a-03, B1a-07
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,fe,auth,,,Medium,Sprint 1,v0.1.0,24h,3,"B1a-03, B1a-07"
+112,Sub-task,[FE] list + filter,งานย่อยของ [B1a-08] FE: หน้า User (list/create/edit/reset password/role),111,,,,,,,Medium,,,,,
+113,Sub-task,[FE] form create/edit,งานย่อยของ [B1a-08] FE: หน้า User (list/create/edit/reset password/role),111,,,,,,,Medium,,,,,
+114,Sub-task,[FE] reset password,งานย่อยของ [B1a-08] FE: หน้า User (list/create/edit/reset password/role),111,,,,,,,Medium,,,,,
+115,Sub-task,[FE] assign role,งานย่อยของ [B1a-08] FE: หน้า User (list/create/edit/reset password/role),111,,,,,,,Medium,,,,,
+116,Sub-task,[FE] test,งานย่อยของ [B1a-08] FE: หน้า User (list/create/edit/reset password/role),111,,,,,,,Medium,,,,,
+117,Story,[B1a-09] BE: `audit_logs` + middleware บันทึก action,"h4. Acceptance Criteria
+* บันทึก login/logout/CRUD สำคัญ ไม่มี token/รหัสผ่านใน log
+
+Blocked by: B1a-01
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,be,,,,Medium,Sprint 1,v0.1.0,12h,1.5,B1a-01
+118,Sub-task,[BE] ตาราง,งานย่อยของ [B1a-09] BE: `audit_logs` + middleware บันทึก action,117,,,,,,,Medium,,,,,
+119,Sub-task,[BE] middleware,งานย่อยของ [B1a-09] BE: `audit_logs` + middleware บันทึก action,117,,,,,,,Medium,,,,,
+120,Sub-task,[BE] helper สำหรับ service,งานย่อยของ [B1a-09] BE: `audit_logs` + middleware บันทึก action,117,,,,,,,Medium,,,,,
+121,Sub-task,[BE] test,งานย่อยของ [B1a-09] BE: `audit_logs` + middleware บันทึก action,117,,,,,,,Medium,,,,,
+122,Story,[B1a-10] BE: denylist — `revoked_tokens` + in-memory + LISTEN/NOTIFY + poll,"h4. Acceptance Criteria
+* เพิกถอน `sid`/`jti`/`sub` cutoff มีผลทุก node ≤ 2 วินาที
+* connection LISTEN ต่อตรง Postgres; หลุด → reconnect + โหลดใหม่ + poll 5 วิ
+
+Blocked by: B1a-01, B1a-05
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,be,auth,,,Medium,Sprint 1,v0.1.0,24h,3,"B1a-01, B1a-05"
+123,Sub-task,[BE] ตาราง + index,งานย่อยของ [B1a-10] BE: denylist — `revoked_tokens` + in-memory + LISTEN/NOTIFY + poll,122,,,,,,,Medium,,,,,
+124,Sub-task,[BE] loader ตอน start,งานย่อยของ [B1a-10] BE: denylist — `revoked_tokens` + in-memory + LISTEN/NOTIFY + poll,122,,,,,,,Medium,,,,,
+125,Sub-task,[BE] LISTEN/NOTIFY listener,งานย่อยของ [B1a-10] BE: denylist — `revoked_tokens` + in-memory + LISTEN/NOTIFY + poll,122,,,,,,,Medium,,,,,
+126,Sub-task,[BE] middleware เช็ก denylist,งานย่อยของ [B1a-10] BE: denylist — `revoked_tokens` + in-memory + LISTEN/NOTIFY + poll,122,,,,,,,Medium,,,,,
+127,Sub-task,[BE] integration test 3 node,งานย่อยของ [B1a-10] BE: denylist — `revoked_tokens` + in-memory + LISTEN/NOTIFY + poll,122,,,,,,,Medium,,,,,
+128,Story,"[B1a-11] BE: logout, backchannel logout, `sub` cutoff, job ลบแถวหมดอายุ","h4. Acceptance Criteria
+* `POST /auth/logout` เพิกถอน + ปิด session; ตอบ 200 + `data:null`
+* backchannel endpoint ภายในเท่านั้น; ปิด user/รีเซ็ตรหัสผ่าน → cutoff อัตโนมัติ
+
+Blocked by: B1a-10, B1a-02
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,be,auth,,,Medium,Sprint 1,v0.1.0,16h,2,"B1a-10, B1a-02"
+129,Sub-task,[BE] logout endpoint,"งานย่อยของ [B1a-11] BE: logout, backchannel logout, `sub` cutoff, job ลบแถวหมดอายุ",128,,,,,,,Medium,,,,,
+130,Sub-task,[BE] backchannel (ตรวจ logout_token),"งานย่อยของ [B1a-11] BE: logout, backchannel logout, `sub` cutoff, job ลบแถวหมดอายุ",128,,,,,,,Medium,,,,,
+131,Sub-task,[BE] cutoff ตอนปิด user/reset,"งานย่อยของ [B1a-11] BE: logout, backchannel logout, `sub` cutoff, job ลบแถวหมดอายุ",128,,,,,,,Medium,,,,,
+132,Sub-task,[BE] job cleanup,"งานย่อยของ [B1a-11] BE: logout, backchannel logout, `sub` cutoff, job ลบแถวหมดอายุ",128,,,,,,,Medium,,,,,
+133,Sub-task,[BE] test,"งานย่อยของ [B1a-11] BE: logout, backchannel logout, `sub` cutoff, job ลบแถวหมดอายุ",128,,,,,,,Medium,,,,,
+134,Story,[B1a-12] FE: logout flow,"h4. Acceptance Criteria
+* `signoutRedirect` + ล้าง Query cache
+* ทุกแท็บ logout (BroadcastChannel); `4011` → หน้า login
+
+Blocked by: B1a-07, B1a-11
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,fe,auth,,,Medium,Sprint 1,v0.1.0,8h,1,"B1a-07, B1a-11"
+135,Sub-task,[FE] ปุ่ม logout,งานย่อยของ [B1a-12] FE: logout flow,134,,,,,,,Medium,,,,,
+136,Sub-task,[FE] BroadcastChannel,งานย่อยของ [B1a-12] FE: logout flow,134,,,,,,,Medium,,,,,
+137,Sub-task,[FE] handle 4011/4010,งานย่อยของ [B1a-12] FE: logout flow,134,,,,,,,Medium,,,,,
+138,Story,[B1a-13] Test: auth integration + E2E,"h4. Acceptance Criteria
+* login ทุก role; สิทธิ์ถูกบล็อก; replay token หลัง logout ได้ `401`
+* สร้าง user/เปลี่ยน role/ปิด user ผ่าน E2E
+
+Blocked by: B1a-08, B1a-11, B1a-12
+Epic: B1a — Auth & Local Users
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",2,,B1a Auth & Local Users,qa,auth,,,Medium,Sprint 1,v0.1.0,20h,2.5,"B1a-08, B1a-11, B1a-12"
+139,Sub-task,[QA] integration (Keycloak),งานย่อยของ [B1a-13] Test: auth integration + E2E,138,,,,,,,Medium,,,,,
+140,Sub-task,[QA] E2E Playwright,งานย่อยของ [B1a-13] Test: auth integration + E2E,138,,,,,,,Medium,,,,,
+141,Sub-task,[QA] เคส 3 node denylist,งานย่อยของ [B1a-13] Test: auth integration + E2E,138,,,,,,,Medium,,,,,
+142,Story,"[B1b-01] Keycloak: LDAP federation (READ_ONLY, LDAPS) + attribute mapper","h4. Acceptance Criteria
+* URL/Base DN/bind DN/ชื่อ attribute เป็น config (env)
+* map `givenName` `sn` `title` `department` `employeeID` `mail`
+
+Blocked by: B1a-04, B0-10
+Epic: B1b — LDAP/AD Federation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",3,,B1b LDAP/AD Federation,infra,auth,,,Medium,Sprint 2,v0.1.1,16h,2,"B1a-04, B0-10"
+143,Sub-task,[Infra] provider config,"งานย่อยของ [B1b-01] Keycloak: LDAP federation (READ_ONLY, LDAPS) + attribute mapper",142,,,,,,,Medium,,,,,
+144,Sub-task,[Infra] truststore/CA,"งานย่อยของ [B1b-01] Keycloak: LDAP federation (READ_ONLY, LDAPS) + attribute mapper",142,,,,,,,Medium,,,,,
+145,Sub-task,[Infra] attribute mappers,"งานย่อยของ [B1b-01] Keycloak: LDAP federation (READ_ONLY, LDAPS) + attribute mapper",142,,,,,,,Medium,,,,,
+146,Sub-task,[Infra] อัปเดต realm export,"งานย่อยของ [B1b-01] Keycloak: LDAP federation (READ_ONLY, LDAPS) + attribute mapper",142,,,,,,,Medium,,,,,
+147,Story,"[B1b-02] Keycloak: AD group → role mapper, periodic sync, break-glass admin","h4. Acceptance Criteria
+* กลุ่ม `docs-admin/staff/viewer` → role
+* ไม่อยู่ในกลุ่มใด → เข้าระบบไม่ได้; sync ทุก 1 ชม.; local admin 1–2 บัญชี
+
+Blocked by: B1b-01
+Epic: B1b — LDAP/AD Federation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",3,,B1b LDAP/AD Federation,infra,auth,,,Medium,Sprint 2,v0.1.1,12h,1.5,B1b-01
+148,Sub-task,[Infra] group mapper,"งานย่อยของ [B1b-02] Keycloak: AD group → role mapper, periodic sync, break-glass admin",147,,,,,,,Medium,,,,,
+149,Sub-task,[Infra] periodic sync,"งานย่อยของ [B1b-02] Keycloak: AD group → role mapper, periodic sync, break-glass admin",147,,,,,,,Medium,,,,,
+150,Sub-task,[Infra] break-glass account,"งานย่อยของ [B1b-02] Keycloak: AD group → role mapper, periodic sync, break-glass admin",147,,,,,,,Medium,,,,,
+151,Story,[B1b-03] BE: ผู้ใช้ LDAP ใน `/users` แบบ read-only + เปิด/ปิดสิทธิ์ + sync ทันที,"h4. Acceptance Criteria
+* คอลัมน์ source; แก้ข้อมูล/รหัสผ่านไม่ได้
+* ปิดใช้งานแล้ว token ถูกเพิกถอน (cutoff)
+
+Blocked by: B1b-01, B1a-03
+Epic: B1b — LDAP/AD Federation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",3,,B1b LDAP/AD Federation,be,auth,,,Medium,Sprint 2,v0.1.1,12h,1.5,"B1b-01, B1a-03"
+152,Sub-task,[BE] list รวม local+ldap,งานย่อยของ [B1b-03] BE: ผู้ใช้ LDAP ใน `/users` แบบ read-only + เปิด/ปิดสิทธิ์ + sync ทันที,151,,,,,,,Medium,,,,,
+153,Sub-task,[BE] enable/disable,งานย่อยของ [B1b-03] BE: ผู้ใช้ LDAP ใน `/users` แบบ read-only + เปิด/ปิดสิทธิ์ + sync ทันที,151,,,,,,,Medium,,,,,
+154,Sub-task,[BE] sync now,งานย่อยของ [B1b-03] BE: ผู้ใช้ LDAP ใน `/users` แบบ read-only + เปิด/ปิดสิทธิ์ + sync ทันที,151,,,,,,,Medium,,,,,
+155,Sub-task,[BE] test,งานย่อยของ [B1b-03] BE: ผู้ใช้ LDAP ใน `/users` แบบ read-only + เปิด/ปิดสิทธิ์ + sync ทันที,151,,,,,,,Medium,,,,,
+156,Story,[B1b-04] FE: แสดง source + UI read-only สำหรับผู้ใช้ LDAP,"h4. Acceptance Criteria
+* ซ่อน/ปิดปุ่มแก้รหัสผ่านและข้อมูลสำหรับ LDAP
+
+Blocked by: B1b-03, B1a-08
+Epic: B1b — LDAP/AD Federation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",3,,B1b LDAP/AD Federation,fe,auth,,,Medium,Sprint 2,v0.1.1,8h,1,"B1b-03, B1a-08"
+157,Sub-task,[FE] badge source,งานย่อยของ [B1b-04] FE: แสดง source + UI read-only สำหรับผู้ใช้ LDAP,156,,,,,,,Medium,,,,,
+158,Sub-task,[FE] disable controls,งานย่อยของ [B1b-04] FE: แสดง source + UI read-only สำหรับผู้ใช้ LDAP,156,,,,,,,Medium,,,,,
+159,Story,[B1b-05] Config สลับไป AD จริง + เตรียม alert LDAP bind fail,"h4. Acceptance Criteria
+* เอกสารค่า config ที่ต้องเปลี่ยนเมื่อต่อ AD จริง
+* metric/health ของ LDAP bind
+
+Blocked by: B1b-01
+Epic: B1b — LDAP/AD Federation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",3,,B1b LDAP/AD Federation,infra,ops,,,Medium,Sprint 2,v0.1.1,8h,1,B1b-01
+160,Sub-task,เอกสาร config,งานย่อยของ [B1b-05] Config สลับไป AD จริง + เตรียม alert LDAP bind fail,159,,,,,,,Medium,,,,,
+161,Sub-task,metric bind,งานย่อยของ [B1b-05] Config สลับไป AD จริง + เตรียม alert LDAP bind fail,159,,,,,,,Medium,,,,,
+162,Story,[B1b-06] Test: integration/E2E กับ OpenLDAP,"h4. Acceptance Criteria
+* ผู้ใช้ตามกลุ่มได้ role ถูก; ผู้ใช้ที่ถูกปิดเข้าไม่ได้
+* หยุด LDAP แล้ว local admin ยังเข้าได้
+
+Blocked by: B1b-02, B1b-03
+Epic: B1b — LDAP/AD Federation
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",3,,B1b LDAP/AD Federation,qa,auth,,,Medium,Sprint 2,v0.1.1,16h,2,"B1b-02, B1b-03"
+163,Sub-task,[QA] integration,งานย่อยของ [B1b-06] Test: integration/E2E กับ OpenLDAP,162,,,,,,,Medium,,,,,
+164,Sub-task,[QA] E2E,งานย่อยของ [B1b-06] Test: integration/E2E กับ OpenLDAP,162,,,,,,,Medium,,,,,
+165,Sub-task,[QA] drill หยุด LDAP,งานย่อยของ [B1b-06] Test: integration/E2E กับ OpenLDAP,162,,,,,,,Medium,,,,,
+166,Task,[B2-00] Spike: ตรวจการค้นหาข้อความไทยด้วย `pg_trgm` + locale ของ DB,"h4. Acceptance Criteria
+* ผลทดสอบกับชุดข้อมูลชื่อลูกค้า/ชื่อไฟล์ภาษาไทย (ไม่เว้นวรรค, วรรณยุกต์, ผสมไทย/อังกฤษ) ว่า exact/prefix/contains ได้ผลตามที่คาด
+* ตรวจ encoding/locale ของฐานข้อมูล (pg_trgm อาศัย locale ในการนับตัวอักษร) และการ normalize (NFC, ตัดช่องว่าง/zero-width) แล้วสรุปเป็นข้อกำหนดของ DB + ADR ใหม่
+* ถ้าไม่ผ่าน: เสนอทางเลือกสำรองพร้อมผลกระทบต่อ B2-01
+
+Blocked by: B0-08, B0-09
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,be,search,,,Medium,Sprint 2,v0.2.0,12h,1.5,"B0-08, B0-09"
+167,Sub-task,[BE] สร้างชุดข้อมูลทดสอบภาษาไทย,งานย่อยของ [B2-00] Spike: ตรวจการค้นหาข้อความไทยด้วย `pg_trgm` + locale ของ DB,166,,,,,,,Medium,,,,,
+168,Sub-task,[BE] ทดสอบ pg_trgm กับ locale/collation ที่เป็นไปได้,งานย่อยของ [B2-00] Spike: ตรวจการค้นหาข้อความไทยด้วย `pg_trgm` + locale ของ DB,166,,,,,,,Medium,,,,,
+169,Sub-task,[BE] ตรวจการ normalize,งานย่อยของ [B2-00] Spike: ตรวจการค้นหาข้อความไทยด้วย `pg_trgm` + locale ของ DB,166,,,,,,,Medium,,,,,
+170,Sub-task,[BE] วัดผล + EXPLAIN,งานย่อยของ [B2-00] Spike: ตรวจการค้นหาข้อความไทยด้วย `pg_trgm` + locale ของ DB,166,,,,,,,Medium,,,,,
+171,Sub-task,[BE] สรุปผลเป็น ADR,งานย่อยของ [B2-00] Spike: ตรวจการค้นหาข้อความไทยด้วย `pg_trgm` + locale ของ DB,166,,,,,,,Medium,,,,,
+172,Story,"[B2-01] DB: customers, job_orders, คอลัมน์ `*_norm`, index","h4. Acceptance Criteria
+* `job_no` unique; index btree + trigram ของ Job/BL/Invoice
+* ฟิลด์ใหม่: assignee, `data_source`, `verification_status`
+* index ตาม `ORDER BY` + `id` ท้ายสุด: `job_orders (created_at DESC, id DESC)` (ปรับตามผล EXPLAIN)
+
+Blocked by: B0-08, B2-00
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,be,,,,Medium,Sprint 2,v0.2.0,12h,1.5,"B0-08, B2-00"
+173,Sub-task,[BE] migration,"งานย่อยของ [B2-01] DB: customers, job_orders, คอลัมน์ `*_norm`, index",172,,,,,,,Medium,,,,,
+174,Sub-task,[BE] index,"งานย่อยของ [B2-01] DB: customers, job_orders, คอลัมน์ `*_norm`, index",172,,,,,,,Medium,,,,,
+175,Sub-task,[BE] sqlc queries,"งานย่อยของ [B2-01] DB: customers, job_orders, คอลัมน์ `*_norm`, index",172,,,,,,,Medium,,,,,
+176,Story,[B2-02] BE: Customers CRUD + merge,"h4. Acceptance Criteria
+* ฟิลด์: ชื่อ รหัส tax id ผู้ติดต่อ หมายเหตุ
+* merge ย้าย Job Order ทั้งหมดไปรายการหลัก
+* list แบบ offset (`page/size/total`)
+
+Blocked by: B2-01, B1a-01
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,be,,,,Medium,Sprint 2,v0.2.0,16h,2,"B2-01, B1a-01"
+177,Sub-task,[BE] CRUD,งานย่อยของ [B2-02] BE: Customers CRUD + merge,176,,,,,,,Medium,,,,,
+178,Sub-task,[BE] normalize ชื่อ,งานย่อยของ [B2-02] BE: Customers CRUD + merge,176,,,,,,,Medium,,,,,
+179,Sub-task,[BE] merge (transaction),งานย่อยของ [B2-02] BE: Customers CRUD + merge,176,,,,,,,Medium,,,,,
+180,Sub-task,[BE] audit,งานย่อยของ [B2-02] BE: Customers CRUD + merge,176,,,,,,,Medium,,,,,
+181,Sub-task,[BE] test,งานย่อยของ [B2-02] BE: Customers CRUD + merge,176,,,,,,,Medium,,,,,
+182,Story,[B2-03] BE: Job Orders CRUD + validation,"h4. Acceptance Criteria
+* B/L, Invoice ซ้ำ → เตือนไม่บล็อก; `job_no` ซ้ำ → `4090`
+* list Job Orders แบบ keyset (`cursor`, ไม่มี `total`) ตาม SPEC 9.2; มี detail
+
+Blocked by: B2-01
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,be,,,,Medium,Sprint 2,v0.2.0,16h,2,B2-01
+183,Sub-task,[BE] CRUD,งานย่อยของ [B2-03] BE: Job Orders CRUD + validation,182,,,,,,,Medium,,,,,
+184,Sub-task,[BE] rules,งานย่อยของ [B2-03] BE: Job Orders CRUD + validation,182,,,,,,,Medium,,,,,
+185,Sub-task,[BE] pagination,งานย่อยของ [B2-03] BE: Job Orders CRUD + validation,182,,,,,,,Medium,,,,,
+186,Sub-task,[BE] audit,งานย่อยของ [B2-03] BE: Job Orders CRUD + validation,182,,,,,,,Medium,,,,,
+187,Sub-task,[BE] test,งานย่อยของ [B2-03] BE: Job Orders CRUD + validation,182,,,,,,,Medium,,,,,
+188,Story,"[B2-04] BE: ฟอร์ม Job Order (inline customer, assignee, bulk assign)","h4. Acceptance Criteria
+* สร้างด้วยมือ: `data_source=manual`, `unverified`
+* แก้หลัง `verified` → กลับ `unverified`; `POST /job-orders/assign`
+
+Blocked by: B2-02, B2-03
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,be,,,,Medium,Sprint 2,v0.2.0,16h,2,"B2-02, B2-03"
+189,Sub-task,[BE] create พร้อม customer ใหม่ใน tx,"งานย่อยของ [B2-04] BE: ฟอร์ม Job Order (inline customer, assignee, bulk assign)",188,,,,,,,Medium,,,,,
+190,Sub-task,[BE] assignee validation,"งานย่อยของ [B2-04] BE: ฟอร์ม Job Order (inline customer, assignee, bulk assign)",188,,,,,,,Medium,,,,,
+191,Sub-task,[BE] bulk assign,"งานย่อยของ [B2-04] BE: ฟอร์ม Job Order (inline customer, assignee, bulk assign)",188,,,,,,,Medium,,,,,
+192,Sub-task,[BE] test,"งานย่อยของ [B2-04] BE: ฟอร์ม Job Order (inline customer, assignee, bulk assign)",188,,,,,,,Medium,,,,,
+193,Story,[B2-05] FE: หน้า Customer (list/filter/form/merge),"h4. Acceptance Criteria
+* TanStack Table + pagination; merge มีขั้นตอนยืนยัน
+
+Blocked by: B2-02, B1a-07
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,fe,,,,Medium,Sprint 2,v0.2.0,20h,2.5,"B2-02, B1a-07"
+194,Sub-task,[FE] list,งานย่อยของ [B2-05] FE: หน้า Customer (list/filter/form/merge),193,,,,,,,Medium,,,,,
+195,Sub-task,[FE] form,งานย่อยของ [B2-05] FE: หน้า Customer (list/filter/form/merge),193,,,,,,,Medium,,,,,
+196,Sub-task,[FE] merge dialog,งานย่อยของ [B2-05] FE: หน้า Customer (list/filter/form/merge),193,,,,,,,Medium,,,,,
+197,Sub-task,[FE] test,งานย่อยของ [B2-05] FE: หน้า Customer (list/filter/form/merge),193,,,,,,,Medium,,,,,
+198,Story,[B2-06] FE: หน้า Job Order (list/detail),"h4. Acceptance Criteria
+* กรองด้วย `verification_status`/assignee; badge conflict/unverified
+
+Blocked by: B2-03
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,fe,,,,Medium,Sprint 3,v0.2.0,20h,2.5,B2-03
+199,Sub-task,[FE] list + filter,งานย่อยของ [B2-06] FE: หน้า Job Order (list/detail),198,,,,,,,Medium,,,,,
+200,Sub-task,[FE] detail,งานย่อยของ [B2-06] FE: หน้า Job Order (list/detail),198,,,,,,,Medium,,,,,
+201,Sub-task,[FE] badges,งานย่อยของ [B2-06] FE: หน้า Job Order (list/detail),198,,,,,,,Medium,,,,,
+202,Sub-task,[FE] test,งานย่อยของ [B2-06] FE: หน้า Job Order (list/detail),198,,,,,,,Medium,,,,,
+203,Story,[B2-07] FE: ฟอร์ม Job Order,"h4. Acceptance Criteria
+* กรอก Job/B/L/Invoice/Customer (เลือกหรือสร้างใหม่)/assignee
+* มอบหมายแบบกลุ่มจากรายการ
+
+Blocked by: B2-04, B2-06
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,fe,,,,Medium,Sprint 3,v0.2.0,20h,2.5,"B2-04, B2-06"
+204,Sub-task,[FE] form + validation (Zod),งานย่อยของ [B2-07] FE: ฟอร์ม Job Order,203,,,,,,,Medium,,,,,
+205,Sub-task,[FE] customer picker + create inline,งานย่อยของ [B2-07] FE: ฟอร์ม Job Order,203,,,,,,,Medium,,,,,
+206,Sub-task,[FE] bulk assign UI,งานย่อยของ [B2-07] FE: ฟอร์ม Job Order,203,,,,,,,Medium,,,,,
+207,Sub-task,[FE] test,งานย่อยของ [B2-07] FE: ฟอร์ม Job Order,203,,,,,,,Medium,,,,,
+208,Story,[B2-08] Test: unit/integration/E2E ของข้อมูลหลัก,"h4. Acceptance Criteria
+* สร้าง Customer → Job Order → แก้ไข → merge ผ่าน E2E; สิทธิ์ตาม role
+
+Blocked by: B2-05, B2-07
+Epic: B2 — Customer & Master Data
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",4,,B2 Customer & Master Data,qa,,,,Medium,Sprint 3,v0.2.0,20h,2.5,"B2-05, B2-07"
+209,Sub-task,"[QA] unit (normalize, validation)",งานย่อยของ [B2-08] Test: unit/integration/E2E ของข้อมูลหลัก,208,,,,,,,Medium,,,,,
+210,Sub-task,"[QA] integration (API, merge)",งานย่อยของ [B2-08] Test: unit/integration/E2E ของข้อมูลหลัก,208,,,,,,,Medium,,,,,
+211,Sub-task,[QA] E2E,งานย่อยของ [B2-08] Test: unit/integration/E2E ของข้อมูลหลัก,208,,,,,,,Medium,,,,,
+212,Story,[B3-01] BE: upload CSV + `import_batches`/`import_rows`,"h4. Acceptance Criteria
+* เก็บไฟล์ต้นฉบับใน storage ภายนอก (prefix `imports/`)
+* สร้าง batch สถานะ `pending`
+
+Blocked by: B2-01
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,be,import,,,Medium,Sprint 3,v0.3.0,16h,2,B2-01
+213,Sub-task,[BE] ตาราง,งานย่อยของ [B3-01] BE: upload CSV + `import_batches`/`import_rows`,212,,,,,,,Medium,,,,,
+214,Sub-task,[BE] upload endpoint,งานย่อยของ [B3-01] BE: upload CSV + `import_batches`/`import_rows`,212,,,,,,,Medium,,,,,
+215,Sub-task,[BE] เก็บไฟล์ผ่าน FileStorage (ชั่วคราวใช้ local จนกว่า B4),งานย่อยของ [B3-01] BE: upload CSV + `import_batches`/`import_rows`,212,,,,,,,Medium,,,,,
+216,Sub-task,[BE] test,งานย่อยของ [B3-01] BE: upload CSV + `import_batches`/`import_rows`,212,,,,,,,Medium,,,,,
+217,Story,[B3-02] BE: middleware `Idempotency-Key` + `idempotency_keys`,"h4. Acceptance Criteria
+* lease 10 นาที, อายุ 24 ชม.; key เดิมคืน response เดิม
+* request ต่าง → `4220`; กำลังรัน → `4091`; ขาด header → `4001`
+
+Blocked by: B0-04
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,be,platform,,,Medium,Sprint 3,v0.3.0,16h,2,B0-04
+218,Sub-task,[BE] ตาราง,งานย่อยของ [B3-02] BE: middleware `Idempotency-Key` + `idempotency_keys`,217,,,,,,,Medium,,,,,
+219,Sub-task,[BE] middleware,งานย่อยของ [B3-02] BE: middleware `Idempotency-Key` + `idempotency_keys`,217,,,,,,,Medium,,,,,
+220,Sub-task,[BE] job ลบแถวหมดอายุ,งานย่อยของ [B3-02] BE: middleware `Idempotency-Key` + `idempotency_keys`,217,,,,,,,Medium,,,,,
+221,Sub-task,[BE] test,งานย่อยของ [B3-02] BE: middleware `Idempotency-Key` + `idempotency_keys`,217,,,,,,,Medium,,,,,
+222,Story,[B3-03] BE: validate (dry-run) + preview + parser,"h4. Acceptance Criteria
+* ตรวจ header/required/`JobOrder` ซ้ำในไฟล์; รองรับ BOM และ encoding
+* preview + error รายแถว
+
+Blocked by: B3-01
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,be,import,,,Medium,Sprint 3,v0.3.0,16h,2,B3-01
+223,Sub-task,[BE] CSV parser (stream),งานย่อยของ [B3-03] BE: validate (dry-run) + preview + parser,222,,,,,,,Medium,,,,,
+224,Sub-task,[BE] validator,งานย่อยของ [B3-03] BE: validate (dry-run) + preview + parser,222,,,,,,,Medium,,,,,
+225,Sub-task,[BE] preview endpoint,งานย่อยของ [B3-03] BE: validate (dry-run) + preview + parser,222,,,,,,,Medium,,,,,
+226,Sub-task,[BE] test (BOM/encoding),งานย่อยของ [B3-03] BE: validate (dry-run) + preview + parser,222,,,,,,,Medium,,,,,
+227,Story,[B3-04] BE: reconcile classifier (new/matched/fills_blank/conflict),"h4. Acceptance Criteria
+* เทียบด้วย `job_no` แบบ normalize ตามตารางใน SPEC 2.4
+* preview แสดงจำนวนแต่ละผล + รายงานเทียบ (CSV)
+
+Blocked by: B3-03, B2-01
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,be,import,,,Medium,Sprint 3,v0.3.0,24h,3,"B3-03, B2-01"
+228,Sub-task,[BE] classifier,งานย่อยของ [B3-04] BE: reconcile classifier (new/matched/fills_blank/conflict),227,,,,,,,Medium,,,,,
+229,Sub-task,[BE] endpoint `/imports/{id}/reconcile`,งานย่อยของ [B3-04] BE: reconcile classifier (new/matched/fills_blank/conflict),227,,,,,,,Medium,,,,,
+230,Sub-task,[BE] รายงานเทียบ,งานย่อยของ [B3-04] BE: reconcile classifier (new/matched/fills_blank/conflict),227,,,,,,,Medium,,,,,
+231,Sub-task,[BE] unit test ครบ 4 ผล,งานย่อยของ [B3-04] BE: reconcile classifier (new/matched/fills_blank/conflict),227,,,,,,,Medium,,,,,
+232,Story,"[B3-05] BE: commit (`queued` + enqueue ใน tx, `202`, `conflict_policy`)","h4. Acceptance Criteria
+* สถานะและ job เกิดพร้อมกัน; ตอบ `202` code `2020`
+* commit ซ้ำคืน batch เดิม
+
+Blocked by: B3-04, B3-02, B1a-05
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,be,import,,,Medium,Sprint 3,v0.3.0,12h,1.5,"B3-04, B3-02, B1a-05"
+233,Sub-task,[BE] endpoint,"งานย่อยของ [B3-05] BE: commit (`queued` + enqueue ใน tx, `202`, `conflict_policy`)",232,,,,,,,Medium,,,,,
+234,Sub-task,[BE] enqueue ใน tx เดียวกัน,"งานย่อยของ [B3-05] BE: commit (`queued` + enqueue ใน tx, `202`, `conflict_policy`)",232,,,,,,,Medium,,,,,
+235,Sub-task,[BE] conflict_policy,"งานย่อยของ [B3-05] BE: commit (`queued` + enqueue ใน tx, `202`, `conflict_policy`)",232,,,,,,,Medium,,,,,
+236,Sub-task,[BE] test,"งานย่อยของ [B3-05] BE: commit (`queued` + enqueue ใน tx, `202`, `conflict_policy`)",232,,,,,,,Medium,,,,,
+237,Story,"[B3-06] BE: import worker (stream, chunk 1,000, retry/resume)","h4. Acceptance Criteria
+* upsert ตามผล reconcile; ผลสถานะ `processing → completed*`
+* คิว `import` concurrency 1; kill แล้ว resume จาก chunk ล่าสุด
+
+Blocked by: B3-05
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,be,import,,,Medium,Sprint 3,v0.3.0,24h,3,B3-05
+238,Sub-task,[BE] worker job,"งานย่อยของ [B3-06] BE: import worker (stream, chunk 1,000, retry/resume)",237,,,,,,,Medium,,,,,
+239,Sub-task,[BE] chunk transaction,"งานย่อยของ [B3-06] BE: import worker (stream, chunk 1,000, retry/resume)",237,,,,,,,Medium,,,,,
+240,Sub-task,[BE] retry/resume,"งานย่อยของ [B3-06] BE: import worker (stream, chunk 1,000, retry/resume)",237,,,,,,,Medium,,,,,
+241,Sub-task,[BE] metric progress,"งานย่อยของ [B3-06] BE: import worker (stream, chunk 1,000, retry/resume)",237,,,,,,,Medium,,,,,
+242,Sub-task,[BE] test,"งานย่อยของ [B3-06] BE: import worker (stream, chunk 1,000, retry/resume)",237,,,,,,,Medium,,,,,
+243,Story,[B3-07] BE: `errors.csv` + endpoints สถานะ/ประวัติ,"h4. Acceptance Criteria
+* `GET /imports`, `/imports/{id}`, `/errors.csv`
+* `processed_rows/success_rows/error_rows` สำหรับ progress
+
+Blocked by: B3-06
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,be,import,,,Medium,Sprint 4,v0.3.0,12h,1.5,B3-06
+244,Sub-task,[BE] endpoints,งานย่อยของ [B3-07] BE: `errors.csv` + endpoints สถานะ/ประวัติ,243,,,,,,,Medium,,,,,
+245,Sub-task,[BE] errors.csv stream,งานย่อยของ [B3-07] BE: `errors.csv` + endpoints สถานะ/ประวัติ,243,,,,,,,Medium,,,,,
+246,Sub-task,[BE] test,งานย่อยของ [B3-07] BE: `errors.csv` + endpoints สถานะ/ประวัติ,243,,,,,,,Medium,,,,,
+247,Story,[B3-08] BE: `import_conflicts` + resolve API,"h4. Acceptance Criteria
+* `use_csv`/`keep_existing` รายการเดียวหรือเป็นกลุ่ม; ตั้ง `verified`
+* ไม่สร้าง conflict ซ้ำเมื่อ import ซ้ำ; audit ค่าเดิม
+
+Blocked by: B3-06
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,be,import,,,Medium,Sprint 4,v0.3.0,16h,2,B3-06
+248,Sub-task,[BE] ตาราง,งานย่อยของ [B3-08] BE: `import_conflicts` + resolve API,247,,,,,,,Medium,,,,,
+249,Sub-task,[BE] list/resolve endpoints,งานย่อยของ [B3-08] BE: `import_conflicts` + resolve API,247,,,,,,,Medium,,,,,
+250,Sub-task,[BE] ย้าย Customer เมื่อ use_csv,งานย่อยของ [B3-08] BE: `import_conflicts` + resolve API,247,,,,,,,Medium,,,,,
+251,Sub-task,[BE] test,งานย่อยของ [B3-08] BE: `import_conflicts` + resolve API,247,,,,,,,Medium,,,,,
+252,Story,"[B3-09] FE: หน้า Import (upload, preview, error, progress, ประวัติ)","h4. Acceptance Criteria
+* สร้าง `Idempotency-Key` ต่อการกด + ปิดปุ่มระหว่างส่ง
+* poll progress ทุก ~2 วินาที; เลือก `conflict_policy` ก่อน commit
+
+Blocked by: B3-07, B3-02
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,fe,import,,,Medium,Sprint 4,v0.3.0,24h,3,"B3-07, B3-02"
+253,Sub-task,[FE] upload + preview,"งานย่อยของ [B3-09] FE: หน้า Import (upload, preview, error, progress, ประวัติ)",252,,,,,,,Medium,,,,,
+254,Sub-task,[FE] reconcile summary,"งานย่อยของ [B3-09] FE: หน้า Import (upload, preview, error, progress, ประวัติ)",252,,,,,,,Medium,,,,,
+255,Sub-task,[FE] progress,"งานย่อยของ [B3-09] FE: หน้า Import (upload, preview, error, progress, ประวัติ)",252,,,,,,,Medium,,,,,
+256,Sub-task,[FE] history,"งานย่อยของ [B3-09] FE: หน้า Import (upload, preview, error, progress, ประวัติ)",252,,,,,,,Medium,,,,,
+257,Sub-task,[FE] test,"งานย่อยของ [B3-09] FE: หน้า Import (upload, preview, error, progress, ประวัติ)",252,,,,,,,Medium,,,,,
+258,Story,[B3-10] FE: หน้าข้อมูลขัดแย้ง,"h4. Acceptance Criteria
+* เลือกหลายรายการแล้ว resolve; badge ใน Job Order
+
+Blocked by: B3-08
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,fe,import,,,Medium,Sprint 4,v0.3.0,16h,2,B3-08
+259,Sub-task,[FE] list + filter,งานย่อยของ [B3-10] FE: หน้าข้อมูลขัดแย้ง,258,,,,,,,Medium,,,,,
+260,Sub-task,[FE] bulk resolve,งานย่อยของ [B3-10] FE: หน้าข้อมูลขัดแย้ง,258,,,,,,,Medium,,,,,
+261,Sub-task,[FE] test,งานย่อยของ [B3-10] FE: หน้าข้อมูลขัดแย้ง,258,,,,,,,Medium,,,,,
+262,Story,[B3-11] Test: import performance + resilience + E2E,"h4. Acceptance Criteria
+* 100k แถว ≤ 2 นาที; แถวผิดไม่ทำให้ทั้งไฟล์ล้ม
+* commit ซ้ำ/2 batch พร้อมกัน/POST ซ้ำด้วย key เดิม/kill worker ผ่านทั้งหมด
+
+Blocked by: B3-09, B3-10
+Epic: B3 — CSV Import
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",5,,B3 CSV Import,qa,import,,,Medium,Sprint 4,v0.3.0,24h,3,"B3-09, B3-10"
+263,Sub-task,[QA] ชุดข้อมูล 100k,งานย่อยของ [B3-11] Test: import performance + resilience + E2E,262,,,,,,,Medium,,,,,
+264,Sub-task,"[QA] integration (kill/resume, concurrent)",งานย่อยของ [B3-11] Test: import performance + resilience + E2E,262,,,,,,,Medium,,,,,
+265,Sub-task,[QA] E2E,งานย่อยของ [B3-11] Test: import performance + resilience + E2E,262,,,,,,,Medium,,,,,
+266,Story,"[B4-01] DB: documents, document_types, `search_vector`, index, unique กันซ้ำ","h4. Acceptance Criteria
+* unique `(job_order_id, sha256, document_type_id)` (ยังไม่ถูกลบ)
+* ฟิลด์ `provided_by_*`, `storage_provider`, `storage_ref`
+
+Blocked by: B2-01
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,storage,,,Medium,Sprint 4,v0.4.0,8h,1,B2-01
+267,Sub-task,[BE] migration,"งานย่อยของ [B4-01] DB: documents, document_types, `search_vector`, index, unique กันซ้ำ",266,,,,,,,Medium,,,,,
+268,Sub-task,[BE] index,"งานย่อยของ [B4-01] DB: documents, document_types, `search_vector`, index, unique กันซ้ำ",266,,,,,,,Medium,,,,,
+269,Sub-task,[BE] sqlc,"งานย่อยของ [B4-01] DB: documents, document_types, `search_vector`, index, unique กันซ้ำ",266,,,,,,,Medium,,,,,
+270,Story,[B4-02] BE: `FileStorage` port + storage contract tests,"h4. Acceptance Criteria
+* interface: Put/Open/Stat/Delete/Link; contract test ชุดเดียว
+
+Blocked by: B0-05
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,storage,,,Medium,Sprint 4,v0.4.0,12h,1.5,B0-05
+271,Sub-task,[BE] interface,งานย่อยของ [B4-02] BE: `FileStorage` port + storage contract tests,270,,,,,,,Medium,,,,,
+272,Sub-task,[BE] contract test suite,งานย่อยของ [B4-02] BE: `FileStorage` port + storage contract tests,270,,,,,,,Medium,,,,,
+273,Sub-task,[BE] fake in-memory,งานย่อยของ [B4-02] BE: `FileStorage` port + storage contract tests,270,,,,,,,Medium,,,,,
+274,Story,[B4-03] BE: SFTP adapter,"h4. Acceptance Criteria
+* SSH key + pin host key; เขียน `.part` แล้ว rename; pool/timeout/retry (idempotent เท่านั้น)
+
+Blocked by: B4-02, B0-10
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,storage,,,Medium,Sprint 4,v0.4.0,16h,2,"B4-02, B0-10"
+275,Sub-task,[BE] adapter,งานย่อยของ [B4-03] BE: SFTP adapter,274,,,,,,,Medium,,,,,
+276,Sub-task,[BE] connection pool,งานย่อยของ [B4-03] BE: SFTP adapter,274,,,,,,,Medium,,,,,
+277,Sub-task,[BE] config/secret,งานย่อยของ [B4-03] BE: SFTP adapter,274,,,,,,,Medium,,,,,
+278,Sub-task,[BE] ผ่าน contract test,งานย่อยของ [B4-03] BE: SFTP adapter,274,,,,,,,Medium,,,,,
+279,Story,[B4-04] BE: shared_folder adapter + health check (marker),"h4. Acceptance Criteria
+* file I/O + `.part` rename; ตรวจ marker `.docsearch-mount` กัน mount หลุด
+* mount หลุด → code `5031`
+
+Blocked by: B4-02, B0-10
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,storage,,,Medium,Sprint 4,v0.4.0,16h,2,"B4-02, B0-10"
+280,Sub-task,[BE] adapter,งานย่อยของ [B4-04] BE: shared_folder adapter + health check (marker),279,,,,,,,Medium,,,,,
+281,Sub-task,[BE] marker health check,งานย่อยของ [B4-04] BE: shared_folder adapter + health check (marker),279,,,,,,,Medium,,,,,
+282,Sub-task,[BE] config `SHARED_FOLDER_PATH`,งานย่อยของ [B4-04] BE: shared_folder adapter + health check (marker),279,,,,,,,Medium,,,,,
+283,Sub-task,[BE] ผ่าน contract test,งานย่อยของ [B4-04] BE: shared_folder adapter + health check (marker),279,,,,,,,Medium,,,,,
+284,Story,"[B4-05] BE: upload endpoint (streaming, sha256, MIME, Idempotency-Key, กันซ้ำ)","h4. Acceptance Criteria
+* 1 ไฟล์/request; ตรวจ MIME จริง/ขนาด ≤ 50 MB/ชนิดไฟล์
+* ลำดับ: `.part` → rename → INSERT+audit ใน tx; DB พลาด → ลบไฟล์
+* ไฟล์ซ้ำ → `200` + `duplicate:true`
+
+Blocked by: B4-01, B4-03, B3-02
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,storage,,,Medium,Sprint 4,v0.4.0,24h,3,"B4-01, B4-03, B3-02"
+285,Sub-task,[BE] multipart streaming,"งานย่อยของ [B4-05] BE: upload endpoint (streaming, sha256, MIME, Idempotency-Key, กันซ้ำ)",284,,,,,,,Medium,,,,,
+286,Sub-task,[BE] validation,"งานย่อยของ [B4-05] BE: upload endpoint (streaming, sha256, MIME, Idempotency-Key, กันซ้ำ)",284,,,,,,,Medium,,,,,
+287,Sub-task,[BE] tx + compensation,"งานย่อยของ [B4-05] BE: upload endpoint (streaming, sha256, MIME, Idempotency-Key, กันซ้ำ)",284,,,,,,,Medium,,,,,
+288,Sub-task,[BE] dedup,"งานย่อยของ [B4-05] BE: upload endpoint (streaming, sha256, MIME, Idempotency-Key, กันซ้ำ)",284,,,,,,,Medium,,,,,
+289,Sub-task,[BE] test,"งานย่อยของ [B4-05] BE: upload endpoint (streaming, sha256, MIME, Idempotency-Key, กันซ้ำ)",284,,,,,,,Medium,,,,,
+290,Story,[B4-06] BE: `provided_by` + สิทธิ์อัปโหลดไม่ผูก assignee,"h4. Acceptance Criteria
+* `provided_by_name/type` ไม่บังคับ; admin/staff อัปโหลดให้ Job Order ใดก็ได้
+
+Blocked by: B4-05
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,,,,Medium,Sprint 4,v0.4.0,8h,1,B4-05
+291,Sub-task,[BE] fields,งานย่อยของ [B4-06] BE: `provided_by` + สิทธิ์อัปโหลดไม่ผูก assignee,290,,,,,,,Medium,,,,,
+292,Sub-task,[BE] validation,งานย่อยของ [B4-06] BE: `provided_by` + สิทธิ์อัปโหลดไม่ผูก assignee,290,,,,,,,Medium,,,,,
+293,Sub-task,[BE] audit,งานย่อยของ [B4-06] BE: `provided_by` + สิทธิ์อัปโหลดไม่ผูก assignee,290,,,,,,,Medium,,,,,
+294,Story,[B4-07] BE: download link (signed `/dl/{token}`) + soft delete,"h4. Acceptance Criteria
+* เช็กสิทธิ์+audit ตอนออกลิงก์และตอนใช้; อายุ ≤ 60 วินาที ผูก user+เอกสาร
+* viewer ดาวน์โหลดได้แต่อัปโหลด/ลบไม่ได้; admin soft delete
+
+Blocked by: B4-05
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,storage,,,Medium,Sprint 4,v0.4.0,16h,2,B4-05
+295,Sub-task,[BE] link endpoint,งานย่อยของ [B4-07] BE: download link (signed `/dl/{token}`) + soft delete,294,,,,,,,Medium,,,,,
+296,Sub-task,[BE] HMAC token,งานย่อยของ [B4-07] BE: download link (signed `/dl/{token}`) + soft delete,294,,,,,,,Medium,,,,,
+297,Sub-task,[BE] stream endpoint,งานย่อยของ [B4-07] BE: download link (signed `/dl/{token}`) + soft delete,294,,,,,,,Medium,,,,,
+298,Sub-task,[BE] soft delete,งานย่อยของ [B4-07] BE: download link (signed `/dl/{token}`) + soft delete,294,,,,,,,Medium,,,,,
+299,Sub-task,[BE] test,งานย่อยของ [B4-07] BE: download link (signed `/dl/{token}`) + soft delete,294,,,,,,,Medium,,,,,
+300,Story,[B4-08] Worker: ไฟล์กำพร้า + retention purge,"h4. Acceptance Criteria
+* ไฟล์ไม่มีแถวใน DB เกิน 24 ชม. ถูกลบ
+* `DOCUMENT_RETENTION_DAYS` (ค่าเริ่มต้น 0) + `PURGE_GRACE_DAYS`
+
+Blocked by: B4-05, B1a-05
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,storage,,,Medium,Sprint 5,v0.4.0,12h,1.5,"B4-05, B1a-05"
+301,Sub-task,[BE] orphan job,งานย่อยของ [B4-08] Worker: ไฟล์กำพร้า + retention purge,300,,,,,,,Medium,,,,,
+302,Sub-task,[BE] retention job,งานย่อยของ [B4-08] Worker: ไฟล์กำพร้า + retention purge,300,,,,,,,Medium,,,,,
+303,Sub-task,[BE] audit,งานย่อยของ [B4-08] Worker: ไฟล์กำพร้า + retention purge,300,,,,,,,Medium,,,,,
+304,Sub-task,[BE] test,งานย่อยของ [B4-08] Worker: ไฟล์กำพร้า + retention purge,300,,,,,,,Medium,,,,,
+305,Story,[B4-09] FE: แท็บเอกสารใน Job Order,"h4. Acceptance Criteria
+* dropzone หลายไฟล์ (ส่งขนาน ≤ 3), progress, เลือกประเภท, ช่อง 'ผู้ส่ง' + autocomplete
+* preview/download; แสดง `duplicate`; ซ่อนปุ่มตาม role
+
+Blocked by: B4-05, B4-07, B2-06
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,fe,storage,,,Medium,Sprint 5,v0.4.0,28h,3.5,"B4-05, B4-07, B2-06"
+306,Sub-task,[FE] dropzone + queue,งานย่อยของ [B4-09] FE: แท็บเอกสารใน Job Order,305,,,,,,,Medium,,,,,
+307,Sub-task,[FE] progress,งานย่อยของ [B4-09] FE: แท็บเอกสารใน Job Order,305,,,,,,,Medium,,,,,
+308,Sub-task,[FE] ฟอร์มผู้ส่ง,งานย่อยของ [B4-09] FE: แท็บเอกสารใน Job Order,305,,,,,,,Medium,,,,,
+309,Sub-task,[FE] preview/download,งานย่อยของ [B4-09] FE: แท็บเอกสารใน Job Order,305,,,,,,,Medium,,,,,
+310,Sub-task,[FE] test,งานย่อยของ [B4-09] FE: แท็บเอกสารใน Job Order,305,,,,,,,Medium,,,,,
+311,Story,[B4-10] Test infra: ซ้อมหยุด/เปิด Samba/SFTP,"h4. Acceptance Criteria
+* health check เจอ marker หาย, upload/download `5031`, alert ขึ้น, search ยังใช้ได้
+
+Blocked by: B4-03, B4-04
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,qa,storage,,,Medium,Sprint 5,v0.4.0,12h,1.5,"B4-03, B4-04"
+312,Sub-task,[QA] drill script,งานย่อยของ [B4-10] Test infra: ซ้อมหยุด/เปิด Samba/SFTP,311,,,,,,,Medium,,,,,
+313,Sub-task,[QA] ตรวจ alert/UX,งานย่อยของ [B4-10] Test infra: ซ้อมหยุด/เปิด Samba/SFTP,311,,,,,,,Medium,,,,,
+314,Story,[B4-11] Test: unit/integration/E2E ของเอกสาร,"h4. Acceptance Criteria
+* upload→download→ลบ ตาม role; upload ซ้ำ key เดิม; ไฟล์ซ้ำ; ไฟล์กำพร้า
+
+Blocked by: B4-09
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,qa,storage,,,Medium,Sprint 5,v0.4.0,20h,2.5,B4-09
+315,Sub-task,[QA] unit,งานย่อยของ [B4-11] Test: unit/integration/E2E ของเอกสาร,314,,,,,,,Medium,,,,,
+316,Sub-task,[QA] integration (SFTP testcontainers),งานย่อยของ [B4-11] Test: unit/integration/E2E ของเอกสาร,314,,,,,,,Medium,,,,,
+317,Sub-task,[QA] E2E,งานย่อยของ [B4-11] Test: unit/integration/E2E ของเอกสาร,314,,,,,,,Medium,,,,,
+318,Story,[B4-12] (ตัวเลือก) ClamAV scan ด้วย config,"h4. Acceptance Criteria
+* เปิด/ปิดด้วย config; ไฟล์ติดไวรัสถูกปฏิเสธ
+
+Blocked by: B4-05
+Epic: B4 — Document Upload
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",6,,B4 Document Upload,be,storage,,,Low,Sprint 5,v0.4.0,8h,1,B4-05
+319,Sub-task,[BE] integration scan,งานย่อยของ [B4-12] (ตัวเลือก) ClamAV scan ด้วย config,318,,,,,,,Medium,,,,,
+320,Sub-task,[BE] config,งานย่อยของ [B4-12] (ตัวเลือก) ClamAV scan ด้วย config,318,,,,,,,Medium,,,,,
+321,Story,[B5-01] Data: generator ข้อมูลทดสอบ 1M Job Order + metadata เอกสาร,"h4. Acceptance Criteria
+* สร้างข้อมูลซ้ำได้ (seeded) ในเวลาที่ยอมรับได้
+
+Blocked by: B4-01
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,be,qa,,,Medium,Sprint 5,v0.5.0,12h,1.5,B4-01
+322,Sub-task,script,งานย่อยของ [B5-01] Data: generator ข้อมูลทดสอบ 1M Job Order + metadata เอกสาร,321,,,,,,,Medium,,,,,
+323,Sub-task,seed โหลดเข้า DB,งานย่อยของ [B5-01] Data: generator ข้อมูลทดสอบ 1M Job Order + metadata เอกสาร,321,,,,,,,Medium,,,,,
+324,Story,"[B5-02] BE: `/search` (exact→prefix→contains, filter, keyset, bulk 200, quick lookup)","h4. Acceptance Criteria
+* ลำดับผลตามคะแนน; bulk แสดงเลขที่ไม่พบ; exact → ไปหน้ารายละเอียด
+* filter: customer/type/วันที่/assignee/`verification_status`/`provided_by_name`
+* query builder แบบ dynamic (ข้อยกเว้นของ sqlc — ADR-026 สถานะ Proposed) แยก 3 query ตามชั้น exact→prefix→contains, cursor เก็บ `(ชั้น, id)`, ใช้ `LIKE` บนคอลัมน์ `*_norm`, ห้ามรูป `(col = $1 OR $1 IS NULL)`
+
+Blocked by: B5-01, B2-01
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,be,search,,,Medium,Sprint 5,v0.5.0,28h,3.5,"B5-01, B2-01"
+325,Sub-task,[BE] query builder (bind parameter เสมอ),"งานย่อยของ [B5-02] BE: `/search` (exact→prefix→contains, filter, keyset, bulk 200, quick lookup)",324,,,,,,,Medium,,,,,
+326,Sub-task,[BE] 3 query ตามชั้น + dedupe,"งานย่อยของ [B5-02] BE: `/search` (exact→prefix→contains, filter, keyset, bulk 200, quick lookup)",324,,,,,,,Medium,,,,,
+327,Sub-task,[BE] keyset pagination (size+1),"งานย่อยของ [B5-02] BE: `/search` (exact→prefix→contains, filter, keyset, bulk 200, quick lookup)",324,,,,,,,Medium,,,,,
+328,Sub-task,[BE] bulk,"งานย่อยของ [B5-02] BE: `/search` (exact→prefix→contains, filter, keyset, bulk 200, quick lookup)",324,,,,,,,Medium,,,,,
+329,Sub-task,[BE] test + ทดสอบ SQL injection,"งานย่อยของ [B5-02] BE: `/search` (exact→prefix→contains, filter, keyset, bulk 200, quick lookup)",324,,,,,,,Medium,,,,,
+330,Sub-task,[BE] สรุปผลเสนอ ADR-026 เป็น Accepted,"งานย่อยของ [B5-02] BE: `/search` (exact→prefix→contains, filter, keyset, bulk 200, quick lookup)",324,,,,,,,Medium,,,,,
+331,Story,[B5-03] DB: ปรับ index จาก `EXPLAIN ANALYZE`,"h4. Acceptance Criteria
+* exact/prefix p95 < 150 ms; contains/filter p95 < 500 ms ที่ 1M แถว; Index Scan
+* ตรวจ Seq Scan/query ช้าจาก `pg_stat_statements`; ไม่อ้างว่าเป็น Index-Only Scan จนกว่าจะวัดจริง; เพิ่ม index `audit_logs (created_at DESC, id DESC)`
+
+Blocked by: B5-02
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,be,search,,,Medium,Sprint 5,v0.5.0,12h,1.5,B5-02
+332,Sub-task,[BE] วัดผล,งานย่อยของ [B5-03] DB: ปรับ index จาก `EXPLAIN ANALYZE`,331,,,,,,,Medium,,,,,
+333,Sub-task,[BE] ปรับ index,งานย่อยของ [B5-03] DB: ปรับ index จาก `EXPLAIN ANALYZE`,331,,,,,,,Medium,,,,,
+334,Sub-task,[BE] บันทึกผล,งานย่อยของ [B5-03] DB: ปรับ index จาก `EXPLAIN ANALYZE`,331,,,,,,,Medium,,,,,
+335,Story,[B5-04] BE: reports + export CSV แบบ stream,"h4. Acceptance Criteria
+* `job-orders-summary`, `missing-documents`, `uploads-by-user` (group by `provided_by`)
+* export stream; ข้อมูลผู้ใช้ตาม role
+
+Blocked by: B5-01, B1a-06
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,be,search,,,Medium,Sprint 5,v0.5.0,24h,3,"B5-01, B1a-06"
+336,Sub-task,[BE] endpoints,งานย่อยของ [B5-04] BE: reports + export CSV แบบ stream,335,,,,,,,Medium,,,,,
+337,Sub-task,[BE] stream export,งานย่อยของ [B5-04] BE: reports + export CSV แบบ stream,335,,,,,,,Medium,,,,,
+338,Sub-task,[BE] สิทธิ์ข้อมูลผู้ใช้,งานย่อยของ [B5-04] BE: reports + export CSV แบบ stream,335,,,,,,,Medium,,,,,
+339,Sub-task,[BE] test,งานย่อยของ [B5-04] BE: reports + export CSV แบบ stream,335,,,,,,,Medium,,,,,
+340,Story,[B5-05] FE: หน้า Search,"h4. Acceptance Criteria
+* ช่องเดียว+เลือกฟิลด์+Advanced filter+bulk; filter เก็บใน URL
+
+Blocked by: B5-02
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,fe,search,,,Medium,Sprint 5,v0.5.0,24h,3,B5-02
+341,Sub-task,[FE] search box,งานย่อยของ [B5-05] FE: หน้า Search,340,,,,,,,Medium,,,,,
+342,Sub-task,[FE] advanced filter,งานย่อยของ [B5-05] FE: หน้า Search,340,,,,,,,Medium,,,,,
+343,Sub-task,[FE] bulk,งานย่อยของ [B5-05] FE: หน้า Search,340,,,,,,,Medium,,,,,
+344,Sub-task,[FE] results table,งานย่อยของ [B5-05] FE: หน้า Search,340,,,,,,,Medium,,,,,
+345,Sub-task,[FE] test,งานย่อยของ [B5-05] FE: หน้า Search,340,,,,,,,Medium,,,,,
+346,Story,[B5-06] FE: หน้า Report + export,"h4. Acceptance Criteria
+* เลือกช่วงเวลา/แผนก/ผู้ส่ง; export; แสดงข้อมูลตาม role
+
+Blocked by: B5-04
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,fe,search,,,Medium,Sprint 6,v0.5.0,16h,2,B5-04
+347,Sub-task,[FE] report pages,งานย่อยของ [B5-06] FE: หน้า Report + export,346,,,,,,,Medium,,,,,
+348,Sub-task,[FE] export,งานย่อยของ [B5-06] FE: หน้า Report + export,346,,,,,,,Medium,,,,,
+349,Sub-task,[FE] role-based columns,งานย่อยของ [B5-06] FE: หน้า Report + export,346,,,,,,,Medium,,,,,
+350,Story,[B5-07] BE: dashboard APIs + `/system/status`,"h4. Acceptance Criteria
+* `recent-documents`, `work-queue` (filter all/missing_bl/missing_invoice/mine/unassigned/conflict/unverified), `activity`
+* cache 30–60 วินาที; p95 < 300 ms
+
+Blocked by: B5-01, B4-04
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,be,dashboard,,,Medium,Sprint 6,v0.5.0,16h,2,"B5-01, B4-04"
+351,Sub-task,[BE] endpoints,งานย่อยของ [B5-07] BE: dashboard APIs + `/system/status`,350,,,,,,,Medium,,,,,
+352,Sub-task,[BE] queries + index,งานย่อยของ [B5-07] BE: dashboard APIs + `/system/status`,350,,,,,,,Medium,,,,,
+353,Sub-task,[BE] cache,งานย่อยของ [B5-07] BE: dashboard APIs + `/system/status`,350,,,,,,,Medium,,,,,
+354,Sub-task,[BE] test,งานย่อยของ [B5-07] BE: dashboard APIs + `/system/status`,350,,,,,,,Medium,,,,,
+355,Story,[B5-08] FE: Dashboard (search-first + work queue + แถบสถานะ),"h4. Acceptance Criteria
+* admin/staff เห็นงานที่ต้องทำ/สถานะ import/กิจกรรม; viewer เห็นเฉพาะค้นหา+เอกสารล่าสุด
+* แถบแจ้งเตือนจาก `/system/status` (poll 30 วิ)
+
+Blocked by: B5-07, B5-05
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,fe,dashboard,,,Medium,Sprint 6,v0.5.0,24h,3,"B5-07, B5-05"
+356,Sub-task,[FE] layout,งานย่อยของ [B5-08] FE: Dashboard (search-first + work queue + แถบสถานะ),355,,,,,,,Medium,,,,,
+357,Sub-task,[FE] widgets ตาม role,งานย่อยของ [B5-08] FE: Dashboard (search-first + work queue + แถบสถานะ),355,,,,,,,Medium,,,,,
+358,Sub-task,[FE] banner,งานย่อยของ [B5-08] FE: Dashboard (search-first + work queue + แถบสถานะ),355,,,,,,,Medium,,,,,
+359,Sub-task,[FE] test,งานย่อยของ [B5-08] FE: Dashboard (search-first + work queue + แถบสถานะ),355,,,,,,,Medium,,,,,
+360,Story,[B5-09] Test: search/report/dashboard + k6 smoke,"h4. Acceptance Criteria
+* E2E ค้นทุกฟิลด์/bulk/export/dashboard ตาม role; k6 smoke บน search
+
+Blocked by: B5-06, B5-08
+Epic: B5 — Search & Report
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",7,,B5 Search & Report,qa,search,,,Medium,Sprint 6,v0.5.0,20h,2.5,"B5-06, B5-08"
+361,Sub-task,[QA] integration,งานย่อยของ [B5-09] Test: search/report/dashboard + k6 smoke,360,,,,,,,Medium,,,,,
+362,Sub-task,[QA] E2E,งานย่อยของ [B5-09] Test: search/report/dashboard + k6 smoke,360,,,,,,,Medium,,,,,
+363,Sub-task,[QA] k6 script,งานย่อยของ [B5-09] Test: search/report/dashboard + k6 smoke,360,,,,,,,Medium,,,,,
+364,Story,[B6-01] Nginx LB + TLS + rate limit + upload streaming + JSON error_page,"h4. Acceptance Criteria
+* upstream FE×3/BE×3, `max_fails`, `proxy_next_upstream` ไม่รวม `http_503`
+* `429/502/503/504` ตอบ JSON envelope; `proxy_request_buffering off`
+
+Blocked by: B0-09, B0-04
+Epic: B6 — Scale & Deploy
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",8,,B6 Scale & Deploy,infra,,,,Medium,Sprint 6,v0.6.0,16h,2,"B0-09, B0-04"
+365,Sub-task,[Infra] nginx.conf,งานย่อยของ [B6-01] Nginx LB + TLS + rate limit + upload streaming + JSON error_page,364,,,,,,,Medium,,,,,
+366,Sub-task,[Infra] TLS (internal CA),งานย่อยของ [B6-01] Nginx LB + TLS + rate limit + upload streaming + JSON error_page,364,,,,,,,Medium,,,,,
+367,Sub-task,[Infra] rate limit,งานย่อยของ [B6-01] Nginx LB + TLS + rate limit + upload streaming + JSON error_page,364,,,,,,,Medium,,,,,
+368,Sub-task,[Infra] error_page,งานย่อยของ [B6-01] Nginx LB + TLS + rate limit + upload streaming + JSON error_page,364,,,,,,,Medium,,,,,
+369,Story,"[B6-02] Compose production-like: fe-1..3, be-1..3, worker, mem limits","h4. Acceptance Criteria
+* BE ตั้ง `RUN_WORKERS=false`; `mem_limit`/`GOMEMLIMIT` ตาม Resource Budget
+
+Blocked by: B6-01
+Epic: B6 — Scale & Deploy
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",8,,B6 Scale & Deploy,infra,,,,Medium,Sprint 6,v0.6.0,16h,2,B6-01
+370,Sub-task,[Infra] services,"งานย่อยของ [B6-02] Compose production-like: fe-1..3, be-1..3, worker, mem limits",369,,,,,,,Medium,,,,,
+371,Sub-task,[Infra] limits,"งานย่อยของ [B6-02] Compose production-like: fe-1..3, be-1..3, worker, mem limits",369,,,,,,,Medium,,,,,
+372,Sub-task,[Infra] env/secrets,"งานย่อยของ [B6-02] Compose production-like: fe-1..3, be-1..3, worker, mem limits",369,,,,,,,Medium,,,,,
+373,Story,"[B6-03] Reliability: restart, healthcheck, autoheal, graceful shutdown","h4. Acceptance Criteria
+* BE/worker healthcheck ใช้ `/healthz`; `depends_on: service_healthy`
+* SIGTERM drain 30 วินาที; ไม่เกิด restart storm ตอน DB ล่ม
+
+Blocked by: B6-02
+Epic: B6 — Scale & Deploy
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",8,,B6 Scale & Deploy,infra,be,,,Medium,Sprint 6,v0.6.0,16h,2,B6-02
+374,Sub-task,healthchecks,"งานย่อยของ [B6-03] Reliability: restart, healthcheck, autoheal, graceful shutdown",373,,,,,,,Medium,,,,,
+375,Sub-task,autoheal,"งานย่อยของ [B6-03] Reliability: restart, healthcheck, autoheal, graceful shutdown",373,,,,,,,Medium,,,,,
+376,Sub-task,graceful shutdown,"งานย่อยของ [B6-03] Reliability: restart, healthcheck, autoheal, graceful shutdown",373,,,,,,,Medium,,,,,
+377,Sub-task,ทดสอบ,"งานย่อยของ [B6-03] Reliability: restart, healthcheck, autoheal, graceful shutdown",373,,,,,,,Medium,,,,,
+378,Story,[B6-04] Backup/restore: `pg_dump` รายวัน + สคริปต์ + ทดสอบ restore,"h4. Acceptance Criteria
+* dump app + keycloak เก็บ 14 วัน; restore สำเร็จจริง
+* ยืนยันการ backup ของ NAS/SFTP กับผู้ดูแล storage
+
+Blocked by: B6-02
+Epic: B6 — Scale & Deploy
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",8,,B6 Scale & Deploy,infra,,,,Medium,Sprint 6,v0.6.0,16h,2,B6-02
+379,Sub-task,[Infra] backup.sh,งานย่อยของ [B6-04] Backup/restore: `pg_dump` รายวัน + สคริปต์ + ทดสอบ restore,378,,,,,,,Medium,,,,,
+380,Sub-task,[Infra] restore.sh,งานย่อยของ [B6-04] Backup/restore: `pg_dump` รายวัน + สคริปต์ + ทดสอบ restore,378,,,,,,,Medium,,,,,
+381,Sub-task,[Infra] cron,งานย่อยของ [B6-04] Backup/restore: `pg_dump` รายวัน + สคริปต์ + ทดสอบ restore,378,,,,,,,Medium,,,,,
+382,Sub-task,[Infra] ทดสอบ restore,งานย่อยของ [B6-04] Backup/restore: `pg_dump` รายวัน + สคริปต์ + ทดสอบ restore,378,,,,,,,Medium,,,,,
+383,Sub-task,[Infra] ยืนยันกับผู้ดูแล storage,งานย่อยของ [B6-04] Backup/restore: `pg_dump` รายวัน + สคริปต์ + ทดสอบ restore,378,,,,,,,Medium,,,,,
+384,Story,[B6-05] Colima startup automation + mount,"h4. Acceptance Criteria
+* VM start หลัง reboot อัตโนมัติ; `mount-docstore.sh` รันทุกครั้งที่ VM start (หรือ fstab)
+
+Blocked by: B6-02, B0-10
+Epic: B6 — Scale & Deploy
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",8,,B6 Scale & Deploy,infra,,,,Medium,Sprint 7,v0.6.0,12h,1.5,"B6-02, B0-10"
+385,Sub-task,[Infra] colima-up.sh,งานย่อยของ [B6-05] Colima startup automation + mount,384,,,,,,,Medium,,,,,
+386,Sub-task,[Infra] launchd/brew services,งานย่อยของ [B6-05] Colima startup automation + mount,384,,,,,,,Medium,,,,,
+387,Sub-task,[Infra] mount automation,งานย่อยของ [B6-05] Colima startup automation + mount,384,,,,,,,Medium,,,,,
+388,Task,[B6-06] Runbook,"h4. Acceptance Criteria
+* start/stop/restore/แก้ปัญหาที่พบบ่อย ครบใน `runbook.md`
+
+Blocked by: B6-04
+Epic: B6 — Scale & Deploy
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",8,,B6 Scale & Deploy,docs,,,,Medium,Sprint 7,v0.6.0,12h,1.5,B6-04
+389,Sub-task,[Docs] เขียน runbook,งานย่อยของ [B6-06] Runbook,388,,,,,,,Medium,,,,,
+390,Sub-task,[Docs] ทบทวนกับทีม,งานย่อยของ [B6-06] Runbook,388,,,,,,,Medium,,,,,
+391,Story,[B6-07] Test: resilience + E2E ผ่าน Nginx 3/3 node,"h4. Acceptance Criteria
+* `docker kill` node ใด ๆ แล้วผู้ใช้ไม่กระทบ และกลับมาภายใน 60 วินาที
+* หยุด Postgres 2 นาที/หยุด storage ระหว่างโหลด → 503 แล้วกลับมาเอง ไม่ restart วน; reboot แล้วระบบกลับมาเอง
+
+Blocked by: B6-03
+Epic: B6 — Scale & Deploy
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",8,,B6 Scale & Deploy,qa,infra,,,Medium,Sprint 7,v0.6.0,24h,3,B6-03
+392,Sub-task,script chaos,งานย่อยของ [B6-07] Test: resilience + E2E ผ่าน Nginx 3/3 node,391,,,,,,,Medium,,,,,
+393,Sub-task,E2E ผ่าน Nginx,งานย่อยของ [B6-07] Test: resilience + E2E ผ่าน Nginx 3/3 node,391,,,,,,,Medium,,,,,
+394,Sub-task,รายงานผล,งานย่อยของ [B6-07] Test: resilience + E2E ผ่าน Nginx 3/3 node,391,,,,,,,Medium,,,,,
+395,Story,"[B7-01] Alloy: เก็บ logs, metrics, traces","h4. Acceptance Criteria
+* logs → Loki, metrics (BE, nginx, postgres รวม `pg_stat_statements`, cAdvisor, Keycloak, worker) → Mimir, traces → Tempo
+
+Blocked by: B6-02
+Epic: B7 — Observability
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",9,,B7 Observability,infra,obs,,,Medium,Sprint 7,v0.7.0,20h,2.5,B6-02
+396,Sub-task,[Infra] alloy config,"งานย่อยของ [B7-01] Alloy: เก็บ logs, metrics, traces",395,,,,,,,Medium,,,,,
+397,Sub-task,[Infra] exporters,"งานย่อยของ [B7-01] Alloy: เก็บ logs, metrics, traces",395,,,,,,,Medium,,,,,
+398,Sub-task,[Infra] ตรวจข้อมูลเข้า,"งานย่อยของ [B7-01] Alloy: เก็บ logs, metrics, traces",395,,,,,,,Medium,,,,,
+399,Story,[B7-02] BE: OpenTelemetry + log fields + custom metrics,"h4. Acceptance Criteria
+* trace HTTP→DB→storage; log มี `trace_id`/`request_id`/`user_id`
+* metric: import job, upload, `db_up`, pool, denylist, idempotency
+
+Blocked by: B7-01
+Epic: B7 — Observability
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",9,,B7 Observability,be,obs,,,Medium,Sprint 7,v0.7.0,20h,2.5,B7-01
+400,Sub-task,[BE] OTel SDK,งานย่อยของ [B7-02] BE: OpenTelemetry + log fields + custom metrics,399,,,,,,,Medium,,,,,
+401,Sub-task,[BE] log fields,งานย่อยของ [B7-02] BE: OpenTelemetry + log fields + custom metrics,399,,,,,,,Medium,,,,,
+402,Sub-task,[BE] custom metrics,งานย่อยของ [B7-02] BE: OpenTelemetry + log fields + custom metrics,399,,,,,,,Medium,,,,,
+403,Sub-task,[BE] test,งานย่อยของ [B7-02] BE: OpenTelemetry + log fields + custom metrics,399,,,,,,,Medium,,,,,
+404,Story,[B7-03] Grafana dashboards (provisioning ใน repo),"h4. Acceptance Criteria
+* Overview, Backend, Postgres (รวม top queries/Seq Scan), Nginx upstream, Import jobs, Container resources
+
+Blocked by: B7-01, B7-02
+Epic: B7 — Observability
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",9,,B7 Observability,infra,obs,,,Medium,Sprint 7,v0.7.0,20h,2.5,"B7-01, B7-02"
+405,Sub-task,[Infra] แต่ละ dashboard,งานย่อยของ [B7-03] Grafana dashboards (provisioning ใน repo),404,,,,,,,Medium,,,,,
+406,Sub-task,[Infra] provisioning files,งานย่อยของ [B7-03] Grafana dashboards (provisioning ใน repo),404,,,,,,,Medium,,,,,
+407,Story,[B7-04] Alerts,"h4. Acceptance Criteria
+* 5xx > 2%, p95 > 1 s, DB pool > 80%, `db_up=0` > 1 นาที, import failed, container unhealthy/restart, disk > 80%, Keycloak down, LDAP bind fail
+
+Blocked by: B7-03
+Epic: B7 — Observability
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",9,,B7 Observability,infra,obs,,,Medium,Sprint 7,v0.7.0,16h,2,B7-03
+408,Sub-task,[Infra] กฎ alert,งานย่อยของ [B7-04] Alerts,407,,,,,,,Medium,,,,,
+409,Sub-task,[Infra] ช่องทางแจ้งเตือน,งานย่อยของ [B7-04] Alerts,407,,,,,,,Medium,,,,,
+410,Sub-task,[Infra] ทดสอบยิง,งานย่อยของ [B7-04] Alerts,407,,,,,,,Medium,,,,,
+411,Story,[B7-05] Standard / Lite profile + ตรวจ RAM budget,"h4. Acceptance Criteria
+* ใช้ RAM ไม่เกิน budget (Standard ≈ 5.5 GB, Lite ≈ 4.5 GB)
+
+Blocked by: B7-01
+Epic: B7 — Observability
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",9,,B7 Observability,infra,obs,,,Medium,Sprint 7,v0.7.0,12h,1.5,B7-01
+412,Sub-task,[Infra] profiles,งานย่อยของ [B7-05] Standard / Lite profile + ตรวจ RAM budget,411,,,,,,,Medium,,,,,
+413,Sub-task,[Infra] วัด RAM,งานย่อยของ [B7-05] Standard / Lite profile + ตรวจ RAM budget,411,,,,,,,Medium,,,,,
+414,Story,[B7-06] Test: alert/dashboard + log redaction,"h4. Acceptance Criteria
+* alert ยิงได้จริง; log ไม่มี token/รหัสผ่าน/ข้อมูลส่วนบุคคล
+
+Blocked by: B7-04
+Epic: B7 — Observability
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",9,,B7 Observability,qa,obs,,,Medium,Sprint 7,v0.7.0,12h,1.5,B7-04
+415,Sub-task,[QA] สคริปต์ตรวจ,งานย่อยของ [B7-06] Test: alert/dashboard + log redaction,414,,,,,,,Medium,,,,,
+416,Sub-task,[QA] ตรวจ log,งานย่อยของ [B7-06] Test: alert/dashboard + log redaction,414,,,,,,,Medium,,,,,
+417,Story,[B8-01] Load test k6 200 VUs + ปรับจูน,"h4. Acceptance Criteria
+* login/search/upload/download ที่ 200 VUs: error < 1%, p95 ตามเป้า
+* แก้ bottleneck ที่พบ (pool, index, Nginx, limits)
+
+Blocked by: B7-04
+Epic: B8 — Hardening & UAT
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",10,,B8 Hardening & UAT,qa,be,infra,,Medium,Sprint 8,v0.8.0,32h,4,B7-04
+418,Sub-task,k6 scenarios,งานย่อยของ [B8-01] Load test k6 200 VUs + ปรับจูน,417,,,,,,,Medium,,,,,
+419,Sub-task,วิเคราะห์ผล,งานย่อยของ [B8-01] Load test k6 200 VUs + ปรับจูน,417,,,,,,,Medium,,,,,
+420,Sub-task,ปรับจูน,งานย่อยของ [B8-01] Load test k6 200 VUs + ปรับจูน,417,,,,,,,Medium,,,,,
+421,Sub-task,รายงาน,งานย่อยของ [B8-01] Load test k6 200 VUs + ปรับจูน,417,,,,,,,Medium,,,,,
+422,Story,[B8-02] E2E ครบทุก role/flow + regression + coverage,"h4. Acceptance Criteria
+* BE ≥ 80%, FE ≥ 70%; ผ่านใน CI
+
+Blocked by: B7-04
+Epic: B8 — Hardening & UAT
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",10,,B8 Hardening & UAT,qa,,,,Medium,Sprint 8,v0.8.0,32h,4,B7-04
+423,Sub-task,[QA] เติม E2E,งานย่อยของ [B8-02] E2E ครบทุก role/flow + regression + coverage,422,,,,,,,Medium,,,,,
+424,Sub-task,[QA] regression suite,งานย่อยของ [B8-02] E2E ครบทุก role/flow + regression + coverage,422,,,,,,,Medium,,,,,
+425,Sub-task,[QA] ตรวจ coverage,งานย่อยของ [B8-02] E2E ครบทุก role/flow + regression + coverage,422,,,,,,,Medium,,,,,
+426,Story,[B8-03] Security review,"h4. Acceptance Criteria
+* CORS, headers (CSP), rate limit, ตรวจไฟล์, secrets, สิทธิ์รายงานข้อมูลผู้ใช้, audit
+
+Blocked by: B7-04
+Epic: B8 — Hardening & UAT
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",10,,B8 Hardening & UAT,be,infra,,,Medium,Sprint 8,v0.8.0,24h,3,B7-04
+427,Sub-task,checklist,งานย่อยของ [B8-03] Security review,426,,,,,,,Medium,,,,,
+428,Sub-task,แก้ข้อพบ,งานย่อยของ [B8-03] Security review,426,,,,,,,Medium,,,,,
+429,Sub-task,dependency scan,งานย่อยของ [B8-03] Security review,426,,,,,,,Medium,,,,,
+430,Story,"[B8-04] ซ้อม restore, migration, reboot","h4. Acceptance Criteria
+* กู้คืนได้ภายใน RTO ที่ตกลง; migration และ reboot ไม่กระทบข้อมูล
+
+Blocked by: B6-07
+Epic: B8 — Hardening & UAT
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",10,,B8 Hardening & UAT,infra,,,,Medium,Sprint 8,v0.8.0,16h,2,B6-07
+431,Sub-task,[Infra] restore drill,"งานย่อยของ [B8-04] ซ้อม restore, migration, reboot",430,,,,,,,Medium,,,,,
+432,Sub-task,[Infra] migration drill,"งานย่อยของ [B8-04] ซ้อม restore, migration, reboot",430,,,,,,,Medium,,,,,
+433,Sub-task,[Infra] reboot drill,"งานย่อยของ [B8-04] ซ้อม restore, migration, reboot",430,,,,,,,Medium,,,,,
+434,Story,[B8-05] Smoke test กับ AD และ NAS จริง,"h4. Acceptance Criteria
+* attribute/nested group/LDAPS ของ AD จริงทำงาน; mount/สิทธิ์/ความช้าของ NAS จริงยอมรับได้
+
+Blocked by: B1b-06, B4-11
+Epic: B8 — Hardening & UAT
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",10,,B8 Hardening & UAT,qa,infra,,,Medium,Sprint 9,v0.8.0,16h,2,"B1b-06, B4-11"
+435,Sub-task,ทดสอบ AD จริง,งานย่อยของ [B8-05] Smoke test กับ AD และ NAS จริง,434,,,,,,,Medium,,,,,
+436,Sub-task,ทดสอบ NAS จริง,งานย่อยของ [B8-05] Smoke test กับ AD และ NAS จริง,434,,,,,,,Medium,,,,,
+437,Sub-task,แก้ mapper/config,งานย่อยของ [B8-05] Smoke test กับ AD และ NAS จริง,434,,,,,,,Medium,,,,,
+438,Story,[B8-06] UAT ด้วยผู้ใช้จริงและข้อมูลจริง + แก้ไข,"h4. Acceptance Criteria
+* ผู้ใช้ลงนามรับ; ข้อบกพร่อง severity สูงถูกแก้
+
+Blocked by: B8-01, B8-02
+Epic: B8 — Hardening & UAT
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",10,,B8 Hardening & UAT,all,,,,Medium,Sprint 9,v0.8.0,40h,5,"B8-01, B8-02"
+439,Sub-task,เตรียม UAT,งานย่อยของ [B8-06] UAT ด้วยผู้ใช้จริงและข้อมูลจริง + แก้ไข,438,,,,,,,Medium,,,,,
+440,Sub-task,จัดรอบทดลอง,งานย่อยของ [B8-06] UAT ด้วยผู้ใช้จริงและข้อมูลจริง + แก้ไข,438,,,,,,,Medium,,,,,
+441,Sub-task,แก้ feedback,งานย่อยของ [B8-06] UAT ด้วยผู้ใช้จริงและข้อมูลจริง + แก้ไข,438,,,,,,,Medium,,,,,
+442,Task,[B8-07] Handover: คู่มือ + go-live checklist,"h4. Acceptance Criteria
+* runbook, คู่มือผู้ใช้/ผู้ดูแล, checklist go-live ครบ
+
+Blocked by: B8-06
+Epic: B8 — Hardening & UAT
+Definition of Done: ดู DEVELOPMENT_PLAN.md หัวข้อ 3 (โค้ด review, test ผ่าน, coverage BE 80%/FE 70%, lint, log+metric, เอกสาร, deploy ผ่าน compose)",10,,B8 Hardening & UAT,docs,,,,Medium,Sprint 9,v0.8.0,24h,3,B8-06
+443,Sub-task,[Docs] คู่มือผู้ใช้,งานย่อยของ [B8-07] Handover: คู่มือ + go-live checklist,442,,,,,,,Medium,,,,,
+444,Sub-task,[Docs] คู่มือผู้ดูแล,งานย่อยของ [B8-07] Handover: คู่มือ + go-live checklist,442,,,,,,,Medium,,,,,
+445,Sub-task,[Docs] checklist,งานย่อยของ [B8-07] Handover: คู่มือ + go-live checklist,442,,,,,,,Medium,,,,,

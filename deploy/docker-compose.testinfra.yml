@@ -1,0 +1,43 @@
+services:
+  ldap:
+    image: osixia/openldap:1.5.0
+    container_name: docsearch-testinfra-ldap
+    environment:
+      LDAP_ORGANISATION: "Logistics Org"
+      LDAP_DOMAIN: "docsearch.internal"
+      LDAP_ADMIN_PASSWORD: "adminpassword"
+    ports:
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ldap-data:/var/lib/ldap
+      - ldap-config:/etc/ldap/slapd.d
+    profiles:
+      - testinfra
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+  samba:
+    image: dperson/samba:latest
+    container_name: docsearch-testinfra-samba
+    environment:
+      USER: "docsearch;sambapassword"
+      SHARE: "docstore;/shares/docstore;yes;no;no;docsearch"
+    ports:
+      - "1445:445"
+      - "1139:139"
+    volumes:
+      - sambadata:/shares/docstore
+    profiles:
+      - testinfra
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+volumes:
+  ldap-data:
+  ldap-config:
+  sambadata:

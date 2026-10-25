@@ -1,0 +1,89 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: docsearch-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docsearch
+      POSTGRES_PASSWORD: docsearch_password
+      POSTGRES_DB: docsearch_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command: >
+      postgres -c shared_preload_libraries=pg_stat_statements
+               -c pg_stat_statements.track=all
+               -c max_connections=200
+               -c shared_buffers=768MB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docsearch -d docsearch_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1536M
+
+  migrate:
+    image: migrate/migrate:v4.17.1
+    container_name: docsearch-migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ../apps/api/db/migrations:/migrations
+    command:
+      - -path=/migrations
+      - -database=postgres://docsearch:docsearch_password@postgres:5432/docsearch_app?sslmode=disable
+      - up
+    restart: "no"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    container_name: docsearch-keycloak
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/docsearch_app
+      KC_DB_USERNAME: docsearch
+      KC_DB_PASSWORD: docsearch_password
+      KC_DB_SCHEMA: keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin_password
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+    command: start-dev --import-realm
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    ports:
+      - "8085:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep -q '200 OK' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+
+  sftp-dev:
+    image: atmoz/sftp:alpine
+    container_name: docsearch-sftp
+    restart: unless-stopped
+    ports:
+      - "2222:22"
+    command: docsearch:sftppassword:::upload
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+volumes:
+  pgdata:

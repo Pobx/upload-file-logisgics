@@ -1,0 +1,44 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist/
+build/
+coverage/
+
+# Go
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+apps/api/bin/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Colima / Docker data
+data/
+*.part
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test / Scratch
+tmp/

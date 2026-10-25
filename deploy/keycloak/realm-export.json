@@ -1,0 +1,67 @@
+{
+  "realm": "docsearch",
+  "displayName": "Document Search System",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "waitIncrementSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "failureFactor": 5,
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Administrator with full system privileges"
+      },
+      {
+        "name": "staff",
+        "description": "Logistics operations staff (upload, import, edit)"
+      },
+      {
+        "name": "viewer",
+        "description": "Read-only access (search, download, reports)"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "docsearch-web",
+      "name": "Document Search Web SPA",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "https://docs.internal/*"
+      ],
+      "webOrigins": [
+        "+"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "backchannel.logout.url": "http://api:8080/internal/auth/backchannel-logout"
+      }
+    },
+    {
+      "clientId": "docsearch-api",
+      "name": "Document Search API Resource Server",
+      "enabled": true,
+      "bearerOnly": true
+    }
+  ]
+}
