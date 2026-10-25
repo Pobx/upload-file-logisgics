@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { onServiceStatusChange } from '../lib/api-client';
+import { UserManagementPage } from '../features/user/UserManagementPage';
 import { Search, FileText, Upload, Users, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -149,15 +150,7 @@ export const App: React.FC = () => {
                 </div>
               }
             />
-            <Route
-              path="/users"
-              element={
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mt-6">
-                  <h1 className="text-xl font-bold text-slate-800 mb-4">{t('users')}</h1>
-                  <p className="text-sm text-slate-500">จัดการรายชื่อผู้ใช้ สิทธิ์การเข้าถึง และการซิงก์จาก Active Directory</p>
-                </div>
-              }
-            />
+            <Route path="/users" element={<UserManagementPage />} />
           </Routes>
         </main>
       </div>

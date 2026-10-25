@@ -10,12 +10,15 @@ import (
 	"syscall"
 	"time"
 
+	"docsearch/api/internal/auth"
 	"docsearch/api/internal/platform/config"
 	"docsearch/api/internal/platform/database"
 	"docsearch/api/internal/platform/health"
 	"docsearch/api/internal/platform/logger"
 	platmiddleware "docsearch/api/internal/platform/middleware"
 	"docsearch/api/internal/platform/response"
+	"docsearch/api/internal/user"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -90,6 +93,28 @@ func main() {
 	// Register Health endpoints
 	healthHandler := health.NewHandler(db)
 	healthHandler.RegisterRoutes(e)
+
+	// Auth & Denylist
+	denylist := auth.NewDenylist()
+	if db != nil && db.Pool != nil {
+		denylist.StartListener(ctx, cfg.DatabaseURL, db.Pool)
+	}
+	tokenValidator := auth.NewTokenValidator(denylist, []byte("dev-secret-key-12345678901234567890"), cfg.KeycloakURL, cfg.KeycloakClientID)
+
+	authHandler := auth.NewHandler(denylist, nil)
+	if db != nil {
+		authHandler = auth.NewHandler(denylist, db.Pool)
+	}
+	authHandler.RegisterRoutes(e, tokenValidator)
+
+	// User Management
+	var dbPool *pgxpool.Pool
+	if db != nil {
+		dbPool = db.Pool
+	}
+	userService := user.NewService(dbPool, nil, denylist)
+	userHandler := user.NewHandler(userService)
+	userHandler.RegisterRoutes(e, tokenValidator)
 
 	// Register API v1 placeholder group
 	v1 := e.Group("/api/v1")
