@@ -6,6 +6,27 @@
 
 ## 1. Quick Start & Daily Operations
 
+### 1.0 บัญชีผู้ใช้งานเริ่มต้น (Default Credentials)
+
+#### ก. บัญชีสำหรับเข้าใช้งานระบบเว็บแอปพลิเคชัน (Web SPA & API)
+| บทบาท (Role) | Username | Password | สิทธิ์การใช้งาน |
+|---|---|---|---|
+| **Admin** | `admin_user` | `Admin1234!` | ผู้ดูแลระบบสูงสุด (จัดการผู้ใช้, Merge ลูกค้า, ลบเอกสาร) |
+| **Staff** | `staff_user` | `Staff1234!` | ฝ่ายปฏิบัติการ (อัปโหลดเอกสาร, นำเข้า CSV, สร้าง Job Order) |
+| **Viewer** | `viewer_user` | `Viewer1234!` | อ่านอย่างเดียว (ค้นหาเอกสาร, ดาวน์โหลด, ดูรายงาน) |
+
+#### ข. บัญชีผู้ดูแลระบบ Infrastructure & Management
+| บริการ | URL / Port | Username | Password |
+|---|---|---|---|
+| **Keycloak Admin Console** | `http://localhost:8085` หรือ `/auth` | `admin` | `admin_password` |
+| **Grafana Dashboards** | `http://localhost:3001` | `admin` | `admin` |
+| **PostgreSQL Database** | `localhost:5432` (`docsearch_app`) | `docsearch` | `docsearch_password` |
+| **Samba NAS Share (testinfra)** | `localhost:1445` (share: `docstore`) | `docsearch` | `sambapassword` |
+| **SFTP Server (testinfra)** | `localhost:2222` | `docsearch` | `sftppassword` |
+| **OpenLDAP (testinfra)** | `localhost:389` / `636` | `cn=admin,dc=docsearch,dc=internal` | `adminpassword` |
+
+---
+
 ### 1.1 การเริ่มระบบบน Colima
 ```bash
 # 1. Start Colima VM
