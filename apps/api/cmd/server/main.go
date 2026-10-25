@@ -21,6 +21,8 @@ import (
 	"docsearch/api/internal/platform/logger"
 	platmiddleware "docsearch/api/internal/platform/middleware"
 	"docsearch/api/internal/platform/response"
+	"docsearch/api/internal/report"
+	"docsearch/api/internal/search"
 	"docsearch/api/internal/storage"
 	"docsearch/api/internal/user"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -142,6 +144,16 @@ func main() {
 	documentService := document.NewService(dbPool, fileStorage, nil)
 	documentHandler := document.NewHandler(documentService, downloadSecret)
 	documentHandler.RegisterRoutes(e, tokenValidator)
+
+	// Search Engine & Dashboard
+	searchService := search.NewService(dbPool)
+	searchHandler := search.NewHandler(searchService)
+	searchHandler.RegisterRoutes(e, tokenValidator)
+
+	// Analytics & Reports
+	reportService := report.NewService(dbPool)
+	reportHandler := report.NewHandler(reportService)
+	reportHandler.RegisterRoutes(e, tokenValidator)
 
 	// Register API v1 placeholder group
 	v1 := e.Group("/api/v1")

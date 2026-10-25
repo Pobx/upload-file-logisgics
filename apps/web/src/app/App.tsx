@@ -5,6 +5,7 @@ import { onServiceStatusChange } from '../lib/api-client';
 import { UserManagementPage } from '../features/user/UserManagementPage';
 import { CustomerManagementPage } from '../features/customer/CustomerManagementPage';
 import { CSVImportPage } from '../features/import/CSVImportPage';
+import { SearchPage } from '../features/search/SearchPage';
 import { Search, FileText, Upload, Users, Building2, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -92,54 +93,7 @@ export const App: React.FC = () => {
         {/* Main Content Area */}
         <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
           <Routes>
-            <Route
-              path="/"
-              element={
-                <div className="space-y-6">
-                  {/* Hero Search Section */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm text-center max-w-3xl mx-auto mt-6">
-                    <h1 className="text-2xl font-bold text-slate-800 mb-2">
-                      {t('search')}
-                    </h1>
-                    <p className="text-slate-500 text-sm mb-6">
-                      ค้นหาเอกสาร Job Order, B/L, Invoice หรือชื่อลูกค้า
-                    </p>
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <Search className="w-5 h-5 absolute left-3.5 top-3 text-slate-400" />
-                        <input
-                          type="text"
-                          placeholder={t('searchPlaceholder')}
-                          className="w-full pl-11 pr-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                        />
-                      </div>
-                      <button className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm">
-                        {t('search')}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Dashboard Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                    <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
-                      <h2 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-indigo-500" />
-                        {t('recentDocuments')}
-                      </h2>
-                      <p className="text-xs text-slate-400 italic">ยังไม่มีเอกสารอัปโหลดล่าสุด</p>
-                    </div>
-
-                    <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
-                      <h2 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <ShieldAlert className="w-4 h-4 text-amber-500" />
-                        {t('workQueue')}
-                      </h2>
-                      <p className="text-xs text-slate-400 italic">ไม่มีรายการเอกสารตกค้าง</p>
-                    </div>
-                  </div>
-                </div>
-              }
-            />
+            <Route path="/" element={<SearchPage />} />
             <Route path="/import" element={<CSVImportPage />} />
             <Route path="/customers" element={<CustomerManagementPage />} />
             <Route path="/users" element={<UserManagementPage />} />
