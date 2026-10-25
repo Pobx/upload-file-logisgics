@@ -178,6 +178,40 @@ func (s *ServiceImpl) SoftDelete(ctx context.Context, id uuid.UUID, userID uuid.
 	return nil
 }
 
+func (s *ServiceImpl) ListByJobOrderID(ctx context.Context, jobOrderID uuid.UUID) ([]Document, error) {
+	if s.pool == nil {
+		return []Document{}, nil
+	}
+
+	rows, err := s.pool.Query(ctx, `
+		SELECT id, job_order_id, document_type_id, file_name, mime_type, size_bytes, sha256,
+		       storage_provider, storage_ref, uploaded_by, provided_by_name, provided_by_type, created_at
+		FROM documents
+		WHERE job_order_id = $1 AND deleted_at IS NULL
+		ORDER BY created_at ASC
+	`, jobOrderID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var list []Document
+	for rows.Next() {
+		var doc Document
+		err := rows.Scan(
+			&doc.ID, &doc.JobOrderID, &doc.DocumentTypeID, &doc.FileName,
+			&doc.MimeType, &doc.SizeBytes, &doc.SHA256, &doc.StorageProvider,
+			&doc.StorageRef, &doc.UploadedBy, &doc.ProvidedByName, &doc.ProvidedByType,
+			&doc.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, doc)
+	}
+	return list, nil
+}
+
 func ptr(s string) *string {
 	return &s
 }

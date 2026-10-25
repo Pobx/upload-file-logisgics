@@ -98,8 +98,10 @@ func (h *Handler) Assign(c echo.Context) error {
 }
 
 func (h *Handler) RegisterRoutes(e *echo.Echo, validator *auth.TokenValidator) {
-	group := e.Group("/api/v1/job-orders", auth.RequireAuth(validator), auth.RequireRole("admin", "staff"))
-	group.POST("", h.Create)
-	group.GET("/:id", h.Get)
-	group.POST("/assign", h.Assign)
+	readGroup := e.Group("/api/v1/job-orders", auth.RequireAuth(validator), auth.RequireRole("admin", "staff", "viewer"))
+	readGroup.GET("/:id", h.Get)
+
+	writeGroup := e.Group("/api/v1/job-orders", auth.RequireAuth(validator), auth.RequireRole("admin", "staff"))
+	writeGroup.POST("", h.Create)
+	writeGroup.POST("/assign", h.Assign)
 }

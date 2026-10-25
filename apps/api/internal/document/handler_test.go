@@ -86,3 +86,24 @@ func TestDocumentHandler_Upload_And_SignedDownload(t *testing.T) {
 	assert.Equal(t, http.StatusOK, recDownload.Code)
 	assert.Equal(t, fileContent, recDownload.Body.String())
 }
+
+func TestDocumentHandler_ListByJobOrderID(t *testing.T) {
+	secretKey := []byte("test-download-secret-key-1234567")
+	svc := document.NewService(nil, nil, nil)
+	handler := document.NewHandler(svc, secretKey)
+
+	validator := auth.NewTokenValidator(nil, []byte("dev-secret"), "iss", "aud")
+	e := echo.New()
+	handler.RegisterRoutes(e, validator)
+
+	jobOrderID := uuid.New()
+	userID := uuid.New()
+	viewerToken, _ := auth.GenerateTestToken(userID, "viewer_user", []string{"viewer"}, "s1", "t1", 5*time.Minute)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/job-orders/"+jobOrderID.String()+"/documents", nil)
+	req.Header.Set("Authorization", "Bearer "+viewerToken)
+	rec := httptest.NewRecorder()
+	e.ServeHTTP(rec, req)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+}

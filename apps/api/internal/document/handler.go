@@ -156,11 +156,27 @@ func (h *Handler) Delete(c echo.Context) error {
 	return response.NoContentSuccess(c)
 }
 
+func (h *Handler) ListByJobOrderID(c echo.Context) error {
+	jobOrderIDStr := c.Param("id")
+	jobOrderID, err := uuid.Parse(jobOrderIDStr)
+	if err != nil {
+		return response.NotFound(c, "Job order not found")
+	}
+
+	docs, err := h.service.ListByJobOrderID(c.Request().Context(), jobOrderID)
+	if err != nil {
+		return response.Error(c, http.StatusInternalServerError, response.CodeInternalError, "Failed to list documents", nil)
+	}
+
+	return response.OK(c, docs)
+}
+
 func (h *Handler) RegisterRoutes(e *echo.Echo, validator *auth.TokenValidator) {
 	staffGroup := e.Group("/api/v1", auth.RequireAuth(validator), auth.RequireRole("admin", "staff"))
 	staffGroup.POST("/job-orders/:id/documents", h.Upload)
 
 	allGroup := e.Group("/api/v1", auth.RequireAuth(validator))
+	allGroup.GET("/job-orders/:id/documents", h.ListByJobOrderID)
 	allGroup.GET("/documents/:id/download-link", h.GetDownloadLink)
 
 	adminGroup := e.Group("/api/v1", auth.RequireAuth(validator), auth.RequireRole("admin"))

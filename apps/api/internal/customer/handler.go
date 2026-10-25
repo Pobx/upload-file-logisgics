@@ -110,10 +110,12 @@ func (h *Handler) Merge(c echo.Context) error {
 }
 
 func (h *Handler) RegisterRoutes(e *echo.Echo, validator *auth.TokenValidator) {
-	group := e.Group("/api/v1/customers", auth.RequireAuth(validator), auth.RequireRole("admin", "staff"))
-	group.GET("", h.List)
-	group.POST("", h.Create)
-	group.GET("/:id", h.Get)
+	readGroup := e.Group("/api/v1/customers", auth.RequireAuth(validator), auth.RequireRole("admin", "staff", "viewer"))
+	readGroup.GET("", h.List)
+	readGroup.GET("/:id", h.Get)
+
+	writeGroup := e.Group("/api/v1/customers", auth.RequireAuth(validator), auth.RequireRole("admin", "staff"))
+	writeGroup.POST("", h.Create)
 
 	// Admin only
 	adminGroup := e.Group("/api/v1/customers", auth.RequireAuth(validator), auth.RequireRole("admin"))
