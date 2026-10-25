@@ -63,5 +63,67 @@
       "enabled": true,
       "bearerOnly": true
     }
+  ],
+  "users": [
+    {
+      "username": "admin_user",
+      "enabled": true,
+      "email": "admin@docsearch.internal",
+      "firstName": "Admin",
+      "lastName": "System",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Admin1234!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin"],
+      "attributes": {
+        "department": ["IT Systems"],
+        "position": ["System Administrator"],
+        "employeeId": ["EMP-001"]
+      }
+    },
+    {
+      "username": "staff_user",
+      "enabled": true,
+      "email": "staff@docsearch.internal",
+      "firstName": "Somchai",
+      "lastName": "Logistics",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Staff1234!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["staff"],
+      "attributes": {
+        "department": ["Logistics Operations"],
+        "position": ["Logistics Officer"],
+        "employeeId": ["EMP-002"]
+      }
+    },
+    {
+      "username": "viewer_user",
+      "enabled": true,
+      "email": "viewer@docsearch.internal",
+      "firstName": "Somsri",
+      "lastName": "Auditor",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Viewer1234!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["viewer"],
+      "attributes": {
+        "department": ["Audit & Finance"],
+        "position": ["Financial Auditor"],
+        "employeeId": ["EMP-003"]
+      }
+    }
   ]
 }
