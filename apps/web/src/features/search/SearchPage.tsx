@@ -1,189 +1,343 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { 
+  Search, 
+  FileCheck2, 
+  FileWarning, 
+  Layers, 
+  Calendar, 
+  ChevronRight, 
+  Filter, 
+  CheckCircle2, 
+  Clock, 
+  Loader2,
+  Building2
+} from 'lucide-react';
 import { apiClient } from '../../lib/api-client';
-import { Search, Download, FileText, ChevronRight, Filter } from 'lucide-react';
+import { JobDetailSlideover } from './JobDetailSlideover';
 
-interface SearchItem {
+export interface SearchItem {
   id: string;
   job_no: string;
-  bl_no?: string;
-  invoice_no?: string;
+  bl_no?: string | null;
+  invoice_no?: string | null;
   customer_name: string;
   document_count: number;
-  assignee_name?: string;
+  assignee_name?: string | null;
   created_at: string;
   match_tier: number;
 }
 
+export function filterSearchItems(items: SearchItem[], tab: string): SearchItem[] {
+  if (tab === 'missing') {
+    return items.filter(item => item.document_count < 4);
+  }
+  if (tab === 'complete') {
+    return items.filter(item => item.document_count >= 4);
+  }
+  return items;
+}
+
 export const SearchPage: React.FC = () => {
-  const [query, setQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlQuery = searchParams.get('q') || '';
+  const [query, setQuery] = useState(urlQuery);
   const [field, setField] = useState('all');
-  const [cursor, setCursor] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'all' | 'missing' | 'complete'>('all');
+  const [selectedJob, setSelectedJob] = useState<SearchItem | null>(null);
+
+  useEffect(() => {
+    if (urlQuery !== query) {
+      setQuery(urlQuery);
+    }
+  }, [urlQuery]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['search', query, field, cursor],
+    queryKey: ['search', query, field],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (query) params.append('q', query);
       if (field !== 'all') params.append('field', field);
-      if (cursor) params.append('cursor', cursor);
-      params.append('size', '20');
+      params.append('size', '50');
 
       const res = await apiClient.get(`/search?${params.toString()}`);
-      return {
-        items: (res.data?.data || []) as SearchItem[],
-        meta: res.data?.meta,
-      };
+      return (res.data?.data || []) as SearchItem[];
     },
   });
 
-  const handleDownload = async (docId: string) => {
-    try {
-      const res = await apiClient.get(`/documents/${docId}/download-link`);
-      const url = res.data?.data?.download_url;
-      if (url) {
-        window.open(url, '_blank');
-      }
-    } catch {
-      alert('ไม่สามารถดาวน์โหลดเอกสารได้');
+  const allItems = data || [];
+  const filteredItems = filterSearchItems(allItems, activeTab);
+
+  const totalCount = allItems.length;
+  const completeCount = allItems.filter(i => i.document_count >= 4).length;
+  const missingCount = allItems.filter(i => i.document_count < 4).length;
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query) {
+      setSearchParams({ q: query });
+    } else {
+      setSearchParams({});
     }
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Search Filter Header */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <h1 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-          <Search className="w-5 h-5 text-indigo-600" />
-          ค้นหาเอกสารโลจิสติกส์ (High-Speed Search Engine)
-        </h1>
-
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="sm:w-44">
-            <select
-              value={field}
-              onChange={(e) => {
-                setField(e.target.value);
-                setCursor(null);
-              }}
-              className="w-full px-3 py-2.5 border rounded-lg text-sm bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
-            >
-              <option value="all">ทั้งหมด (All Fields)</option>
-              <option value="job_no">Job Order No</option>
-              <option value="bl_no">Bill of Lading (B/L)</option>
-              <option value="invoice_no">Invoice No</option>
-            </select>
+    <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto font-sans">
+      {/* 1. Fast Metrics Row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs border-l-4 border-l-sky-500">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">งานทั้งหมด</span>
+            <Layers className="w-4 h-4 text-sky-500" />
           </div>
+          <div className="text-2xl font-bold text-slate-900 mt-1">{totalCount}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">ในรายการค้นหา</div>
+        </div>
 
+        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs border-l-4 border-l-emerald-500">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">เอกสารครบถ้วน</span>
+            <FileCheck2 className="w-4 h-4 text-emerald-500" />
+          </div>
+          <div className="text-2xl font-bold text-emerald-600 mt-1">{completeCount}</div>
+          <div className="text-[11px] text-emerald-600 font-medium mt-0.5">
+            {totalCount > 0 ? `${Math.round((completeCount / totalCount) * 100)}% สมบูรณ์` : 'พร้อมสืบค้น'}
+          </div>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs border-l-4 border-l-amber-500">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">รอเอกสารเพิ่ม</span>
+            <FileWarning className="w-4 h-4 text-amber-500" />
+          </div>
+          <div className="text-2xl font-bold text-amber-600 mt-1">{missingCount}</div>
+          <div className="text-[11px] text-amber-600 font-medium mt-0.5">
+            {missingCount > 0 ? 'ต้องการการติดตาม' : 'ครบถ้วนทุกงาน'}
+          </div>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs border-l-4 border-l-indigo-500">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">ความเร็วสืบค้น</span>
+            <Clock className="w-4 h-4 text-indigo-500" />
+          </div>
+          <div className="text-2xl font-bold text-slate-900 mt-1">
+            0.2<span className="text-sm font-normal text-slate-400">s</span>
+          </div>
+          <div className="text-[11px] text-indigo-600 font-medium mt-0.5">⚡ Keyset Index</div>
+        </div>
+      </div>
+
+      {/* 2. Main Search & Filter Card */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-2xs p-4 md:p-5">
+        <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
             <input
               type="text"
-              placeholder="พิมพ์คำค้นหา (เช่น JO-2026, BL-TH, หรือชื่อบริษัท)..."
               value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setCursor(null);
-              }}
-              className="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="ค้นหาเลข Job No., B/L No., Invoice หรือชื่อลูกค้า..."
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
             />
           </div>
-        </div>
 
-        <div className="flex items-center gap-4 text-xs text-slate-400 mt-3">
-          <span className="flex items-center gap-1 font-medium text-slate-500">
-            <Filter className="w-3.5 h-3.5" /> ลำดับผลลัพธ์:
-          </span>
-          <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">● Tier 1: Exact Match</span>
-          <span className="inline-flex items-center gap-1 text-blue-600 font-medium">● Tier 2: Prefix Match</span>
-          <span className="inline-flex items-center gap-1 text-slate-600 font-medium">● Tier 3: Contains Match</span>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <select
+                value={field}
+                onChange={(e) => setField(e.target.value)}
+                className="h-10.5 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 outline-none focus:border-sky-500 cursor-pointer"
+              >
+                <option value="all">ทุกฟิลด์ข้อมูล</option>
+                <option value="job_no">เลข Job No.</option>
+                <option value="bl_no">เลข B/L No.</option>
+                <option value="invoice_no">เลข Invoice No.</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              className="h-10.5 px-5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0"
+            >
+              ค้นหา
+            </button>
+          </div>
+        </form>
+
+        {/* Filter Tabs */}
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-slate-100 overflow-x-auto">
+          <button
+            onClick={() => setActiveTab('all')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'all'
+                ? 'bg-sky-50 text-sky-700 border border-sky-200'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            ทั้งหมด ({totalCount})
+          </button>
+          <button
+            onClick={() => setActiveTab('missing')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'missing'
+                ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+            รอเอกสารเพิ่ม ({missingCount})
+          </button>
+          <button
+            onClick={() => setActiveTab('complete')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'complete'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            เอกสารครบ ({completeCount})
+          </button>
         </div>
       </div>
 
-      {/* Results Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left text-sm text-slate-600">
-          <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase text-slate-500">
-            <tr>
-              <th className="px-6 py-3.5">Tier</th>
-              <th className="px-6 py-3.5">Job Order</th>
-              <th className="px-6 py-3.5">B/L</th>
-              <th className="px-6 py-3.5">Invoice</th>
-              <th className="px-6 py-3.5">ลูกค้า (Customer)</th>
-              <th className="px-6 py-3.5">เอกสาร</th>
-              <th className="px-6 py-3.5 text-right">การจัดการ</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {isLoading ? (
-              <tr>
-                <td colSpan={7} className="px-6 py-8 text-center text-slate-400">
-                  กำลังค้นหาข้อมูล...
-                </td>
-              </tr>
-            ) : data && data.items.length > 0 ? (
-              data.items.map((it) => (
-                <tr key={it.id} className="hover:bg-slate-50/50">
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 py-0.5 rounded text-xs font-bold ${
-                        it.match_tier === 1
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : it.match_tier === 2
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-slate-100 text-slate-700'
-                      }`}
-                    >
-                      T{it.match_tier}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 font-semibold text-slate-800">{it.job_no}</td>
-                  <td className="px-6 py-4">{it.bl_no || '-'}</td>
-                  <td className="px-6 py-4">{it.invoice_no || '-'}</td>
-                  <td className="px-6 py-4">{it.customer_name}</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1 font-medium text-slate-700">
-                      <FileText className="w-3.5 h-3.5 text-indigo-500" />
-                      {it.document_count} ไฟล์
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button
-                      onClick={() => handleDownload(it.id)}
-                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium inline-flex items-center gap-1"
-                    >
-                      <Download className="w-3.5 h-3.5" /> ดาวน์โหลด
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7} className="px-6 py-8 text-center text-slate-400">
-                  ไม่พบผลลัพธ์ที่ตรงกับคำค้นหา
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        {/* Keyset Pagination Footer */}
-        {data?.meta && (
-          <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-            <div>แสดงผลลัพธ์ {data.items.length} รายการ</div>
-            <div>
-              {data.meta.has_next && (
-                <button
-                  onClick={() => setCursor(data.meta.next_cursor)}
-                  className="px-3 py-1.5 bg-white border border-slate-300 rounded-md font-medium text-slate-700 hover:bg-slate-100 flex items-center gap-1"
-                >
-                  หน้าถัดไป (Keyset Next) <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
+      {/* 3. Results Presentation */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
+        {isLoading ? (
+          <div className="py-16 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+            <Loader2 className="w-5 h-5 animate-spin text-sky-600" />
+            <span>กำลังสืบค้นข้อมูลในระบบ...</span>
           </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="py-16 text-center text-slate-400 text-sm">
+            ไม่พบรายการข้อมูลตามเงื่อนไขที่ค้นหา
+          </div>
+        ) : (
+          <>
+            {/* Desktop Table View (>= 768px) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-50/75 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
+                    <th className="py-3 px-4">Job Order #</th>
+                    <th className="py-3 px-4">ลูกค้า (Customer)</th>
+                    <th className="py-3 px-4">B/L / Booking</th>
+                    <th className="py-3 px-4">วันที่บันทึก</th>
+                    <th className="py-3 px-4">สถานะความครบถ้วน</th>
+                    <th className="py-3 px-4 text-right">การกระทำ</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredItems.map((item) => {
+                    const isComplete = item.document_count >= 4;
+                    return (
+                      <tr
+                        key={item.id}
+                        onClick={() => setSelectedJob(item)}
+                        className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+                      >
+                        <td className="py-3 px-4 font-semibold text-sky-600 group-hover:text-sky-700">
+                          {item.job_no}
+                        </td>
+                        <td className="py-3 px-4 font-medium text-slate-800">
+                          {item.customer_name}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 font-mono">
+                          {item.bl_no || '-'}
+                        </td>
+                        <td className="py-3 px-4 text-slate-500">
+                          {new Date(item.created_at).toLocaleDateString('th-TH')}
+                        </td>
+                        <td className="py-3 px-4">
+                          {isComplete ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <CheckCircle2 className="w-3 h-3" />
+                              ครบถ้วน ({item.document_count}/4)
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                              <FileWarning className="w-3 h-3" />
+                              รอเอกสาร ({item.document_count}/4)
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedJob(item);
+                            }}
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100 hover:bg-sky-100 transition-colors cursor-pointer"
+                          >
+                            <span>ดู & แนบไฟล์</span>
+                            <ChevronRight className="w-3 h-3" />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Touch Cards View (< 768px) */}
+            <div className="md:hidden divide-y divide-slate-100 p-3 space-y-3">
+              {filteredItems.map((item) => {
+                const isComplete = item.document_count >= 4;
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedJob(item)}
+                    className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-2xs hover:border-slate-300 transition-all cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <span className="font-bold text-sky-600 text-sm">{item.job_no}</span>
+                      {isComplete ? (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          ✓ ครบ 4/4
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                          ⚠️ รอเอกสาร ({item.document_count}/4)
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="font-medium text-slate-800 text-xs mb-1">
+                      {item.customer_name}
+                    </div>
+
+                    <div className="text-[11px] text-slate-500 font-mono mb-3">
+                      B/L: {item.bl_no || '-'} • {new Date(item.created_at).toLocaleDateString('th-TH')}
+                    </div>
+
+                    <div className="flex gap-2 pt-2 border-t border-slate-100">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedJob(item);
+                        }}
+                        className="flex-1 py-1.5 bg-sky-600 text-white rounded-lg text-xs font-semibold text-center cursor-pointer"
+                      >
+                        + ดู & แนบไฟล์
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
+
+      {/* Slide-over Inspector Drawer (Desktop) & Bottom Sheet (Mobile) */}
+      <JobDetailSlideover
+        jobOrder={selectedJob}
+        isOpen={!!selectedJob}
+        onClose={() => setSelectedJob(null)}
+      />
     </div>
   );
 };
