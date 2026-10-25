@@ -19,11 +19,33 @@ export interface CursorMeta {
   has_next: boolean;
 }
 
+const TOKEN_KEY = 'docsearch_token';
+let currentToken: string | null = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
+
+export const setAuthToken = (token: string | null) => {
+  currentToken = token;
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token);
+  } else {
+    localStorage.removeItem(TOKEN_KEY);
+  }
+};
+
+export const getAuthToken = () => currentToken;
+
 export const apiClient = axios.create({
   baseURL: '/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+// Request Interceptor: attach Bearer token
+apiClient.interceptors.request.use((config) => {
+  if (currentToken) {
+    config.headers.Authorization = `Bearer ${currentToken}`;
+  }
+  return config;
 });
 
 // Broadcast channel for multi-tab logout synchronization (SPEC 8.4)
@@ -58,6 +80,7 @@ apiClient.interceptors.response.use(
 
     // Handle Token Revoked or Expired
     if (status === 401 || code === '4010' || code === '4011') {
+      setAuthToken(null);
       authChannel.postMessage({ type: 'LOGOUT' });
       // Redirect to login if not already there
       if (!window.location.pathname.startsWith('/login')) {

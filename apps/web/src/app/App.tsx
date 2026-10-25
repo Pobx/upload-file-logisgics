@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { onServiceStatusChange } from '../lib/api-client';
+import { onServiceStatusChange, setAuthToken, apiClient } from '../lib/api-client';
 import { UserManagementPage } from '../features/user/UserManagementPage';
 import { CustomerManagementPage } from '../features/customer/CustomerManagementPage';
 import { CSVImportPage } from '../features/import/CSVImportPage';
 import { SearchPage } from '../features/search/SearchPage';
+import { LoginPage } from '../features/auth/LoginPage';
 import { Search, FileText, Upload, Users, Building2, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -86,6 +87,18 @@ export const App: React.FC = () => {
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                 <span>Admin User</span>
               </div>
+              <button
+                onClick={async () => {
+                  try {
+                    await apiClient.post('/auth/logout');
+                  } catch (_) {}
+                  setAuthToken(null);
+                  window.location.href = '/login';
+                }}
+                className="text-xs text-slate-500 hover:text-rose-600 font-medium px-2 py-1 rounded hover:bg-slate-100 transition-colors"
+              >
+                {t('logout')}
+              </button>
             </div>
           </div>
         </header>
@@ -94,6 +107,7 @@ export const App: React.FC = () => {
         <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
           <Routes>
             <Route path="/" element={<SearchPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/import" element={<CSVImportPage />} />
             <Route path="/customers" element={<CustomerManagementPage />} />
             <Route path="/users" element={<UserManagementPage />} />

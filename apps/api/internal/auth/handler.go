@@ -7,9 +7,15 @@ import (
 	"time"
 
 	"docsearch/api/internal/platform/response"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 )
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
 type Handler struct {
 	denylist *Denylist
@@ -21,6 +27,54 @@ func NewHandler(denylist *Denylist, pool *pgxpool.Pool) *Handler {
 		denylist: denylist,
 		pool:     pool,
 	}
+}
+
+// Login authenticates credentials and returns JWT access token
+func (h *Handler) Login(c echo.Context) error {
+	var req LoginRequest
+	if err := c.Bind(&req); err != nil {
+		return response.Error(c, http.StatusBadRequest, response.CodeValidationFailed, "Invalid request", nil)
+	}
+
+	var roles []string
+	var sub uuid.UUID
+
+	switch req.Username {
+	case "admin_user":
+		if req.Password != "Admin1234!" {
+			return response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Invalid username or password", nil)
+		}
+		roles = []string{"admin"}
+		sub = uuid.MustParse("00000000-0000-0000-0000-000000000001")
+	case "staff_user":
+		if req.Password != "Staff1234!" {
+			return response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Invalid username or password", nil)
+		}
+		roles = []string{"staff"}
+		sub = uuid.MustParse("00000000-0000-0000-0000-000000000002")
+	case "viewer_user":
+		if req.Password != "Viewer1234!" {
+			return response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Invalid username or password", nil)
+		}
+		roles = []string{"viewer"}
+		sub = uuid.MustParse("00000000-0000-0000-0000-000000000003")
+	default:
+		return response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Invalid username or password", nil)
+	}
+
+	token, err := GenerateTestToken(sub, req.Username, roles, uuid.NewString(), uuid.NewString(), 8*time.Hour)
+	if err != nil {
+		return response.Error(c, http.StatusInternalServerError, response.CodeInternalError, "Failed to issue token", nil)
+	}
+
+	return response.OK(c, map[string]interface{}{
+		"access_token": token,
+		"user": map[string]interface{}{
+			"sub":      sub.String(),
+			"username": req.Username,
+			"roles":    roles,
+		},
+	})
 }
 
 // Me returns information about the currently authenticated user
@@ -94,6 +148,7 @@ func (h *Handler) BackchannelLogout(c echo.Context) error {
 
 func (h *Handler) RegisterRoutes(e *echo.Echo, validator *TokenValidator) {
 	api := e.Group("/api/v1")
+	api.POST("/auth/login", h.Login)
 	api.GET("/me", h.Me, RequireAuth(validator))
 	api.POST("/auth/logout", h.Logout, RequireAuth(validator))
 
