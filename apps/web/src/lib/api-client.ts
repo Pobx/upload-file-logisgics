@@ -33,6 +33,35 @@ export const setAuthToken = (token: string | null) => {
 
 export const getAuthToken = () => currentToken;
 
+export interface UserInfo {
+  username: string;
+  roles: string[];
+  sub?: string;
+}
+
+export const getUserInfo = (): UserInfo | null => {
+  const token = getAuthToken();
+  if (!token) return null;
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const payload = JSON.parse(atob(parts[1]));
+    let roles: string[] = [];
+    if (Array.isArray(payload.roles)) {
+      roles = payload.roles;
+    } else if (payload.realm_access?.roles) {
+      roles = payload.realm_access.roles;
+    }
+    return {
+      username: payload.preferred_username || payload.username || 'User',
+      roles: roles.map((r: string) => r.toLowerCase()),
+      sub: payload.sub,
+    };
+  } catch (_) {
+    return null;
+  }
+};
+
 export const apiClient = axios.create({
   baseURL: '/api/v1',
   headers: {
