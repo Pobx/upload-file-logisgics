@@ -11,6 +11,8 @@ import (
 	"time"
 
 	"docsearch/api/internal/auth"
+	"docsearch/api/internal/customer"
+	"docsearch/api/internal/joborder"
 	"docsearch/api/internal/platform/config"
 	"docsearch/api/internal/platform/database"
 	"docsearch/api/internal/platform/health"
@@ -115,6 +117,16 @@ func main() {
 	userService := user.NewService(dbPool, nil, denylist)
 	userHandler := user.NewHandler(userService)
 	userHandler.RegisterRoutes(e, tokenValidator)
+
+	// Customer Management
+	customerService := customer.NewService(dbPool, nil)
+	customerHandler := customer.NewHandler(customerService)
+	customerHandler.RegisterRoutes(e, tokenValidator)
+
+	// Job Order Management
+	jobOrderService := joborder.NewService(dbPool, nil)
+	jobOrderHandler := joborder.NewHandler(jobOrderService)
+	jobOrderHandler.RegisterRoutes(e, tokenValidator)
 
 	// Register API v1 placeholder group
 	v1 := e.Group("/api/v1")

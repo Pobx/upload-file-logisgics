@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { onServiceStatusChange } from '../lib/api-client';
 import { UserManagementPage } from '../features/user/UserManagementPage';
-import { Search, FileText, Upload, Users, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { CustomerManagementPage } from '../features/customer/CustomerManagementPage';
+import { Search, FileText, Upload, Users, Building2, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export const App: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -60,6 +61,10 @@ export const App: React.FC = () => {
                 <Link to="/import" className="hover:text-indigo-600 flex items-center gap-1.5 py-1">
                   <Upload className="w-4 h-4" />
                   {t('importCSV')}
+                </Link>
+                <Link to="/customers" className="hover:text-indigo-600 flex items-center gap-1.5 py-1">
+                  <Building2 className="w-4 h-4" />
+                  {t('customers')}
                 </Link>
                 <Link to="/users" className="hover:text-indigo-600 flex items-center gap-1.5 py-1">
                   <Users className="w-4 h-4" />
@@ -150,6 +155,7 @@ export const App: React.FC = () => {
                 </div>
               }
             />
+            <Route path="/customers" element={<CustomerManagementPage />} />
             <Route path="/users" element={<UserManagementPage />} />
           </Routes>
         </main>
