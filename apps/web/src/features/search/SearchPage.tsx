@@ -6,13 +6,10 @@ import {
   FileCheck2, 
   FileWarning, 
   Layers, 
-  Calendar, 
   ChevronRight, 
-  Filter, 
   CheckCircle2, 
   Clock, 
-  Loader2,
-  Building2
+  Loader2
 } from 'lucide-react';
 import { apiClient } from '../../lib/api-client';
 import { JobDetailSlideover } from './JobDetailSlideover';

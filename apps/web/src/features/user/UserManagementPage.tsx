@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '../../lib/api-client';
-import { Users, UserPlus, RefreshCw, Shield, CheckCircle, XCircle } from 'lucide-react';
+import { apiClient, getUserInfo } from '../../lib/api-client';
+import { Users, UserPlus, RefreshCw, Shield, CheckCircle2, XCircle, X } from 'lucide-react';
 
 interface UserProfile {
   sub: string;
@@ -26,12 +26,16 @@ export const UserManagementPage: React.FC = () => {
   const [newLastName, setNewLastName] = useState('');
   const [newRole, setNewRole] = useState('staff');
 
-  const { data: users, isLoading } = useQuery<UserProfile[]>({
+  const userInfo = getUserInfo();
+  const isAdmin = userInfo?.roles?.includes('admin') || false;
+
+  const { data: users = [], isLoading } = useQuery<UserProfile[]>({
     queryKey: ['users'],
     queryFn: async () => {
       const res = await apiClient.get('/users?page=1&size=50');
       return res.data?.data || [];
     },
+    enabled: isAdmin,
   });
 
   const syncMutation = useMutation({
@@ -73,199 +77,205 @@ export const UserManagementPage: React.FC = () => {
       password: newPassword,
       first_name: newFirstName,
       last_name: newLastName,
-      roles: [newRole],
+      role: newRole,
     });
   };
 
+  if (!isAdmin) {
+    return (
+      <div className="p-8 max-w-md mx-auto text-center font-sans">
+        <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-2xs">
+          <Shield className="w-10 h-10 text-rose-500 mx-auto mb-2" />
+          <h2 className="text-base font-bold text-slate-900">ไม่มีสิทธิ์เข้าถึงหน้านี้</h2>
+          <p className="text-xs text-slate-500 mt-1">
+            เฉพาะผู้ดูแลระบบ (Admin) เท่านั้นที่สามารถจัดการผู้ใช้งานและสิทธิ์ความปลอดภัยได้
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+    <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto font-sans">
+      {/* Header */}
+      <div className="bg-white p-5 md:p-6 rounded-xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Users className="w-5 h-5 text-indigo-600" />
-            การจัดการผู้ใช้งานในระบบ (User Management)
+          <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <Users className="w-5 h-5 text-sky-600" />
+            จัดการบัญชีผู้ใช้งาน & สิทธิ์ (User & Access Control)
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            จัดการบัญชีผู้ใช้งานทั้ง Local (Keycloak) และผู้ใช้งานจาก Active Directory / LDAP
+          <p className="text-xs text-slate-500 mt-1">
+            ซิงค์บัญชีผู้ใช้จาก Keycloak OIDC, กำหนดบทบาทสิทธิ์ (Roles), และเพิกถอนสิทธิ์แบบ Real-time
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2">
           <button
             onClick={() => syncMutation.mutate()}
             disabled={syncMutation.isPending}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
           >
-            <RefreshCw className={`w-4 h-4 ${syncMutation.isPending ? 'animate-spin' : ''}`} />
-            ซิงก์ข้อมูล (Sync AD)
+            <RefreshCw className={`w-3.5 h-3.5 ${syncMutation.isPending ? 'animate-spin' : ''}`} />
+            <span>ซิงค์ผู้ใช้</span>
           </button>
+
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer transition-colors"
           >
             <UserPlus className="w-4 h-4" />
-            เพิ่มผู้ใช้ใหม่
+            <span>+ สร้างผู้ใช้</span>
           </button>
         </div>
       </div>
 
-      {/* User Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase text-slate-500">
-              <tr>
-                <th className="px-6 py-3.5">ชื่อผู้ใช้ / รหัสพนักงาน</th>
-                <th className="px-6 py-3.5">ชื่อ-นามสกุล</th>
-                <th className="px-6 py-3.5">แผนก / ตำแหน่ง</th>
-                <th className="px-6 py-3.5">แหล่งข้อมูล</th>
-                <th className="px-6 py-3.5">สถานะ</th>
-                <th className="px-6 py-3.5 text-right">การจัดการ</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-slate-400">
-                    กำลังโหลดข้อมูลผู้ใช้...
-                  </td>
+      {/* Users Table */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
+        {isLoading ? (
+          <div className="py-12 text-center text-xs text-slate-400">กำลังโหลดรายชื่อผู้ใช้...</div>
+        ) : users.length === 0 ? (
+          <div className="py-12 text-center text-xs text-slate-400">ไม่พบข้อมูลผู้ใช้งาน</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px]">
+                  <th className="py-3 px-4">ชื่อผู้ใช้ (Username)</th>
+                  <th className="py-3 px-4">ชื่อ - นามสกุล</th>
+                  <th className="py-3 px-4">แผนก / ตำแหน่ง</th>
+                  <th className="py-3 px-4">แหล่งที่มา</th>
+                  <th className="py-3 px-4">สถานะ</th>
+                  <th className="py-3 px-4 text-right">การจัดการ</th>
                 </tr>
-              ) : users && users.length > 0 ? (
-                users.map((u) => (
-                  <tr key={u.sub} className="hover:bg-slate-50/50">
-                    <td className="px-6 py-4 font-medium text-slate-800">
-                      <div>{u.username}</div>
-                      {u.employee_id && (
-                        <div className="text-xs text-slate-400">ID: {u.employee_id}</div>
-                      )}
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {users.map((u) => (
+                  <tr key={u.sub} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-3 px-4 font-semibold text-slate-900">{u.username}</td>
+                    <td className="py-3 px-4 text-slate-700">
+                      {u.first_name || u.last_name ? `${u.first_name || ''} ${u.last_name || ''}` : '-'}
                     </td>
-                    <td className="px-6 py-4">
-                      {u.first_name} {u.last_name}
+                    <td className="py-3 px-4 text-slate-500">
+                      {u.department || u.position ? `${u.department || ''} ${u.position ? `(${u.position})` : ''}` : '-'}
                     </td>
-                    <td className="px-6 py-4">
-                      <div>{u.department || '-'}</div>
-                      <div className="text-xs text-slate-400">{u.position}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                        u.source === 'ldap' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
-                        {u.source.toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
+                    <td className="py-3 px-4 text-slate-400 font-mono text-[11px]">{u.source}</td>
+                    <td className="py-3 px-4">
                       {u.is_active ? (
-                        <span className="inline-flex items-center gap-1 text-emerald-600 text-xs font-medium">
-                          <CheckCircle className="w-3.5 h-3.5" /> ใช้งานอยู่
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <CheckCircle2 className="w-3 h-3" />
+                          ใช้งานปกติ
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-slate-400 text-xs font-medium">
-                          <XCircle className="w-3.5 h-3.5" /> ปิดใช้งาน
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                          <XCircle className="w-3 h-3" />
+                          ปิดการใช้งาน
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      {u.is_active && u.source === 'local' && (
+                    <td className="py-3 px-4 text-right">
+                      {u.is_active && (
                         <button
-                          onClick={() => disableMutation.mutate(u.sub)}
-                          className="text-xs text-rose-600 hover:text-rose-800 font-medium"
+                          onClick={() => {
+                            if (confirm(`คุณต้องการระงับการใช้งานบัญชี ${u.username} ใช่หรือไม่?`)) {
+                              disableMutation.mutate(u.sub);
+                            }
+                          }}
+                          className="px-2.5 py-1 text-xs border border-rose-200 hover:bg-rose-50 text-rose-600 rounded-md font-medium cursor-pointer transition-colors"
                         >
-                          ระงับสิทธิ์
+                          ระงับบัญชี
                         </button>
                       )}
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-slate-400">
-                    ไม่พบข้อมูลผู้ใช้ในระบบ
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
-      {/* Create Modal */}
+      {/* Create User Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <Shield className="w-5 h-5 text-indigo-600" />
-              เพิ่มผู้ใช้งานใหม่ (Local User)
-            </h2>
-            <form onSubmit={handleCreate} className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-bold text-slate-900">สร้างบัญชีผู้ใช้งานใหม่</h3>
+              <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-600 cursor-pointer">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreate} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">Username *</label>
+                <label className="block font-semibold text-slate-700 mb-1">ชื่อผู้ใช้งาน (Username) *</label>
                 <input
                   type="text"
-                  required
                   value={newUsername}
                   onChange={(e) => setNewUsername(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  required
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500"
                 />
               </div>
+
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">รหัสผ่านชั่วคราว *</label>
+                <label className="block font-semibold text-slate-700 mb-1">รหัสผ่านเริ่มต้น *</label>
                 <input
                   type="password"
-                  required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                  required
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">ชื่อจริง *</label>
+                  <label className="block font-semibold text-slate-700 mb-1">ชื่อจริง</label>
                   <input
                     type="text"
-                    required
                     value={newFirstName}
                     onChange={(e) => setNewFirstName(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">นามสกุล *</label>
+                  <label className="block font-semibold text-slate-700 mb-1">นามสกุล</label>
                   <input
                     type="text"
-                    required
                     value={newLastName}
                     onChange={(e) => setNewLastName(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500"
                   />
                 </div>
               </div>
+
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">สิทธิ์การใช้งาน (Role)</label>
+                <label className="block font-semibold text-slate-700 mb-1">บทบาทสิทธิ์ (Role) *</label>
                 <select
                   value={newRole}
                   onChange={(e) => setNewRole(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:bg-white focus:outline-none focus:border-sky-500 cursor-pointer"
                 >
-                  <option value="staff">Staff (จัดการเอกสารและข้อมูล)</option>
+                  <option value="staff">Staff / CS (ค้นหาและอัปโหลดเอกสาร)</option>
                   <option value="admin">Admin (ผู้ดูแลระบบสูงสุด)</option>
-                  <option value="viewer">Viewer (ค้นหาและอ่านอย่างเดียว)</option>
+                  <option value="viewer">Viewer (อ่านและดาวน์โหลดอย่างเดียว)</option>
                 </select>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex gap-2 pt-3">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 hover:bg-slate-50"
+                  className="flex-1 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 font-medium text-slate-700 cursor-pointer"
                 >
                   ยกเลิก
                 </button>
                 <button
                   type="submit"
                   disabled={createMutation.isPending}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium"
+                  className="flex-1 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold cursor-pointer shadow-xs disabled:opacity-50"
                 >
-                  {createMutation.isPending ? 'กำลังบันทึก...' : 'บันทึกผู้ใช้'}
+                  {createMutation.isPending ? 'กำลังสร้าง...' : 'สร้างบัญชีผู้ใช้'}
                 </button>
               </div>
             </form>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { apiClient, setAuthToken } from '../../lib/api-client';
-import { Lock, LogIn, ShieldAlert, CheckCircle2, UserCheck, Shield } from 'lucide-react';
+import { FileText, LogIn, ShieldAlert, UserCheck, Shield, Eye, Loader2 } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -41,20 +41,20 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans antialiased">
       <div className="bg-white max-w-md w-full rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
-        {/* Header */}
-        <div className="bg-indigo-600 p-6 text-white text-center">
-          <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-3 backdrop-blur-sm">
-            <Lock className="w-6 h-6 text-white" />
+        {/* Brand Header */}
+        <div className="bg-gradient-to-br from-sky-600 to-sky-700 p-7 text-white text-center">
+          <div className="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+            <FileText className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-xl font-bold">เข้าสู่ระบบจัดการเอกสาร</h1>
-          <p className="text-xs text-indigo-100 mt-1">
-            Logistics Document Upload & Search System
+          <h1 className="text-xl font-bold tracking-tight">DocFlow Logistics</h1>
+          <p className="text-xs text-sky-100 mt-1">
+            ระบบจัดเก็บและสืบค้นเอกสารโลจิสติกส์
           </p>
         </div>
 
-        <div className="p-6 space-y-5">
+        <div className="p-6 md:p-8 space-y-5">
           {/* Reason Notification Banner */}
           {reason && (
             <div className="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl flex items-start gap-2.5 text-xs">
@@ -66,24 +66,24 @@ export const LoginPage: React.FC = () => {
                     : 'เซสชันการใช้งานหมดอายุ (Session Expired)'}
                 </p>
                 <p className="text-amber-700 mt-0.5">
-                  กรุณาเข้าสู่ระบบใหม่อีกครั้งเพื่อดำเนินการต่อ
+                  กรุณาเข้าสู่ระบบใหม่อีกครั้งเพื่อเริ่มทำงาน
                 </p>
               </div>
             </div>
           )}
 
-          {/* Error Message */}
           {errorMsg && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-xl text-xs font-medium">
-              {errorMsg}
+            <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-xl text-xs flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 shrink-0" />
+              <span>{errorMsg}</span>
             </div>
           )}
 
-          {/* Quick Login Preset Buttons */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-              เข้าสู่ระบบด่วน (Quick Presets)
-            </label>
+          {/* Quick Preset Buttons */}
+          <div className="space-y-2">
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              เลือกบัญชีจำลองเพื่อทดสอบด่วน:
+            </div>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
@@ -92,11 +92,11 @@ export const LoginPage: React.FC = () => {
                   setPassword('Admin1234!');
                   handleLogin('admin_user', 'Admin1234!');
                 }}
-                className="p-2.5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-center transition-all group"
+                className="flex flex-col items-center p-2.5 rounded-lg border border-slate-200 hover:border-sky-500 hover:bg-sky-50/50 transition-all text-center group cursor-pointer"
               >
-                <Shield className="w-4 h-4 text-indigo-600 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                <div className="text-xs font-bold text-slate-800">Admin</div>
-                <div className="text-[10px] text-slate-400">สิทธิ์เต็ม</div>
+                <Shield className="w-4 h-4 text-purple-600 mb-1 group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-slate-800">Admin</span>
+                <span className="text-[10px] text-slate-400">4 เมนู</span>
               </button>
 
               <button
@@ -106,11 +106,11 @@ export const LoginPage: React.FC = () => {
                   setPassword('Staff1234!');
                   handleLogin('staff_user', 'Staff1234!');
                 }}
-                className="p-2.5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-center transition-all group"
+                className="flex flex-col items-center p-2.5 rounded-lg border border-slate-200 hover:border-sky-500 hover:bg-sky-50/50 transition-all text-center group cursor-pointer"
               >
-                <UserCheck className="w-4 h-4 text-blue-600 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                <div className="text-xs font-bold text-slate-800">Staff</div>
-                <div className="text-[10px] text-slate-400">ปฏิบัติการ</div>
+                <UserCheck className="w-4 h-4 text-sky-600 mb-1 group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-slate-800">CS Staff</span>
+                <span className="text-[10px] text-slate-400">3 เมนู</span>
               </button>
 
               <button
@@ -120,58 +120,68 @@ export const LoginPage: React.FC = () => {
                   setPassword('Viewer1234!');
                   handleLogin('viewer_user', 'Viewer1234!');
                 }}
-                className="p-2.5 bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-center transition-all group"
+                className="flex flex-col items-center p-2.5 rounded-lg border border-slate-200 hover:border-sky-500 hover:bg-sky-50/50 transition-all text-center group cursor-pointer"
               >
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                <div className="text-xs font-bold text-slate-800">Viewer</div>
-                <div className="text-[10px] text-slate-400">อ่านเท่านั้น</div>
+                <Eye className="w-4 h-4 text-emerald-600 mb-1 group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-slate-800">Viewer</span>
+                <span className="text-[10px] text-slate-400">2 เมนู</span>
               </button>
             </div>
           </div>
 
-          <div className="relative flex py-1 items-center">
-            <div className="flex-grow border-t border-slate-200"></div>
-            <span className="flex-shrink mx-3 text-xs text-slate-400 font-medium">หรือกรอกชื่อผู้ใช้</span>
-            <div className="flex-grow border-t border-slate-200"></div>
+          <div className="relative flex items-center justify-center my-4">
+            <div className="border-t border-slate-200 w-full"></div>
+            <span className="bg-white px-2.5 text-[11px] text-slate-400 uppercase font-medium absolute">
+              หรือเข้าสู่ระบบด้วยตนเอง
+            </span>
           </div>
 
           {/* Form */}
           <form onSubmit={handleFormSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 ชื่อผู้ใช้งาน (Username)
               </label>
               <input
                 type="text"
-                required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="เช่น admin_user, staff_user"
-                className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                required
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                placeholder="ระบุชื่อผู้ใช้งาน..."
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 รหัสผ่าน (Password)
               </label>
               <input
                 type="password"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                required
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                placeholder="ระบุรหัสผ่าน..."
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-colors"
+              className="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-700 disabled:opacity-60 text-white font-semibold text-sm rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
-              <LogIn className="w-4 h-4" />
-              {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>กำลังเข้าสู่ระบบ...</span>
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  <span>เข้าสู่ระบบ (Sign In)</span>
+                </>
+              )}
             </button>
           </form>
         </div>
