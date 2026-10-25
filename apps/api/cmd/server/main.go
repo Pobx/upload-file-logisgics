@@ -12,6 +12,7 @@ import (
 
 	"docsearch/api/internal/auth"
 	"docsearch/api/internal/customer"
+	"docsearch/api/internal/document"
 	"docsearch/api/internal/importer"
 	"docsearch/api/internal/joborder"
 	"docsearch/api/internal/platform/config"
@@ -20,6 +21,7 @@ import (
 	"docsearch/api/internal/platform/logger"
 	platmiddleware "docsearch/api/internal/platform/middleware"
 	"docsearch/api/internal/platform/response"
+	"docsearch/api/internal/storage"
 	"docsearch/api/internal/user"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
@@ -133,6 +135,13 @@ func main() {
 	importerService := importer.NewService(dbPool)
 	importerHandler := importer.NewHandler(importerService)
 	importerHandler.RegisterRoutes(e, tokenValidator)
+
+	// Document Upload & Signed Download
+	downloadSecret := []byte("docsearch-secret-key-32-bytes-long!")
+	fileStorage := storage.NewSharedFolderStorage("./data/docstore", downloadSecret)
+	documentService := document.NewService(dbPool, fileStorage, nil)
+	documentHandler := document.NewHandler(documentService, downloadSecret)
+	documentHandler.RegisterRoutes(e, tokenValidator)
 
 	// Register API v1 placeholder group
 	v1 := e.Group("/api/v1")
