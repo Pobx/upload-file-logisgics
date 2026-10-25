@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { onServiceStatusChange } from '../lib/api-client';
 import { UserManagementPage } from '../features/user/UserManagementPage';
 import { CustomerManagementPage } from '../features/customer/CustomerManagementPage';
+import { CSVImportPage } from '../features/import/CSVImportPage';
 import { Search, FileText, Upload, Users, Building2, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -139,22 +140,7 @@ export const App: React.FC = () => {
                 </div>
               }
             />
-            <Route
-              path="/import"
-              element={
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm max-w-2xl mx-auto mt-6">
-                  <h1 className="text-xl font-bold text-slate-800 mb-2">{t('importCSV')}</h1>
-                  <p className="text-sm text-slate-500 mb-6">
-                    อัปโหลดไฟล์ CSV รายการ Job Order (รองรับ 100,000 แถว พร้อมระบบ Reconcile อัตโนมัติ)
-                  </p>
-                  <div className="border-2 border-dashed border-slate-300 rounded-xl p-10 text-center hover:bg-slate-50 cursor-pointer transition-colors">
-                    <Upload className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-                    <p className="text-sm font-medium text-slate-700">ลากไฟล์ CSV มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
-                    <p className="text-xs text-slate-400 mt-1">UTF-8, คั่นด้วย comma (,), ขนาดไฟล์ไม่เกิน 50 MB</p>
-                  </div>
-                </div>
-              }
-            />
+            <Route path="/import" element={<CSVImportPage />} />
             <Route path="/customers" element={<CustomerManagementPage />} />
             <Route path="/users" element={<UserManagementPage />} />
           </Routes>

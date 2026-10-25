@@ -12,6 +12,7 @@ import (
 
 	"docsearch/api/internal/auth"
 	"docsearch/api/internal/customer"
+	"docsearch/api/internal/importer"
 	"docsearch/api/internal/joborder"
 	"docsearch/api/internal/platform/config"
 	"docsearch/api/internal/platform/database"
@@ -127,6 +128,11 @@ func main() {
 	jobOrderService := joborder.NewService(dbPool, nil)
 	jobOrderHandler := joborder.NewHandler(jobOrderService)
 	jobOrderHandler.RegisterRoutes(e, tokenValidator)
+
+	// CSV Import & Reconcile
+	importerService := importer.NewService(dbPool)
+	importerHandler := importer.NewHandler(importerService)
+	importerHandler.RegisterRoutes(e, tokenValidator)
 
 	// Register API v1 placeholder group
 	v1 := e.Group("/api/v1")
