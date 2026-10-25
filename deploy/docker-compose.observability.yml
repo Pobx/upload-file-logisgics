@@ -1,0 +1,60 @@
+services:
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: docsearch-loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./observability/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+    ports:
+      - "3100:3100"
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  tempo:
+    image: grafana/tempo:2.4.1
+    container_name: docsearch-tempo
+    restart: unless-stopped
+    command: -config.file=/etc/tempo/tempo-config.yaml
+    volumes:
+      - ./observability/tempo/tempo-config.yaml:/etc/tempo/tempo-config.yaml:ro
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  alloy:
+    image: grafana/alloy:v1.0.0
+    container_name: docsearch-alloy
+    restart: unless-stopped
+    command: run --server.http.listen-addr=0.0.0.0:12345 /etc/alloy/config.alloy
+    volumes:
+      - ./observability/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "12345:12345"
+    deploy:
+      resources:
+        limits:
+          memory: 192M
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: docsearch-grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./observability/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3001:3000"
+    deploy:
+      resources:
+        limits:
+          memory: 256M

@@ -6,6 +6,14 @@ up:
 	@echo "Starting application containers..."
 	docker compose -f deploy/docker-compose.yml up -d
 
+obs-up:
+	@echo "Starting LGTM observability stack..."
+	docker compose -f deploy/docker-compose.observability.yml up -d
+
+obs-down:
+	@echo "Stopping LGTM observability stack..."
+	docker compose -f deploy/docker-compose.observability.yml down
+
 down:
 	@echo "Stopping application containers..."
 	docker compose -f deploy/docker-compose.yml down
