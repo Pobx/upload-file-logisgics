@@ -24,10 +24,12 @@ let currentToken: string | null = typeof window !== 'undefined' ? localStorage.g
 
 export const setAuthToken = (token: string | null) => {
   currentToken = token;
-  if (token) {
-    localStorage.setItem(TOKEN_KEY, token);
-  } else {
-    localStorage.removeItem(TOKEN_KEY);
+  if (typeof localStorage !== 'undefined') {
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token);
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+    }
   }
 };
 
@@ -45,7 +47,10 @@ export const getUserInfo = (): UserInfo | null => {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
-    const payload = JSON.parse(atob(parts[1]));
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+    const decoded = typeof atob !== 'undefined' ? atob(padded) : Buffer.from(padded, 'base64').toString('binary');
+    const payload = JSON.parse(decoded);
     let roles: string[] = [];
     if (Array.isArray(payload.roles)) {
       roles = payload.roles;
