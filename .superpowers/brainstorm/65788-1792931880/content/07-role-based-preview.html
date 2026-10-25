@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตัวอย่าง UI ตามแต่ละ Role - Logistics DocFlow</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background: #f8fafc; color: #0f172a; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+    
+    /* Top Role Switcher Bar */
+    .role-switcher-banner { background: #ffffff; border-bottom: 2px solid #e2e8f0; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; z-index: 50; }
+    .role-buttons { display: flex; gap: 8px; }
+    .role-btn { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; display: flex; align-items: center; gap: 8px; transition: all 0.15s; }
+    .role-btn:hover { background: #f1f5f9; }
+    .role-btn.active { background: #0284c7; color: white; border-color: #0284c7; box-shadow: 0 2px 6px rgba(2,132,199,0.3); }
+
+    /* Layout Frame */
+    .app-container { flex: 1; display: flex; overflow: hidden; }
+
+    /* Sidebar */
+    .sidebar { width: 250px; background: #ffffff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: space-between; }
+    .brand { padding: 18px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; }
+    .brand-logo { width: 32px; height: 32px; background: #0284c7; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; }
+    .brand-name { font-weight: 700; font-size: 15px; color: #0f172a; }
+    .nav-links { padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; }
+    .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #475569; text-decoration: none; }
+    .nav-item.active { background: #f0f9ff; color: #0284c7; font-weight: 600; }
+    .nav-item.locked { color: #94a3b8; opacity: 0.6; cursor: not-allowed; }
+    .lock-tag { font-size: 10px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #64748b; }
+    .user-card { padding: 16px; border-top: 1px solid #f1f5f9; }
+
+    /* Main Content */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    .topbar { height: 60px; background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+    .content-body { flex: 1; padding: 24px; overflow-y: auto; }
+
+    /* Role Notice Banner */
+    .role-notice { padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; display: flex; align-items: center; justify-content: space-between; }
+    .notice-admin { background: #faf5ff; border: 1px solid #e9d5ff; color: #6b21a8; }
+    .notice-staff { background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; }
+    .notice-viewer { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; }
+
+    /* Table & Cards */
+    .table-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { padding: 12px 20px; background: #f8fafc; color: #64748b; font-weight: 600; border-bottom: 1px solid #e2e8f0; font-size: 11px; text-transform: uppercase; }
+    td { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    tr:hover { background-color: #f8fafc; }
+
+    /* Slide-over Drawer */
+    .drawer-overlay { position: absolute; inset: 0; background: rgba(15,23,42,0.2); backdrop-filter: blur(2px); z-index: 30; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .drawer { position: absolute; top: 0; right: -480px; width: 460px; height: 100%; background: #ffffff; border-left: 1px solid #e2e8f0; box-shadow: -8px 0 24px rgba(15,23,42,0.08); z-index: 40; transition: right 0.25s; display: flex; flex-direction: column; }
+    .drawer.open { right: 0; }
+    .drawer-header { padding: 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+    .drawer-body { padding: 20px; flex: 1; overflow-y: auto; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Role Switcher Toolbar -->
+  <div class="role-switcher-banner">
+    <div>
+      <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">จำลองสิทธิ์การเข้าใช้งาน (Role Preview Switcher):</span>
+      <div style="font-size: 13px; font-weight: 600; color: #0f172a;">คลิกเพื่อสลับดูหน้าตาและสิทธิ์ของแต่ละ Role</div>
+    </div>
+    <div class="role-buttons">
+      <button class="role-btn" id="btn-admin" onclick="switchRole('admin')">
+        <span>🛡️</span> Admin (ผู้ดูแลระบบ)
+      </button>
+      <button class="role-btn active" id="btn-staff" onclick="switchRole('staff')">
+        <span>🎧</span> Staff / CS (เจ้าหน้าที่)
+      </button>
+      <button class="role-btn" id="btn-viewer" onclick="switchRole('viewer')">
+        <span>👁️</span> Viewer (ผู้ดูอย่างเดียว)
+      </button>
+    </div>
+  </div>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <div class="brand-logo" id="brandIcon">L</div>
+          <div>
+            <div class="brand-name">DocFlow</div>
+            <div style="font-size: 10px; color: #0284c7; font-weight: 600;" id="roleSubheader">CS Operations</div>
+          </div>
+        </div>
+        <nav class="nav-links">
+          <div class="nav-item active">
+            <span>🔍 ค้นหาเอกสาร</span>
+          </div>
+          <div class="nav-item" id="nav-import">
+            <span>📥 นำเข้า CSV งาน</span>
+          </div>
+          <div class="nav-item" id="nav-customer">
+            <span>🏢 จัดการลูกค้า</span>
+          </div>
+          <div class="nav-item" id="nav-user">
+            <span>👥 จัดการผู้ใช้ & สิทธิ์</span>
+          </div>
+          <div class="nav-item" id="nav-system">
+            <span>⚙️ ประวัติและระบบ (Audit)</span>
+          </div>
+        </nav>
+      </div>
+
+      <div class="user-card">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px;" id="userAvatar">CS</div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600;" id="userName">Staff CS User</div>
+            <div style="font-size: 11px; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;" id="userBadge">CS Staff</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 10px; width: 440px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 14px;">
+          <span>🔍</span>
+          <input type="text" style="border: none; background: transparent; outline: none; width: 100%; font-size: 13px;" value="JOB-2026-0891" />
+          <span style="font-size: 10px; background: #e2e8f0; padding: 2px 4px; border-radius: 3px; color: #64748b;">⌘K</span>
+        </div>
+        <div>
+          <button style="border: none; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;" id="topActionBtn" onclick="openDrawer()">
+            + แนบเอกสารเข้า Job
+          </button>
+        </div>
+      </header>
+
+      <div class="content-body">
+        <!-- Role Permission Summary Notice -->
+        <div class="role-notice" id="roleNotice"></div>
+
+        <!-- Table -->
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Job Order #</th>
+                <th>ลูกค้า</th>
+                <th>B/L No.</th>
+                <th>สถานะเอกสาร</th>
+                <th>สิทธิ์และการกระทำ (Actions)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: 600; color: #0284c7;">JOB-2026-0891</td>
+                <td>Thai Union Frozen Products PCL</td>
+                <td><code>BL-BKK-984210</code></td>
+                <td><span style="background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">⚠️ ขาด B/L</span></td>
+                <td id="rowActionCell">
+                  <!-- dynamic per role -->
+                </td>
+              </tr>
+              <tr>
+                <td style="font-weight: 600; color: #0284c7;">JOB-2026-0890</td>
+                <td>SCG Logistics Management Co., Ltd.</td>
+                <td><code>BL-SCG-202604</code></td>
+                <td><span style="background: #ecfdf5; color: #065f46; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ เอกสารครบ 4/4</span></td>
+                <td>
+                  <button style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer;" onclick="openDrawer()">
+                    ดาวน์โหลดเอกสาร ⬇
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Slide-over Drawer -->
+      <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+      <aside class="drawer" id="drawer">
+        <div class="drawer-header">
+          <div>
+            <h3 style="font-size: 16px; font-weight: 700; color: #0f172a;">JOB-2026-0891</h3>
+            <p style="font-size: 12px; color: #64748b;">Thai Union Frozen Products PCL</p>
+          </div>
+          <button style="border: none; background: none; font-size: 18px; color: #94a3b8; cursor: pointer;" onclick="closeDrawer()">✕</button>
+        </div>
+        <div class="drawer-body" id="drawerContent">
+          <!-- Dynamic per role -->
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    let currentRole = 'staff';
+
+    const rolesConfig = {
+      admin: {
+        title: 'Admin (ผู้ดูแลระบบสูงสุด)',
+        sub: 'Full System Administration',
+        avatarBg: '#f3e8ff',
+        avatarColor: '#7e22ce',
+        avatarText: 'AD',
+        name: 'Super Admin',
+        badgeClass: 'notice-admin',
+        badgeText: '🛡️ Role: Admin (Full Access)',
+        notice: '<strong>🛡️ สิทธิ์ Admin:</strong> สามารถค้นหา, นำเข้า CSV, จัดการ/Merge ลูกค้า, จัดการบัญชีผู้ใช้ และตั้งค่าความปลอดภัยระบบได้ครบถ้วน',
+        topAction: { text: '+ สร้าง Job Order หรือ แนบเอกสาร', bg: '#7e22ce', color: '#ffffff', visible: true },
+        nav: {
+          import: { visible: true, locked: false },
+          customer: { visible: true, locked: false, label: '🏢 จัดการและรวมลูกค้า (Merge)' },
+          user: { visible: true, locked: false },
+          system: { visible: true, locked: false }
+        },
+        rowAction: `
+          <div style="display: flex; gap: 6px;">
+            <button style="background: #0284c7; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 11px; cursor: pointer;" onclick="openDrawer()">+ แนบ B/L</button>
+            <button style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; padding: 5px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;" onclick="alert('Admin: ลบหรือแก้ไขประวัติเอกสาร')">🗑️ ลบ/แก้ไข</button>
+          </div>
+        `,
+        drawerHtml: `
+          <div style="background: #f0fdf4; border: 1px dashed #22c55e; border-radius: 8px; padding: 16px; text-align: center; margin-bottom: 16px;">
+            <strong>📥 ลากไฟล์มาวาง หรือคลิกเพื่ออัปโหลด</strong>
+            <p style="font-size: 11px; color: #166534; margin-top: 2px;">(Admin สามารถแทนที่หรือลบไฟล์เดิมได้)</p>
+          </div>
+          <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">เอกสารที่จัดเก็บแล้ว:</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 6px;">
+            <div>Commercial_Invoice.pdf (1.4MB)</div>
+            <div style="display: flex; gap: 4px;">
+              <button style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; font-size: 11px;">⬇ ดูไฟล์</button>
+              <button style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; border-radius: 4px; padding: 2px 6px; font-size: 11px;">✕ ลบ</button>
+            </div>
+          </div>
+        `
+      },
+      staff: {
+        title: 'Staff / CS (เจ้าหน้าที่บริการลูกค้า)',
+        sub: 'CS Operations Hub',
+        avatarBg: '#e0f2fe',
+        avatarColor: '#0284c7',
+        avatarText: 'CS',
+        name: 'Staff CS User',
+        badgeClass: 'notice-staff',
+        badgeText: '🎧 Role: CS Staff (Upload & Search)',
+        notice: '<strong>🎧 สิทธิ์ Staff / CS:</strong> สามารถค้นหาเอกสารย้อนหลังได้ไม่จำกัด, นำเข้าไฟล์ CSV และแนบเอกสารเข้า Job Orders ได้ทันที (ไม่สามารถลบหรือจัดการผู้ใช้)',
+        topAction: { text: '+ แนบเอกสารเข้า Job', bg: '#0284c7', color: '#ffffff', visible: true },
+        nav: {
+          import: { visible: true, locked: false },
+          customer: { visible: true, locked: false, label: '🏢 ดูรายชื่อลูกค้า (View Only)' },
+          user: { visible: false, locked: true },
+          system: { visible: false, locked: true }
+        },
+        rowAction: `
+          <button style="background: #0284c7; color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;" onclick="openDrawer()">
+            + แนบ B/L ทันที
+          </button>
+        `,
+        drawerHtml: `
+          <div style="background: #f0f9ff; border: 2px dashed #0284c7; border-radius: 8px; padding: 16px; text-align: center; color: #0369a1; margin-bottom: 16px;">
+            <strong>📥 ลากไฟล์มาวางที่นี่เพื่อแนบเอกสาร</strong>
+            <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Invoice, Packing List, B/L, หรือ Customs Form</p>
+          </div>
+          <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">เอกสารในงานนี้:</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 6px;">
+            <div>📄 Commercial_Invoice.pdf (1.4MB)</div>
+            <button style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 3px 8px; font-size: 11px; cursor: pointer;">⬇ ดาวน์โหลด</button>
+          </div>
+        `
+      },
+      viewer: {
+        title: 'Viewer (ผู้ดูอย่างเดียว เช่น ฝ่ายบัญชี/ผู้บริหาร)',
+        sub: 'Read-only Access',
+        avatarBg: '#f1f5f9',
+        avatarColor: '#475569',
+        avatarText: 'VW',
+        name: 'Viewer Auditor',
+        badgeClass: 'notice-viewer',
+        badgeText: '👁️ Role: Viewer (Read-only)',
+        notice: '<strong>👁️ สิทธิ์ Viewer (อ่านอย่างเดียว):</strong> ค้นหาและดู/ดาวน์โหลดเอกสารย้อนหลังได้ แต่ไม่มีสิทธิ์อัปโหลด แนบไฟล์ หรือแก้ไขข้อมูลใดๆ',
+        topAction: { text: '🔒 สิทธิ์อ่านอย่างเดียว', bg: '#f1f5f9', color: '#94a3b8', visible: false },
+        nav: {
+          import: { visible: false, locked: true },
+          customer: { visible: true, locked: false, label: '🏢 รายชื่อลูกค้า (View Only)' },
+          user: { visible: false, locked: true },
+          system: { visible: false, locked: true }
+        },
+        rowAction: `
+          <button style="background: #f8fafc; border: 1px solid #cbd5e1; color: #475569; padding: 5px 12px; border-radius: 4px; font-size: 11px; cursor: pointer;" onclick="openDrawer()">
+            👁️ ดูเอกสาร ➔
+          </button>
+        `,
+        drawerHtml: `
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; text-align: center; color: #64748b; font-size: 12px; margin-bottom: 16px;">
+            🔒 <strong>โหมดอ่านอย่างเดียว (Read-only)</strong>
+            <p style="font-size: 11px; margin-top: 2px;">คุณไม่มีสิทธิ์แนบไฟล์หรือแก้ไขเอกสารใน Job นี้</p>
+          </div>
+          <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">เอกสารที่สามารถดาวน์โหลดได้:</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 6px;">
+            <div>📄 Commercial_Invoice.pdf (1.4MB)</div>
+            <button style="background: #f0f9ff; border: 1px solid #bae6fd; color: #0284c7; border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: 600; cursor: pointer;">⬇ ดาวน์โหลด</button>
+          </div>
+        `
+      }
+    };
+
+    function switchRole(role) {
+      currentRole = role;
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-' + role).classList.add('active');
+
+      const cfg = rolesConfig[role];
+      document.getElementById('roleSubheader').innerText = cfg.sub;
+      document.getElementById('userAvatar').innerText = cfg.avatarText;
+      document.getElementById('userAvatar').style.background = cfg.avatarBg;
+      document.getElementById('userAvatar').style.color = cfg.avatarColor;
+      document.getElementById('userName').innerText = cfg.name;
+      document.getElementById('userBadge').innerText = cfg.badgeText;
+      document.getElementById('userBadge').className = cfg.badgeClass;
+
+      const notice = document.getElementById('roleNotice');
+      notice.className = 'role-notice ' + cfg.badgeClass;
+      notice.innerHTML = cfg.notice;
+
+      // Top action
+      const topBtn = document.getElementById('topActionBtn');
+      if (cfg.topAction.visible) {
+        topBtn.style.display = 'block';
+        topBtn.innerText = cfg.topAction.text;
+        topBtn.style.background = cfg.topAction.bg;
+        topBtn.style.color = cfg.topAction.color;
+      } else {
+        topBtn.style.display = 'none';
+      }
+
+      // Nav visibility
+      document.getElementById('nav-import').style.display = cfg.nav.import.visible ? 'flex' : 'none';
+      document.getElementById('nav-customer').querySelector('span').innerText = cfg.nav.customer.label || '🏢 จัดการลูกค้า';
+      document.getElementById('nav-user').style.display = cfg.nav.user.visible ? 'flex' : 'none';
+      document.getElementById('nav-system').style.display = cfg.nav.system.visible ? 'flex' : 'none';
+
+      // Table action
+      document.getElementById('rowActionCell').innerHTML = cfg.rowAction;
+
+      // Drawer
+      document.getElementById('drawerContent').innerHTML = cfg.drawerHtml;
+    }
+
+    function openDrawer() {
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('overlay').classList.add('open');
+    }
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+
+    // Init
+    switchRole('staff');
+  </script>
+</body>
+</html>

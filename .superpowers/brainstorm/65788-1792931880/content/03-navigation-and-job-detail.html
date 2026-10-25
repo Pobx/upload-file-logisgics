@@ -1,0 +1,101 @@
+<h2>โครงสร้างหน้าจอหลัก (Layout & Quick-Action) ในโทน Slate & Sky Blue</h2>
+<p class="subtitle">เปรียบเทียบการจัดวางเมนูและวิธีที่ทีม CS จัดการเอกสารหลังทำงานเสร็จ</p>
+
+<div class="cards">
+  <!-- Option A: Modern Sidebar + Slide-over Drawer -->
+  <div class="card" data-choice="layout-sidebar-drawer" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <div style="display: flex; height: 190px; gap: 10px;">
+        <!-- Left Sidebar -->
+        <div style="width: 110px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 8px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 700; font-size: 11px; color: #0284c7; margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
+              <span>📦</span> DocFlow
+            </div>
+            <div style="font-size: 10px; display: flex; flex-direction: column; gap: 4px;">
+              <div style="background: #f0f9ff; color: #0284c7; font-weight: 600; padding: 4px 6px; border-radius: 4px;">🔍 ค้นหาเอกสาร</div>
+              <div style="color: #64748b; padding: 4px 6px;">📥 นำเข้า CSV</div>
+              <div style="color: #64748b; padding: 4px 6px;">🏢 ลูกค้า</div>
+              <div style="color: #64748b; padding: 4px 6px;">👥 ผู้ใช้</div>
+            </div>
+          </div>
+          <div style="font-size: 9px; color: #94a3b8; border-top: 1px solid #f1f5f9; pt: 4px;">
+            👤 CS Officer
+          </div>
+        </div>
+
+        <!-- Main Content (Center) -->
+        <div style="flex: 1; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px 10px; font-size: 10px; color: #64748b; display: flex; justify-content: space-between;">
+            <span>🔍 ค้นหา Job No / BL / ลูกค้า...</span>
+            <span style="font-size: 8px; background: #e2e8f0; padding: 1px 4px; border-radius: 2px;">⌘K</span>
+          </div>
+          <div style="font-size: 10px; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px;">
+            <div style="font-weight: 600; color: #0f172a; display: flex; justify-content: space-between;">
+              <span>JOB-2026-0891</span>
+              <span style="color: #d97706; font-size: 9px;">รอ B/L</span>
+            </div>
+            <div style="color: #64748b; font-size: 9px; margin-top: 2px;">Thai Union Frozen</div>
+          </div>
+        </div>
+
+        <!-- Right Slide-over Panel -->
+        <div style="width: 140px; background: #ffffff; border: 2px solid #0284c7; border-radius: 6px; padding: 8px; font-size: 9px; box-shadow: -2px 0 6px rgba(0,0,0,0.05);">
+          <div style="font-weight: 700; color: #0f172a; margin-bottom: 6px; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px;">แนบเอกสารด่วน</div>
+          <div style="background: #f0fdf4; border: 1px dashed #22c55e; border-radius: 4px; padding: 10px 4px; text-align: center; color: #15803d; margin-bottom: 6px;">
+            📄 วางไฟล์ที่นี่
+          </div>
+          <div style="color: #64748b;">
+            <div>• Invoice.pdf ✓</div>
+            <div>• Packing.pdf ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>แบบ A: Left Sidebar + Quick Slide-over Drawer</h3>
+      <p><strong>จุดเด่น:</strong> มีเมนูซ้ายมือที่พับเก็บได้ พื้นที่ตรงกลางกว้างขวาง และเมื่อคลิกที่งานใดๆ จะมีลิ้นชัก (Drawer) เลื่อนออกมาจากขวาให้แนบไฟล์และดูเอกสารได้ทันทีโดยไม่ต้องเปิดหน้าต่างใหม่</p>
+    </div>
+  </div>
+
+  <!-- Option B: Top Bar + Modal Dialog -->
+  <div class="card" data-choice="layout-topbar-modal" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <div style="height: 190px; display: flex; flex-direction: column; gap: 8px;">
+        <!-- Top Nav -->
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-weight: 700; font-size: 11px; color: #0284c7;">📦 DocFlow</div>
+          <div style="display: flex; gap: 8px; font-size: 10px; color: #64748b;">
+            <span style="color: #0284c7; font-weight: 600;">ค้นหา</span>
+            <span>นำเข้า CSV</span>
+            <span>ลูกค้า</span>
+          </div>
+          <div style="font-size: 9px; color: #94a3b8;">CS Officer</div>
+        </div>
+
+        <!-- Main Table with Centered Modal Overlay -->
+        <div style="position: relative; flex: 1; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px;">
+          <!-- Simulated modal in center -->
+          <div style="position: absolute; inset: 12px 24px; background: #ffffff; border: 1px solid #0284c7; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 10px; font-size: 10px; z-index: 2;">
+            <div style="font-weight: 700; color: #0f172a; margin-bottom: 6px; display: flex; justify-content: space-between;">
+              <span>อัปโหลดเอกสารเข้า JOB-0891</span>
+              <span style="color: #94a3b8; cursor: pointer;">✕</span>
+            </div>
+            <div style="border: 1px dashed #94a3b8; border-radius: 4px; padding: 12px; text-align: center; color: #64748b; background: #f8fafc;">
+              ลากไฟล์มาวางที่นี่ หรือคลิกเลือกไฟล์
+            </div>
+          </div>
+          <!-- Background Blurred Table -->
+          <div style="opacity: 0.3; font-size: 9px;">
+            <div>JOB-2026-0891 • Thai Union • 3 docs</div>
+            <div style="margin-top: 6px;">JOB-2026-0890 • SCG Logistics • 5 docs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>แบบ B: Classic Top Nav + Modal Pop-up</h3>
+      <p><strong>จุดเด่น:</strong> แถบเมนูด้านบนแบบดั้งเดิม ขยายความกว้างเต็มจอ และเมื่อต้องการดูหรือแนบไฟล์ จะมีหน้าต่าง Pop-up เด้งขึ้นมาตรงกลางจอ</p>
+    </div>
+  </div>
+</div>

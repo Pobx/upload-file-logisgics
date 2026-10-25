@@ -188,6 +188,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      JAVA_OPTS_APPEND: "-XX:UseSVE=0"
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/docsearch_app
       KC_DB_USERNAME: docsearch

@@ -1,0 +1,131 @@
+<h2>ทิศทางการออกแบบ UI สำหรับทีม Customer Service</h2>
+<p class="subtitle">เน้นความเร็ว ลดความซ้ำซ้อน และค้นหาเอกสารย้อนหลังได้ทันทีใน 1-2 คลิก ขณะที่กำลังคุยสายหรือตอบอีเมลลูกค้า</p>
+
+<div class="cards">
+  <!-- Option A -->
+  <div class="card" data-choice="command-center" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #0f172a; padding: 16px; border-radius: 8px; color: #f8fafc;">
+      <!-- Mockup A UI Preview -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 12px;">
+        <span style="font-weight: 700; color: #38bdf8; font-size: 13px;">⚡ Fast Command Center (Omni-Search)</span>
+        <span style="background: #1e293b; color: #94a3b8; font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 1px solid #475569;">⌘ + K Quick Find</span>
+      </div>
+      
+      <!-- Big Search Bar -->
+      <div style="background: #1e293b; border: 1px solid #38bdf8; border-radius: 6px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span style="color: #38bdf8;">🔍</span>
+        <span style="color: #94a3b8; font-size: 13px;">พิมพ์ Job No, B/L, หรือชื่อลูกค้า (เช่น JOB-2026-001 หรือ SCG)...</span>
+      </div>
+
+      <!-- Quick Metrics & Triage -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+        <div style="background: #1e293b; padding: 8px; border-radius: 6px; border-left: 3px solid #10b981;">
+          <div style="font-size: 10px; color: #94a3b8;">เอกสารครบแล้ว</div>
+          <div style="font-size: 14px; font-weight: 700; color: #10b981;">142 Jobs</div>
+        </div>
+        <div style="background: #1e293b; padding: 8px; border-radius: 6px; border-left: 3px solid #f59e0b;">
+          <div style="font-size: 10px; color: #94a3b8;">รอเอกสารเพิ่ม (Pending)</div>
+          <div style="font-size: 14px; font-weight: 700; color: #f59e0b;">18 Jobs</div>
+        </div>
+        <div style="background: #1e293b; padding: 8px; border-radius: 6px; border-left: 3px solid #6366f1;">
+          <div style="font-size: 10px; color: #94a3b8;">อัปโหลดเสร็จวันนี้</div>
+          <div style="font-size: 14px; font-weight: 700; color: #818cf8;">34 Files</div>
+        </div>
+      </div>
+
+      <!-- Quick Result Card with Missing Pill -->
+      <div style="background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 10px; font-size: 12px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-weight: 600; color: #e2e8f0;">JOB-2026-0891 • Thai Union Group</span>
+          <span style="background: #78350f; color: #fef3c7; padding: 1px 6px; border-radius: 12px; font-size: 10px;">ขาด 1 เอกสาร (B/L)</span>
+        </div>
+        <div style="color: #94a3b8; font-size: 11px; display: flex; gap: 12px;">
+          <span>📄 Invoice ✓</span>
+          <span>📄 Packing List ✓</span>
+          <span style="color: #f87171;">⚠️ Bill of Lading (รออัปโหลด)</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>แบบ A: Command Center & Omni-Search (สไตล์ Linear / Raycast)</h3>
+      <p><strong>จุดเด่น:</strong> มีช่อง Search ยักษ์ตรงกลางพร้อมชอร์ตคัต <code>Cmd+K</code> ตอบคำถามลูกค้าได้ภายใน 3 วินาที แสดง Checklist ชัดเจนว่า Job ไหนเอกสารครบหรือขาดอะไร และลากไฟล์มาวางเพื่ออัปโหลดได้ทันที</p>
+      <div class="pros-cons" style="margin-top: 8px;">
+        <div class="pros">
+          <h4>ข้อดี</h4>
+          <ul>
+            <li>เร็วที่สุดสำหรับการค้นหาขณะคุยโทรศัพท์</li>
+            <li>เห็นทันทีว่างานไหนเอกสารยังขาดอยู่</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>เหมาะกับ</h4>
+          <ul>
+            <li>ทีม CS ที่เน้น Search ย้อนหลังบ่อยๆ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="split-workspace" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #0f172a; padding: 16px; border-radius: 8px; color: #f8fafc;">
+      <!-- Mockup B UI Preview -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 12px;">
+        <span style="font-weight: 700; color: #a855f7; font-size: 13px;">📑 Two-Pane Inspector Workspace</span>
+        <span style="background: #1e293b; color: #94a3b8; font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 1px solid #475569;">Split View</span>
+      </div>
+
+      <!-- Split Layout -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 160px;">
+        <!-- Left Pane: List -->
+        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 8px; font-size: 11px; overflow: hidden;">
+          <div style="color: #94a3b8; font-weight: 600; margin-bottom: 6px; border-bottom: 1px solid #334155; padding-bottom: 4px;">Job Orders ล่าสุด</div>
+          <div style="background: #334155; padding: 6px; border-radius: 4px; margin-bottom: 4px; border-left: 2px solid #a855f7;">
+            <div style="font-weight: 600; color: #f1f5f9;">JOB-2026-0891</div>
+            <div style="color: #cbd5e1; font-size: 10px;">Thai Union (3/4 docs)</div>
+          </div>
+          <div style="padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #94a3b8;">
+            <div>JOB-2026-0890</div>
+            <div style="font-size: 10px;">SCG Logistics (Completed)</div>
+          </div>
+        </div>
+
+        <!-- Right Pane: Preview & Actions -->
+        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 8px; font-size: 11px;">
+          <div style="color: #a855f7; font-weight: 600; margin-bottom: 4px;">JOB-2026-0891 Preview</div>
+          <div style="background: #0f172a; border: 1px dashed #64748b; border-radius: 4px; padding: 12px 6px; text-align: center; color: #94a3b8; margin-bottom: 6px;">
+            <span>📥 วางไฟล์เอกสารที่นี่เพื่อแนบเข้า Job นี้</span>
+          </div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <span style="background: #064e3b; color: #6ee7b7; padding: 2px 6px; border-radius: 4px; font-size: 9px;">Invoice.pdf (1.2MB) ⬇</span>
+            <span style="background: #064e3b; color: #6ee7b7; padding: 2px 6px; border-radius: 4px; font-size: 9px;">Packing.pdf ⬇</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>แบบ B: Two-Pane Inspector Workspace (สไตล์ Notion / Zendesk)</h3>
+      <p><strong>จุดเด่น:</strong> ฝั่งซ้ายเป็นรายการงาน ฝั่งขวาเป็นแผงพรีวิวรายละเอียดเอกสารและปุ่มดาวน์โหลด/แนบไฟล์ในหน้าเดียว ไม่ต้องกดสลับหน้าไปมา</p>
+      <div class="pros-cons" style="margin-top: 8px;">
+        <div class="pros">
+          <h4>ข้อดี</h4>
+          <ul>
+            <li>เห็นรายละเอียดและไฟล์แนบได้ทันทีโดยไม่ต้องคลิกเปิดหน้าใหม่</li>
+            <li>ลากวางไฟล์เพื่อแนบเอกสารที่ตกค้างได้รวดเร็ว</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>เหมาะกับ</h4>
+          <ul>
+            <li>ทีม CS ที่ต้องเปิดดูเนื้อหาหลายๆ Job ต่อเนื่องกัน</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 24px; padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+  <p style="margin: 0; color: #475569; font-size: 14px;">👉 <em>คุณสามารถคลิกเลือกตัวเลือกบนการ์ดด้านบน หรือบอกความชอบในช่องแชทได้เลยครับ</em></p>
+</div>

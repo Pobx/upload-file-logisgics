@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตัวอย่าง UI แบบ Interactive - Logistics DocFlow</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    body { background-color: #f8fafc; color: #0f172a; height: 100vh; overflow: hidden; display: flex; }
+    
+    /* Sidebar */
+    .sidebar { width: 240px; background: #ffffff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: space-between; transition: width 0.2s; z-index: 20; }
+    .brand { padding: 18px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; }
+    .brand-logo { width: 32px; height: 32px; background: linear-gradient(135deg, #0284c7, #0369a1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; box-shadow: 0 2px 4px rgba(2,132,199,0.25); }
+    .brand-name { font-weight: 700; font-size: 16px; color: #0f172a; letter-spacing: -0.3px; }
+    .nav-links { padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #475569; text-decoration: none; cursor: pointer; transition: all 0.15s; }
+    .nav-item:hover { background: #f1f5f9; color: #0f172a; }
+    .nav-item.active { background: #f0f9ff; color: #0284c7; font-weight: 600; border: 1px solid #bae6fd; }
+    .user-footer { padding: 16px; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+    .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+
+    /* Main Area */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+    .topbar { height: 60px; background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+    .search-box { display: flex; align-items: center; gap: 10px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 14px; width: 440px; transition: border-color 0.15s; }
+    .search-box:focus-within { border-color: #0284c7; background: #ffffff; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
+    .search-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; color: #0f172a; }
+    .search-kbd { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; font-size: 10px; color: #64748b; font-family: monospace; }
+    .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+    /* Content Area */
+    .content-body { flex: 1; padding: 24px; overflow-y: auto; background: #f8fafc; }
+    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .metric-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+    .metric-label { font-size: 12px; color: #64748b; font-weight: 500; }
+    .metric-value { font-size: 22px; font-weight: 700; color: #0f172a; margin-top: 4px; display: flex; align-items: baseline; gap: 6px; }
+
+    /* Table */
+    .table-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden; }
+    .table-header { padding: 16px 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+    .filter-tabs { display: flex; gap: 8px; }
+    .tab-btn { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; background: transparent; color: #64748b; }
+    .tab-btn.active { background: #f0f9ff; color: #0284c7; border-color: #bae6fd; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { padding: 12px 20px; background: #f8fafc; color: #64748b; font-weight: 600; border-bottom: 1px solid #e2e8f0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    tr:hover { background-color: #f8fafc; cursor: pointer; }
+    .badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+    .badge-success { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .badge-warning { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+
+    /* Slide-over Drawer */
+    .drawer-overlay { position: absolute; inset: 0; background: rgba(15,23,42,0.2); backdrop-filter: blur(2px); z-index: 30; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .drawer { position: absolute; top: 0; right: -480px; width: 460px; height: 100%; background: #ffffff; border-left: 1px solid #e2e8f0; box-shadow: -8px 0 24px rgba(15,23,42,0.08); z-index: 40; transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
+    .drawer.open { right: 0; }
+    .drawer-header { padding: 20px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+    .drawer-body { padding: 20px; flex: 1; overflow-y: auto; }
+    .dropzone { border: 2px dashed #0284c7; background: #f0f9ff; border-radius: 8px; padding: 24px 16px; text-align: center; color: #0369a1; font-size: 12px; margin-bottom: 20px; cursor: pointer; transition: background 0.15s; }
+    .dropzone:hover { background: #e0f2fe; }
+    .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; background: #ffffff; }
+  </style>
+</head>
+<body>
+
+  <!-- Left Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo">L</div>
+        <div>
+          <div class="brand-name">DocFlow Logistics</div>
+          <div style="font-size: 10px; color: #0284c7; font-weight: 600;">CS Operations Hub</div>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <div class="nav-item active" onclick="setActiveNav(this)">
+          <span>🔍</span> ค้นหาและดูเอกสาร
+        </div>
+        <div class="nav-item" onclick="setActiveNav(this)">
+          <span>📥</span> นำเข้า CSV งาน
+        </div>
+        <div class="nav-item" onclick="setActiveNav(this)">
+          <span>🏢</span> จัดการลูกค้า (Customers)
+        </div>
+        <div class="nav-item" onclick="setActiveNav(this)">
+          <span>👥</span> บัญชีผู้ใช้งาน
+        </div>
+      </nav>
+    </div>
+
+    <div class="user-footer">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="user-avatar">CS</div>
+        <div>
+          <div style="font-size: 12px; font-weight: 600; color: #0f172a;">Customer Service 1</div>
+          <div style="font-size: 10px; color: #10b981;">● ออนไลน์พร้อมทำงาน</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <main class="main">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="พิมพ์ค้นหาเลข Job No., B/L No., หรือชื่อลูกค้าได้ทันที..." value="JOB-2026-0891" />
+        <span class="search-kbd">⌘ K</span>
+      </div>
+
+      <div class="topbar-actions">
+        <span style="font-size: 12px; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 6px;">
+          🌐 ไทย (TH)
+        </span>
+        <button style="background: #0284c7; color: #ffffff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="openDrawer('JOB-2026-0891', 'Thai Union Frozen Products PCL', false)">
+          + แนบเอกสารด่วน
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Body -->
+    <div class="content-body">
+      <!-- Fast Metrics -->
+      <div class="metrics-row">
+        <div class="metric-card" style="border-left: 4px solid #10b981;">
+          <div class="metric-label">เอกสารจัดเก็บครบถ้วน</div>
+          <div class="metric-value">142 <span style="font-size: 11px; color: #10b981; font-weight: 500;">94%</span></div>
+        </div>
+        <div class="metric-card" style="border-left: 4px solid #f59e0b;">
+          <div class="metric-label">รอเอกสารย้อนหลัง (Pending)</div>
+          <div class="metric-value" style="color: #d97706;">8 <span style="font-size: 11px; color: #64748b; font-weight: 500;">ต้องตามต่อ</span></div>
+        </div>
+        <div class="metric-card" style="border-left: 4px solid #0284c7;">
+          <div class="metric-label">Job Orders เดือนนี้</div>
+          <div class="metric-value">150 <span style="font-size: 11px; color: #0284c7; font-weight: 500;">+24 จากสัปดาห์ก่อน</span></div>
+        </div>
+        <div class="metric-card" style="border-left: 4px solid #6366f1;">
+          <div class="metric-label">เวลาเฉลี่ยในการสืบค้น</div>
+          <div class="metric-value">1.8s <span style="font-size: 11px; color: #10b981; font-weight: 500;">⚡ เร็วมาก</span></div>
+        </div>
+      </div>
+
+      <!-- Main Results Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="filter-tabs">
+            <button class="tab-btn active">ทั้งหมด (150)</button>
+            <button class="tab-btn" style="color: #d97706;">⚠️ รอเอกสารเพิ่ม (8)</button>
+            <button class="tab-btn">✅ เอกสารครบ (142)</button>
+          </div>
+          <div style="font-size: 12px; color: #64748b;">
+            💡 <em>คลิกที่แถวงานเพื่อเปิดแผงพรีวิวและแนบไฟล์ด้านขวา</em>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Job Order #</th>
+              <th>ชื่อลูกค้า (Customer)</th>
+              <th>B/L / Booking No.</th>
+              <th>วันที่บันทึก</th>
+              <th>ความครบถ้วนของเอกสาร</th>
+              <th>การกระทำ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr onclick="openDrawer('JOB-2026-0891', 'Thai Union Frozen Products PCL', false)">
+              <td style="font-weight: 600; color: #0284c7;">JOB-2026-0891</td>
+              <td><strong>Thai Union Frozen Products PCL</strong><br><span style="font-size: 11px; color: #64748b;">CUST-001 (Samut Sakhon)</span></td>
+              <td><code>BL-BKK-984210</code></td>
+              <td style="color: #64748b;">วันนี้, 14:20 น.</td>
+              <td>
+                <span class="badge badge-warning">⚠️ ขาด 1 เอกสาร (B/L)</span>
+                <div style="font-size: 10px; color: #64748b; margin-top: 2px;">มีแล้ว: Invoice, Packing List</div>
+              </td>
+              <td>
+                <button style="background: #f0f9ff; border: 1px solid #bae6fd; color: #0284c7; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">
+                  ดู & แนบไฟล์ ➔
+                </button>
+              </td>
+            </tr>
+
+            <!-- Row 2 -->
+            <tr onclick="openDrawer('JOB-2026-0890', 'SCG Logistics Management Co., Ltd.', true)">
+              <td style="font-weight: 600; color: #0284c7;">JOB-2026-0890</td>
+              <td><strong>SCG Logistics Management Co., Ltd.</strong><br><span style="font-size: 11px; color: #64748b;">CUST-002 (Bangsue)</span></td>
+              <td><code>BL-SCG-202604</code></td>
+              <td style="color: #64748b;">เมื่อวาน, 16:45 น.</td>
+              <td>
+                <span class="badge badge-success">✓ เอกสารครบ (4/4)</span>
+                <div style="font-size: 10px; color: #64748b; margin-top: 2px;">Invoice, PL, BL, Customs Form</div>
+              </td>
+              <td>
+                <button style="background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; padding: 5px 10px; border-radius: 6px; font-size: 11px; cursor: pointer;">
+                  ดาวน์โหลดเอกสาร ➔
+                </button>
+              </td>
+            </tr>
+
+            <!-- Row 3 -->
+            <tr onclick="openDrawer('JOB-2026-0889', 'CP All Public Company Limited', true)">
+              <td style="font-weight: 600; color: #0284c7;">JOB-2026-0889</td>
+              <td><strong>CP All Public Company Limited</strong><br><span style="font-size: 11px; color: #64748b;">CUST-003 (Silom)</span></td>
+              <td><code>BL-CP-119283</code></td>
+              <td style="color: #64748b;">24 ต.ค. 2026</td>
+              <td>
+                <span class="badge badge-success">✓ เอกสารครบ (3/3)</span>
+                <div style="font-size: 10px; color: #64748b; margin-top: 2px;">Invoice, Packing List, BL</div>
+              </td>
+              <td>
+                <button style="background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; padding: 5px 10px; border-radius: 6px; font-size: 11px; cursor: pointer;">
+                  ดาวน์โหลดเอกสาร ➔
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide-over Inspector Drawer -->
+    <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+    <aside class="drawer" id="drawer">
+      <div class="drawer-header">
+        <div>
+          <span style="font-size: 10px; background: #e0f2fe; color: #0284c7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">JOB INSPECTOR</span>
+          <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 4px;" id="drawerJobNo">JOB-2026-0891</h3>
+          <p style="font-size: 12px; color: #64748b;" id="drawerCustomer">Thai Union Frozen Products PCL</p>
+        </div>
+        <button style="background: none; border: none; font-size: 18px; color: #94a3b8; cursor: pointer; padding: 4px;" onclick="closeDrawer()">✕</button>
+      </div>
+
+      <div class="drawer-body">
+        <!-- Quick Drop Zone -->
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px; display: block;">แนบเอกสารหลังปิดงาน (Drag & Drop)</label>
+          <div class="dropzone" onclick="alert('จำลองการเลือกไฟล์: แนบไฟล์เข้าสู่ระบบและสร้าง Signed Download Link ทันที')">
+            <div style="font-size: 24px; margin-bottom: 4px;">📥</div>
+            <strong>คลิกหรือลากไฟล์ PDF/รูปภาพ มาวางที่นี่</strong>
+            <p style="font-size: 11px; color: #64748b; margin-top: 2px;">รองรับ Invoice, Packing List, B/L, ใบขนสินค้า (Customs)</p>
+          </div>
+        </div>
+
+        <!-- Document Checklist -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 12px; font-weight: 600; color: #0f172a;">เอกสารที่จัดเก็บแล้วใน Job นี้</span>
+            <span style="font-size: 11px; color: #0284c7; font-weight: 500;">ดาวน์โหลดทั้งหมด (.ZIP)</span>
+          </div>
+
+          <div class="doc-item">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 18px;">📄</span>
+              <div>
+                <div style="font-weight: 600; font-size: 12px; color: #0f172a;">Commercial_Invoice_TU_0891.pdf</div>
+                <div style="font-size: 10px; color: #64748b;">1.4 MB • อัปโหลดโดย CS1 วันนี้ 14:22 น.</div>
+              </div>
+            </div>
+            <button style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer;" onclick="alert('ดาวน์โหลดไฟล์ Invoice ผ่าน Signed Link')">⬇ ดูไฟล์</button>
+          </div>
+
+          <div class="doc-item">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 18px;">📄</span>
+              <div>
+                <div style="font-weight: 600; font-size: 12px; color: #0f172a;">Packing_List_Containers.pdf</div>
+                <div style="font-size: 10px; color: #64748b;">840 KB • อัปโหลดโดย CS1 วันนี้ 14:23 น.</div>
+              </div>
+            </div>
+            <button style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer;" onclick="alert('ดาวน์โหลดไฟล์ Packing List ผ่าน Signed Link')">⬇ ดูไฟล์</button>
+          </div>
+
+          <div class="doc-item" style="border: 1px dashed #f59e0b; background: #fffdf5;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 18px; color: #d97706;">⚠️</span>
+              <div>
+                <div style="font-weight: 600; font-size: 12px; color: #b45309;">Bill of Lading (ยังไม่ได้แนบ)</div>
+                <div style="font-size: 10px; color: #92400e;">รอเอกสารจาก Shipping Line</div>
+              </div>
+            </div>
+            <button style="background: #fef3c7; border: 1px solid #fde68a; color: #92400e; border-radius: 4px; padding: 4px 8px; font-size: 11px; font-weight: 600; cursor: pointer;" onclick="alert('เปิดกล่องเลือกไฟล์สำหรับแนบ B/L')">+ แนบทันที</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    function openDrawer(jobNo, customer, isComplete) {
+      document.getElementById('drawerJobNo').innerText = jobNo;
+      document.getElementById('drawerCustomer').innerText = customer;
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('overlay').classList.add('open');
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+
+    function setActiveNav(el) {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Keyboard shortcut Cmd+K or Ctrl+K
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        document.querySelector('.search-box input').focus();
+        document.querySelector('.search-box input').select();
+      }
+      if (e.key === 'Escape') {
+        closeDrawer();
+      }
+    });
+  </script>
+</body>
+</html>
