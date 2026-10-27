@@ -38,46 +38,52 @@ export const DocumentReadinessDonut: React.FC<DocumentReadinessDonutProps> = ({
     <div className="flex flex-col md:flex-row items-center gap-4 bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs">
       {/* SVG Donut Ring */}
       <div className="relative w-32 h-32 shrink-0">
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
           <circle cx="50" cy="50" r={radius} fill="none" stroke="#F1F5F9" strokeWidth="11" />
           {totalCount > 0 && (
             <>
-              <circle
-                cx="50"
-                cy="50"
-                r={radius}
-                fill="none"
-                stroke="#10B981"
-                strokeWidth="11"
-                strokeDasharray={`${completeDash} ${circumference}`}
-                strokeDashoffset={0}
-                strokeLinecap="round"
-                className="transition-all duration-500 ease-out"
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r={radius}
-                fill="none"
-                stroke="#F43F5E"
-                strokeWidth="11"
-                strokeDasharray={`${missingDash} ${circumference}`}
-                strokeDashoffset={-completeDash}
-                strokeLinecap="round"
-                className="transition-all duration-500 ease-out"
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r={radius}
-                fill="none"
-                stroke="#F59E0B"
-                strokeWidth="11"
-                strokeDasharray={`${pendingDash} ${circumference}`}
-                strokeDashoffset={-(completeDash + missingDash)}
-                strokeLinecap="round"
-                className="transition-all duration-500 ease-out"
-              />
+              {completeCount > 0 && (
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={radius}
+                  fill="none"
+                  stroke="#10B981"
+                  strokeWidth="11"
+                  strokeDasharray={`${completeDash} ${circumference}`}
+                  strokeDashoffset={0}
+                  strokeLinecap="round"
+                  className="transition-all duration-500 ease-out"
+                />
+              )}
+              {missingBLCount > 0 && (
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={radius}
+                  fill="none"
+                  stroke="#F43F5E"
+                  strokeWidth="11"
+                  strokeDasharray={`${missingDash} ${circumference}`}
+                  strokeDashoffset={-completeDash}
+                  strokeLinecap="round"
+                  className="transition-all duration-500 ease-out"
+                />
+              )}
+              {pendingCount > 0 && (
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={radius}
+                  fill="none"
+                  stroke="#F59E0B"
+                  strokeWidth="11"
+                  strokeDasharray={`${pendingDash} ${circumference}`}
+                  strokeDashoffset={-(completeDash + missingDash)}
+                  strokeLinecap="round"
+                  className="transition-all duration-500 ease-out"
+                />
+              )}
             </>
           )}
         </svg>

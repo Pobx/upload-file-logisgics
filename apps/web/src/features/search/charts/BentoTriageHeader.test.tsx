@@ -83,8 +83,8 @@ describe('BentoTriageHeader', () => {
     expect(screen.queryByText(/Weekly Document Intake/i)).toBeNull();
   });
 
-  it('displays correct missing B/L badge count when 0', () => {
-    render(
+  it('displays All Clear state when missingBLCount is 0', () => {
+    const { container } = render(
       <BentoTriageHeader 
         completeCount={10} 
         missingBLCount={0} 
@@ -92,10 +92,23 @@ describe('BentoTriageHeader', () => {
         totalCount={10} 
       />
     );
-    // Both Donut legend and triage alert badge show "0 งาน"
-    const zeroBadges = screen.getAllByText('0 งาน');
-    expect(zeroBadges.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/Action Required: เอกสารที่ต้องตามด่วนวันนี้/i)).toBeInTheDocument();
+    expect(screen.getByText(/✓ เอกสารครบถ้วน ไม่มีงานค้างเร่งด่วนในขณะนี้/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Action Required: เอกสารที่ต้องตามด่วนวันนี้/i)).toBeNull();
+    const allClearCard = container.querySelector('.bg-emerald-50');
+    expect(allClearCard).toBeInTheDocument();
+  });
+
+  it('renders dynamic missing B/L copy instead of hardcoded carriers when missingBLCount > 0', () => {
+    render(
+      <BentoTriageHeader 
+        completeCount={14} 
+        missingBLCount={5} 
+        pendingCount={3} 
+        totalCount={22} 
+      />
+    );
+    expect(screen.getByText('ขาด House B/L รวม 5 งาน')).toBeInTheDocument();
+    expect(screen.queryByText(/Evergreen \(3\), Maersk \(2\)/i)).toBeNull();
   });
 
   it('applies active styling to the currently selected mode button', () => {

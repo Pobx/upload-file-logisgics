@@ -166,4 +166,76 @@ describe('SearchPage Integration & Bento Triage', () => {
     expect(screen.getAllByText(/แนบไฟล์/i).length).toBeGreaterThan(0);
     expect(screen.getAllByLabelText(/สแกนหรือแนบไฟล์ด้วยกล้อง/i).length).toBeGreaterThan(0);
   });
+
+  it('unauthenticated session defaults to viewer role (least privilege principle)', async () => {
+    setAuthToken(null);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('JOB-2026-001').length).toBeGreaterThan(0);
+    });
+
+    expect(screen.queryByText(/แนบไฟล์/i)).toBeNull();
+    expect(screen.queryByLabelText(/สแกนหรือแนบไฟล์ด้วยกล้อง/i)).toBeNull();
+    expect(screen.getAllByText('ดูรายละเอียด').length).toBeGreaterThan(0);
+  });
+
+  it('partitions items mutually exclusively into missingBL, complete, and pending counts', async () => {
+    const testItems: SearchItem[] = [
+      {
+        id: '1',
+        job_no: 'JOB-2026-001',
+        customer_name: 'Customer A',
+        bl_no: null,
+        document_count: 2,
+        created_at: new Date().toISOString(),
+        match_tier: 1,
+      },
+      {
+        id: '2',
+        job_no: 'JOB-2026-002',
+        customer_name: 'Customer B',
+        bl_no: 'BL-123',
+        document_count: 4,
+        created_at: new Date().toISOString(),
+        match_tier: 1,
+      },
+      {
+        id: '3',
+        job_no: 'JOB-2026-003',
+        customer_name: 'Customer C',
+        bl_no: 'BL-456',
+        document_count: 2,
+        created_at: new Date().toISOString(),
+        match_tier: 1,
+      },
+    ];
+
+    vi.spyOn(apiClient, 'get').mockResolvedValue({
+      data: { data: testItems },
+    } as any);
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('ทั้งหมด (3)')).toBeInTheDocument();
+    });
+
+    // Donut breakdown badges:
+    // completeCount: 1, missingBLCount: 1, pendingCount: 1
+    const oneCountBadges = screen.getAllByText('1 งาน');
+    expect(oneCountBadges.length).toBeGreaterThanOrEqual(3);
+  });
 });

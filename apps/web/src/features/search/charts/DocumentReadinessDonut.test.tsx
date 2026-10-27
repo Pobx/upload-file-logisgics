@@ -98,6 +98,31 @@ describe('DocumentReadinessDonut', () => {
     expect(greenSegment).toBeInTheDocument();
     expect(redSegment).toBeInTheDocument();
     expect(amberSegment).toBeInTheDocument();
+
+    const svg = container.querySelector('svg');
+    expect(svg?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('eliminates zero-count SVG ghost dots by conditionally omitting zero segments', () => {
+    const { container } = render(
+      <DocumentReadinessDonut 
+        completeCount={10} 
+        missingBLCount={0} 
+        pendingCount={2} 
+        totalCount={12} 
+      />
+    );
+    // 1 background circle + 2 colored segments (green + amber, no red) = 3 circles
+    const circles = container.querySelectorAll('circle');
+    expect(circles.length).toBe(3);
+
+    const greenSegment = container.querySelector('circle[stroke="#10B981"]');
+    const amberSegment = container.querySelector('circle[stroke="#F59E0B"]');
+    const redSegment = container.querySelector('circle[stroke="#F43F5E"]');
+
+    expect(greenSegment).toBeInTheDocument();
+    expect(amberSegment).toBeInTheDocument();
+    expect(redSegment).toBeNull();
   });
 
   it('renders only the background track circle when totalCount is 0', () => {

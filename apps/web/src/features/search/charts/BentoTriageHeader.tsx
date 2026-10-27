@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DocumentReadinessDonut } from './DocumentReadinessDonut';
 import { WeeklyVolumeBarChart } from './WeeklyVolumeBarChart';
-import { AlertCircle, PieChart, BarChart3, LayoutGrid } from 'lucide-react';
+import { AlertCircle, CheckCircle2, PieChart, BarChart3, LayoutGrid } from 'lucide-react';
 
 export interface BentoTriageHeaderProps {
   completeCount: number;
@@ -71,26 +71,49 @@ export const BentoTriageHeader: React.FC<BentoTriageHeaderProps> = ({
               totalCount={totalCount}
             />
           </div>
-          <div className="lg:col-span-6 flex flex-col justify-between bg-rose-50 border border-rose-200 border-l-4 border-l-rose-500 rounded-2xl p-4">
-            <div>
-              <div className="flex items-center justify-between text-rose-800 font-bold text-sm">
-                <span className="flex items-center gap-1.5">
-                  <AlertCircle className="w-4 h-4 text-rose-600" />
-                  Action Required: เอกสารที่ต้องตามด่วนวันนี้
-                </span>
-                <span className="bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full text-xs font-semibold">
-                  {missingBLCount} งาน
-                </span>
+          {missingBLCount === 0 ? (
+            <div className="lg:col-span-6 flex flex-col justify-between bg-emerald-50 border border-emerald-200 border-l-4 border-l-emerald-500 rounded-2xl p-4">
+              <div>
+                <div className="flex items-center justify-between text-emerald-800 font-bold text-sm">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    ✓ เอกสารครบถ้วน ไม่มีงานค้างเร่งด่วนในขณะนี้
+                  </span>
+                  <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                    0 งาน
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                  เอกสาร Bill of Lading (B/L) ครบถ้วนทุกรายการ ไม่มีความเสี่ยงตู้ตกค้างหรือค่าปรับสายเรือในขณะนี้
+                </p>
               </div>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                มีงานที่ยังขาด Bill of Lading (B/L) ต้องเร่งประสานสายเรือ (Evergreen, Maersk, ONE) ก่อนตัดรอบบ่ายนี้เพื่อป้องกันค่าปรับและตู้ตกค้างที่ท่าเรือ
-              </p>
+              <div className="mt-4 pt-3 border-t border-emerald-200/60 flex items-center justify-between text-xs text-emerald-800">
+                <span>ขาด House B/L รวม 0 งาน</span>
+                <span className="font-semibold text-emerald-700">สถานะปกติ 🟢</span>
+              </div>
             </div>
-            <div className="mt-4 pt-3 border-t border-rose-200/60 flex items-center justify-between text-xs text-rose-900">
-              <span>สายเรือที่ขาดเอกสาร: <strong>Evergreen (3), Maersk (2)</strong></span>
-              <span className="font-semibold text-rose-700">ลำดับความเร่งด่วนสูงสุด 🚨</span>
+          ) : (
+            <div className="lg:col-span-6 flex flex-col justify-between bg-rose-50 border border-rose-200 border-l-4 border-l-rose-500 rounded-2xl p-4">
+              <div>
+                <div className="flex items-center justify-between text-rose-800 font-bold text-sm">
+                  <span className="flex items-center gap-1.5">
+                    <AlertCircle className="w-4 h-4 text-rose-600" />
+                    Action Required: เอกสารที่ต้องตามด่วนวันนี้
+                  </span>
+                  <span className="bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                    {missingBLCount} งาน
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                  มีงานที่ยังขาด Bill of Lading (B/L) ต้องเร่งประสานสายเรือ (Evergreen, Maersk, ONE) ก่อนตัดรอบบ่ายนี้เพื่อป้องกันค่าปรับและตู้ตกค้างที่ท่าเรือ
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-rose-200/60 flex items-center justify-between text-xs text-rose-900">
+                <span>ขาด House B/L รวม {missingBLCount} งาน</span>
+                <span className="font-semibold text-rose-700">ลำดับความเร่งด่วนสูงสุด 🚨</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 

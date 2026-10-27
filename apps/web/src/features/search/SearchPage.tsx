@@ -45,7 +45,7 @@ export const SearchPage: React.FC = () => {
   const [selectedJob, setSelectedJob] = useState<SearchItem | null>(null);
 
   const userInfo = getUserInfo();
-  const roles = userInfo?.roles || ['staff'];
+  const roles = userInfo?.roles || ['viewer'];
   const userRole = roles.includes('admin') ? 'admin' : roles.includes('staff') ? 'staff' : 'viewer';
   const allowUpload = canUploadDocuments(userRole);
 
@@ -72,10 +72,10 @@ export const SearchPage: React.FC = () => {
   const filteredItems = filterSearchItems(allItems, activeTab);
 
   const totalCount = allItems.length;
-  const completeCount = allItems.filter(i => i.document_count >= 4).length;
-  const missingCount = allItems.filter(i => i.document_count < 4).length;
   const missingBLCount = allItems.filter(i => !i.bl_no).length;
-  const pendingCount = allItems.filter(i => i.document_count > 0 && i.document_count < 4 && !!i.bl_no).length;
+  const completeCount = allItems.filter(i => !!i.bl_no && i.document_count >= 4).length;
+  const pendingCount = allItems.filter(i => !!i.bl_no && i.document_count < 4).length;
+  const missingCount = allItems.filter(i => i.document_count < 4).length;
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
