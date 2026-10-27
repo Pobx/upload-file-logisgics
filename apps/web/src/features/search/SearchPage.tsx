@@ -3,16 +3,16 @@ import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { 
   Search, 
-  FileCheck2, 
-  FileWarning, 
-  Layers, 
   ChevronRight, 
   CheckCircle2, 
-  Clock, 
-  Loader2
+  FileWarning, 
+  Loader2,
+  Camera
 } from 'lucide-react';
-import { apiClient } from '../../lib/api-client';
-import { JobDetailSlideover } from './JobDetailSlideover';
+import { apiClient, getUserInfo } from '../../lib/api-client';
+import { JobDetailSlideover, canUploadDocuments } from './JobDetailSlideover';
+import { BentoTriageHeader } from './charts/BentoTriageHeader';
+import { MicroProgressBar } from './charts/MicroProgressBar';
 
 export interface SearchItem {
   id: string;
@@ -44,6 +44,11 @@ export const SearchPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'missing' | 'complete'>('all');
   const [selectedJob, setSelectedJob] = useState<SearchItem | null>(null);
 
+  const userInfo = getUserInfo();
+  const roles = userInfo?.roles || ['staff'];
+  const userRole = roles.includes('admin') ? 'admin' : roles.includes('staff') ? 'staff' : 'viewer';
+  const allowUpload = canUploadDocuments(userRole);
+
   useEffect(() => {
     if (urlQuery !== query) {
       setQuery(urlQuery);
@@ -69,6 +74,8 @@ export const SearchPage: React.FC = () => {
   const totalCount = allItems.length;
   const completeCount = allItems.filter(i => i.document_count >= 4).length;
   const missingCount = allItems.filter(i => i.document_count < 4).length;
+  const missingBLCount = allItems.filter(i => !i.bl_no).length;
+  const pendingCount = allItems.filter(i => i.document_count > 0 && i.document_count < 4 && !!i.bl_no).length;
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,50 +88,13 @@ export const SearchPage: React.FC = () => {
 
   return (
     <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto font-sans">
-      {/* 1. Fast Metrics Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs border-l-4 border-l-sky-500">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">งานทั้งหมด</span>
-            <Layers className="w-4 h-4 text-sky-500" />
-          </div>
-          <div className="text-2xl font-bold text-slate-900 mt-1">{totalCount}</div>
-          <div className="text-[11px] text-slate-400 mt-0.5">ในรายการค้นหา</div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs border-l-4 border-l-emerald-500">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">เอกสารครบถ้วน</span>
-            <FileCheck2 className="w-4 h-4 text-emerald-500" />
-          </div>
-          <div className="text-2xl font-bold text-emerald-600 mt-1">{completeCount}</div>
-          <div className="text-[11px] text-emerald-600 font-medium mt-0.5">
-            {totalCount > 0 ? `${Math.round((completeCount / totalCount) * 100)}% สมบูรณ์` : 'พร้อมสืบค้น'}
-          </div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs border-l-4 border-l-amber-500">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">รอเอกสารเพิ่ม</span>
-            <FileWarning className="w-4 h-4 text-amber-500" />
-          </div>
-          <div className="text-2xl font-bold text-amber-600 mt-1">{missingCount}</div>
-          <div className="text-[11px] text-amber-600 font-medium mt-0.5">
-            {missingCount > 0 ? 'ต้องการการติดตาม' : 'ครบถ้วนทุกงาน'}
-          </div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs border-l-4 border-l-indigo-500">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">ความเร็วสืบค้น</span>
-            <Clock className="w-4 h-4 text-indigo-500" />
-          </div>
-          <div className="text-2xl font-bold text-slate-900 mt-1">
-            0.2<span className="text-sm font-normal text-slate-400">s</span>
-          </div>
-          <div className="text-[11px] text-indigo-600 font-medium mt-0.5">⚡ Keyset Index</div>
-        </div>
-      </div>
+      {/* 1. Bento Triage & Visual Charts Header */}
+      <BentoTriageHeader
+        completeCount={completeCount}
+        missingBLCount={missingBLCount}
+        pendingCount={pendingCount}
+        totalCount={totalCount}
+      />
 
       {/* 2. Main Search & Filter Card */}
       <div className="bg-white border border-slate-200 rounded-xl shadow-2xs p-4 md:p-5">
@@ -248,29 +218,49 @@ export const SearchPage: React.FC = () => {
                           {new Date(item.created_at).toLocaleDateString('th-TH')}
                         </td>
                         <td className="py-3 px-4">
-                          {isComplete ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                              <CheckCircle2 className="w-3 h-3" />
-                              ครบถ้วน ({item.document_count}/4)
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                              <FileWarning className="w-3 h-3" />
-                              รอเอกสาร ({item.document_count}/4)
-                            </span>
-                          )}
+                          <div className="space-y-1.5 min-w-[130px]">
+                            {isComplete ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <CheckCircle2 className="w-3 h-3" />
+                                ครบถ้วน ({item.document_count}/4)
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                <FileWarning className="w-3 h-3" />
+                                รอเอกสาร ({item.document_count}/4)
+                              </span>
+                            )}
+                            <MicroProgressBar
+                              hasInvoice={!!item.invoice_no}
+                              hasPackingList={item.document_count >= 2}
+                              hasBL={!!item.bl_no}
+                            />
+                          </div>
                         </td>
                         <td className="py-3 px-4 text-right">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedJob(item);
-                            }}
-                            className="inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100 hover:bg-sky-100 transition-colors cursor-pointer"
-                          >
-                            <span>ดู & แนบไฟล์</span>
-                            <ChevronRight className="w-3 h-3" />
-                          </button>
+                          {allowUpload ? (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedJob(item);
+                              }}
+                              className="inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100 hover:bg-sky-100 transition-colors cursor-pointer"
+                            >
+                              <span>ดู & แนบไฟล์</span>
+                              <ChevronRight className="w-3 h-3" />
+                            </button>
+                          ) : (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedJob(item);
+                              }}
+                              className="inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition-colors cursor-pointer"
+                            >
+                              <span>ดูรายละเอียด</span>
+                              <ChevronRight className="w-3 h-3" />
+                            </button>
+                          )}
                         </td>
                       </tr>
                     );
@@ -306,20 +296,54 @@ export const SearchPage: React.FC = () => {
                       {item.customer_name}
                     </div>
 
-                    <div className="text-[11px] text-slate-500 font-mono mb-3">
+                    <div className="text-[11px] text-slate-500 font-mono mb-2.5">
                       B/L: {item.bl_no || '-'} • {new Date(item.created_at).toLocaleDateString('th-TH')}
                     </div>
 
+                    {/* Micro Progress Bar on Mobile Card */}
+                    <div className="mb-3">
+                      <MicroProgressBar
+                        hasInvoice={!!item.invoice_no}
+                        hasPackingList={item.document_count >= 2}
+                        hasBL={!!item.bl_no}
+                      />
+                    </div>
+
                     <div className="flex gap-2 pt-2 border-t border-slate-100">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedJob(item);
-                        }}
-                        className="flex-1 py-1.5 bg-sky-600 text-white rounded-lg text-xs font-semibold text-center cursor-pointer"
-                      >
-                        + ดู & แนบไฟล์
-                      </button>
+                      {allowUpload ? (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedJob(item);
+                            }}
+                            className="flex-1 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold text-center cursor-pointer"
+                          >
+                            + ดู & แนบไฟล์
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedJob(item);
+                            }}
+                            title="ถ่ายรูปสแกนเอกสารด่วน"
+                            className="p-1.5 bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 rounded-lg flex items-center justify-center cursor-pointer"
+                            aria-label="สแกนหรือแนบไฟล์ด้วยกล้อง"
+                          >
+                            <Camera className="w-4 h-4" />
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedJob(item);
+                          }}
+                          className="flex-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold text-center cursor-pointer"
+                        >
+                          ดูรายละเอียด
+                        </button>
+                      )}
                     </div>
                   </div>
                 );

@@ -1,26 +1,60 @@
-import { describe, it, expect } from 'vitest';
-import { filterSearchItems, SearchItem } from './SearchPage';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SearchPage, filterSearchItems, SearchItem } from './SearchPage';
+import { apiClient, setAuthToken } from '../../lib/api-client';
+
+expect.extend({
+  toBeInTheDocument(received: HTMLElement | null) {
+    const pass = received != null && document.body.contains(received);
+    return {
+      pass,
+      message: () => `expected element to ${pass ? 'not ' : ''}be in document`,
+    };
+  },
+});
+
+interface CustomMatchers<R = unknown> {
+  toBeInTheDocument(): R;
+}
+
+declare module 'vitest' {
+  interface Assertion<T = any> extends CustomMatchers<T> {}
+  interface AsymmetricMatchersContaining extends CustomMatchers {}
+}
+
+const sampleItems: SearchItem[] = [
+  {
+    id: '1',
+    job_no: 'JOB-2026-001',
+    customer_name: 'Siam Cement Group',
+    bl_no: null, // missing B/L
+    invoice_no: 'INV-001',
+    document_count: 1,
+    created_at: new Date().toISOString(),
+    match_tier: 1,
+  },
+  {
+    id: '2',
+    job_no: 'JOB-2026-002',
+    customer_name: 'PTT Global',
+    bl_no: 'MSKU1234567',
+    invoice_no: 'INV-002',
+    document_count: 4, // complete
+    created_at: new Date().toISOString(),
+    match_tier: 1,
+  },
+];
+
+const makeAuthToken = (roles: string[]) => {
+  const payload = Buffer.from(
+    JSON.stringify({ preferred_username: 'tester', roles })
+  ).toString('base64url');
+  return `header.${payload}.signature`;
+};
 
 describe('SearchPage Filter Tabs', () => {
-  const sampleItems: SearchItem[] = [
-    {
-      id: '1',
-      job_no: 'JOB-001',
-      customer_name: 'Customer A',
-      document_count: 2, // missing docs
-      created_at: new Date().toISOString(),
-      match_tier: 1,
-    },
-    {
-      id: '2',
-      job_no: 'JOB-002',
-      customer_name: 'Customer B',
-      document_count: 4, // complete
-      created_at: new Date().toISOString(),
-      match_tier: 1,
-    },
-  ];
-
   it('filters all items when tab is all', () => {
     expect(filterSearchItems(sampleItems, 'all')).toHaveLength(2);
   });
@@ -28,12 +62,108 @@ describe('SearchPage Filter Tabs', () => {
   it('filters missing docs items when tab is missing', () => {
     const res = filterSearchItems(sampleItems, 'missing');
     expect(res).toHaveLength(1);
-    expect(res[0].job_no).toBe('JOB-001');
+    expect(res[0].job_no).toBe('JOB-2026-001');
   });
 
   it('filters complete items when tab is complete', () => {
     const res = filterSearchItems(sampleItems, 'complete');
     expect(res).toHaveLength(1);
-    expect(res[0].job_no).toBe('JOB-002');
+    expect(res[0].job_no).toBe('JOB-2026-002');
+  });
+});
+
+describe('SearchPage Integration & Bento Triage', () => {
+  let queryClient: QueryClient;
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+    vi.spyOn(apiClient, 'get').mockResolvedValue({
+      data: {
+        data: sampleItems,
+      },
+    } as any);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    setAuthToken(null);
+  });
+
+  it('renders bento triage header and readiness donut on search page', async () => {
+    setAuthToken(makeAuthToken(['staff']));
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(screen.getByText(/วงแหวนความพร้อม/i)).toBeInTheDocument();
+    expect(screen.getByText(/อัปเดตสถานะงานเรียลไทม์ \(CS Triage Hub\)/i)).toBeInTheDocument();
+  });
+
+  it('renders micro progress bars on jobs after loading', async () => {
+    setAuthToken(makeAuthToken(['staff']));
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('JOB-2026-001').length).toBeGreaterThan(0);
+    });
+
+    const progressBars = screen.getAllByRole('progressbar');
+    expect(progressBars.length).toBeGreaterThan(0);
+  });
+
+  it('viewer role strictly hides upload buttons and camera scan triggers', async () => {
+    setAuthToken(makeAuthToken(['viewer']));
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('JOB-2026-001').length).toBeGreaterThan(0);
+    });
+
+    // Should NOT have "ดู & แนบไฟล์" or "+ ดู & แนบไฟล์"
+    expect(screen.queryByText(/แนบไฟล์/i)).toBeNull();
+    // Should NOT have camera scan trigger
+    expect(screen.queryByLabelText(/สแกนหรือแนบไฟล์ด้วยกล้อง/i)).toBeNull();
+    // Should have read-only "ดูรายละเอียด"
+    expect(screen.getAllByText('ดูรายละเอียด').length).toBeGreaterThan(0);
+  });
+
+  it('staff role displays upload action buttons and camera scan trigger', async () => {
+    setAuthToken(makeAuthToken(['staff']));
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('JOB-2026-001').length).toBeGreaterThan(0);
+    });
+
+    expect(screen.getAllByText(/แนบไฟล์/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByLabelText(/สแกนหรือแนบไฟล์ด้วยกล้อง/i).length).toBeGreaterThan(0);
   });
 });
