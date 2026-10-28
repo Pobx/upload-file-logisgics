@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/shared/components/layout/AppLayout';
 import { LoginPage, UserManagementPage } from '../features/identity';
-import { CustomerManagementPage } from '../features/customer/CustomerManagementPage';
+import { CustomerManagementPage } from '../features/partners';
 import { CSVImportPage } from '../features/import/CSVImportPage';
 import { SearchPage } from '../features/search/SearchPage';
 import { getAuthToken } from '../lib/api-client';

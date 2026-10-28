@@ -56,15 +56,15 @@ apps/web/src/
 ---
 
 ### Task 3: Partners Vertical Slice (`features/partners/`)
-- [ ] Create `apps/web/src/features/partners/types/`: `customer.ts`.
-- [ ] Create `apps/web/src/features/partners/api/`: `customerApi.ts`, `customerDto.ts`.
-- [ ] Create `apps/web/src/features/partners/hooks/`: `useCustomers.ts`.
-- [ ] Move `features/customer/CustomerManagementPage.tsx` into `features/partners/`.
-- [ ] Create `apps/web/src/features/partners/index.ts` with public barrel exports (`CustomerManagementPage`, `customerApi`).
-- [ ] Remove deprecated `features/customer/` directory.
-- [ ] Update `app/App.tsx` imports to use `@/features/partners`.
-- [ ] Run `npm test --prefix apps/web` to verify tests pass.
-- [ ] Commit: `git commit -m "refactor(partners): migrate customer management to partners vertical slice"`
+- [x] Create `apps/web/src/features/partners/types/`: `customer.ts`.
+- [x] Create `apps/web/src/features/partners/api/`: `customerApi.ts`, `customerDto.ts`.
+- [x] Create `apps/web/src/features/partners/hooks/`: `useCustomers.ts`.
+- [x] Move `features/customer/CustomerManagementPage.tsx` into `features/partners/`.
+- [x] Create `apps/web/src/features/partners/index.ts` with public barrel exports (`CustomerManagementPage`, `customerApi`).
+- [x] Remove deprecated `features/customer/` directory.
+- [x] Update `app/App.tsx` imports to use `@/features/partners`.
+- [x] Run `npm test --prefix apps/web` to verify tests pass.
+- [x] Commit: `git commit -m "refactor(partners): migrate customer management to partners vertical slice"`
 
 ---
 

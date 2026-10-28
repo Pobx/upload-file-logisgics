@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient, getUserInfo } from '../../lib/api-client';
+import { getUserInfo } from '@/shared/lib/tokenStorage';
 import { Building2, Plus, Search, GitMerge, CheckCircle2, X, AlertCircle } from 'lucide-react';
-
-interface Customer {
-  id: string;
-  name: string;
-  customer_code?: string;
-  tax_id?: string;
-  contact_name?: string;
-  contact_phone?: string;
-  is_active: boolean;
-}
+import { Customer } from './types';
+import { useCustomers } from './hooks';
 
 export const CustomerManagementPage: React.FC = () => {
-  const queryClient = useQueryClient();
-  const [search, setSearch] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showMergeModal, setShowMergeModal] = useState(false);
   const [selectedTargetCustomer, setSelectedTargetCustomer] = useState<Customer | null>(null);
@@ -30,57 +19,52 @@ export const CustomerManagementPage: React.FC = () => {
   const userInfo = getUserInfo();
   const isAdmin = userInfo?.roles?.includes('admin') || false;
 
-  const { data: customers = [], isLoading } = useQuery<Customer[]>({
-    queryKey: ['customers', search],
-    queryFn: async () => {
-      const res = await apiClient.get(`/customers?page=1&size=50&q=${encodeURIComponent(search)}`);
-      return res.data?.data || [];
-    },
-  });
-
-  const createMutation = useMutation({
-    mutationFn: async (payload: any) => {
-      await apiClient.post('/customers', payload);
-    },
-    onSuccess: () => {
-      setShowCreateModal(false);
-      setName('');
-      setCode('');
-      setTaxId('');
-      setContactName('');
-      queryClient.invalidateQueries({ queryKey: ['customers'] });
-    },
-  });
-
-  const mergeMutation = useMutation({
-    mutationFn: async ({ targetId, sourceId }: { targetId: string; sourceId: string }) => {
-      await apiClient.post(`/customers/${targetId}/merge`, { source_customer_id: sourceId });
-    },
-    onSuccess: () => {
-      setShowMergeModal(false);
-      setSelectedTargetCustomer(null);
-      setSourceId('');
-      queryClient.invalidateQueries({ queryKey: ['customers'] });
-    },
-  });
+  const {
+    customers,
+    isLoading,
+    search,
+    setSearch,
+    createMutation,
+    mergeMutation,
+  } = useCustomers();
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate({
-      name,
-      customer_code: code || undefined,
-      tax_id: taxId || undefined,
-      contact_name: contactName || undefined,
-    });
+    createMutation.mutate(
+      {
+        name,
+        customer_code: code || undefined,
+        tax_id: taxId || undefined,
+        contact_name: contactName || undefined,
+      },
+      {
+        onSuccess: () => {
+          setShowCreateModal(false);
+          setName('');
+          setCode('');
+          setTaxId('');
+          setContactName('');
+        },
+      }
+    );
   };
 
   const handleMerge = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTargetCustomer || !sourceId) return;
-    mergeMutation.mutate({
-      targetId: selectedTargetCustomer.id,
-      sourceId,
-    });
+    mergeMutation.mutate(
+      {
+        targetId: selectedTargetCustomer.id,
+        sourceId,
+      },
+      {
+        onSuccess: () => {
+          setShowMergeModal(false);
+          setSelectedTargetCustomer(null);
+          setSourceId('');
+        },
+      }
+    );
   };
 
   return (
