@@ -5,7 +5,7 @@ import { LoginPage, UserManagementPage } from '../features/identity';
 import { CustomerManagementPage } from '../features/partners';
 import { CSVImportPage } from '../features/document-ingest';
 import { ShipmentsPage } from '../features/shipments';
-import { getAuthToken } from '../lib/api-client';
+import { getAuthToken } from '@/shared/lib/tokenStorage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = getAuthToken();
