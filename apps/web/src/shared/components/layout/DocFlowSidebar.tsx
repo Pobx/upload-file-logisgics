@@ -10,7 +10,7 @@ import {
   ChevronRight, 
   FileText 
 } from 'lucide-react';
-import { getUserInfo } from '../../lib/api-client';
+import { getUserInfo } from '@/shared/lib/tokenStorage';
 
 export interface NavItemDef {
   key: string;

@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Search, Globe, LogOut, ShieldAlert, CheckCircle2 } from 'lucide-react';
-import { apiClient, setAuthToken, getUserInfo } from '../../lib/api-client';
+import { httpClient } from '@/shared/lib/httpClient';
+import { setAuthToken, getUserInfo } from '@/shared/lib/tokenStorage';
 
 interface DocFlowHeaderProps {
   serviceAlert: string | null;
@@ -44,7 +45,7 @@ export const DocFlowHeader: React.FC<DocFlowHeaderProps> = ({ serviceAlert, onDi
 
   const handleLogout = async () => {
     try {
-      await apiClient.post('/auth/logout');
+      await httpClient.post('/auth/logout');
     } catch (_) {}
     setAuthToken(null);
     window.location.href = '/login';

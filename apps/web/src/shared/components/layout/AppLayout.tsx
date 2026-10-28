@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { onServiceStatusChange } from '../../lib/api-client';
+import { onServiceStatusChange } from '@/shared/lib/httpClient';
 import { DocFlowSidebar } from './DocFlowSidebar';
 import { DocFlowHeader } from './DocFlowHeader';
 import { MobileBottomNav } from './MobileBottomNav';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AppLayout } from '../components/layout/AppLayout';
+import { AppLayout } from '@/shared/components/layout/AppLayout';
 import { UserManagementPage } from '../features/user/UserManagementPage';
 import { CustomerManagementPage } from '../features/customer/CustomerManagementPage';
 import { CSVImportPage } from '../features/import/CSVImportPage';

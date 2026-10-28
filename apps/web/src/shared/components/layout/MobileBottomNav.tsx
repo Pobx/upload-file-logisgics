@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getUserInfo } from '../../lib/api-client';
+import { getUserInfo } from '@/shared/lib/tokenStorage';
 import { getFilteredNavItems } from './DocFlowSidebar';
 
 export const MobileBottomNav: React.FC = () => {
