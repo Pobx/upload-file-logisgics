@@ -1,24 +1,9 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient, getUserInfo } from '../../lib/api-client';
 import { Users, UserPlus, RefreshCw, Shield, CheckCircle2, XCircle, X } from 'lucide-react';
-
-interface UserProfile {
-  sub: string;
-  username: string;
-  first_name?: string;
-  last_name?: string;
-  position?: string;
-  department?: string;
-  employee_id?: string;
-  email?: string;
-  source: string;
-  is_active: boolean;
-  synced_at: string;
-}
+import { useUsers } from './hooks/useUsers';
+import { getUserInfo } from '@/shared/lib/tokenStorage';
 
 export const UserManagementPage: React.FC = () => {
-  const queryClient = useQueryClient();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -29,56 +14,34 @@ export const UserManagementPage: React.FC = () => {
   const userInfo = getUserInfo();
   const isAdmin = userInfo?.roles?.includes('admin') || false;
 
-  const { data: users = [], isLoading } = useQuery<UserProfile[]>({
-    queryKey: ['users'],
-    queryFn: async () => {
-      const res = await apiClient.get('/users?page=1&size=50');
-      return res.data?.data || [];
-    },
-    enabled: isAdmin,
-  });
-
-  const syncMutation = useMutation({
-    mutationFn: async () => {
-      await apiClient.post('/users/sync');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
-  });
-
-  const createMutation = useMutation({
-    mutationFn: async (payload: any) => {
-      await apiClient.post('/users', payload);
-    },
-    onSuccess: () => {
-      setShowCreateModal(false);
-      setNewUsername('');
-      setNewPassword('');
-      setNewFirstName('');
-      setNewLastName('');
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
-  });
-
-  const disableMutation = useMutation({
-    mutationFn: async (sub: string) => {
-      await apiClient.delete(`/users/${sub}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
-  });
+  const {
+    users,
+    isLoading,
+    syncMutation,
+    createMutation,
+    disableMutation,
+  } = useUsers({ enabled: isAdmin });
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate({
-      username: newUsername,
-      password: newPassword,
-      first_name: newFirstName,
-      last_name: newLastName,
-      role: newRole,
-    });
+    createMutation.mutate(
+      {
+        username: newUsername,
+        password: newPassword,
+        first_name: newFirstName,
+        last_name: newLastName,
+        role: newRole,
+      },
+      {
+        onSuccess: () => {
+          setShowCreateModal(false);
+          setNewUsername('');
+          setNewPassword('');
+          setNewFirstName('');
+          setNewLastName('');
+        },
+      }
+    );
   };
 
   if (!isAdmin) {

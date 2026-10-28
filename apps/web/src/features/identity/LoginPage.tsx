@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { apiClient, setAuthToken } from '../../lib/api-client';
 import { FileText, LogIn, ShieldAlert, UserCheck, Shield, Eye, Loader2 } from 'lucide-react';
+import { authApi } from './api/authApi';
+import { setAuthToken } from '@/shared/lib/tokenStorage';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -17,11 +18,11 @@ export const LoginPage: React.FC = () => {
     setErrorMsg(null);
     setLoading(true);
     try {
-      const res = await apiClient.post('/auth/login', {
+      const data = await authApi.login({
         username: u,
         password: p,
       });
-      const token = res.data?.data?.access_token;
+      const token = data?.access_token;
       if (token) {
         setAuthToken(token);
         navigate('/');
@@ -29,7 +30,7 @@ export const LoginPage: React.FC = () => {
         setErrorMsg('ไม่สามารถเข้าสู่ระบบได้ ไม่พบ Token');
       }
     } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+      setErrorMsg(err.response?.data?.message || err.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
     } finally {
       setLoading(false);
     }

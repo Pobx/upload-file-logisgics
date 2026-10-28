@@ -1,11 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/shared/components/layout/AppLayout';
-import { UserManagementPage } from '../features/user/UserManagementPage';
+import { LoginPage, UserManagementPage } from '../features/identity';
 import { CustomerManagementPage } from '../features/customer/CustomerManagementPage';
 import { CSVImportPage } from '../features/import/CSVImportPage';
 import { SearchPage } from '../features/search/SearchPage';
-import { LoginPage } from '../features/auth/LoginPage';
 import { getAuthToken } from '../lib/api-client';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {

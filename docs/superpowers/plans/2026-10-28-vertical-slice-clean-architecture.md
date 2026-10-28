@@ -43,15 +43,15 @@ apps/web/src/
 ---
 
 ### Task 2: Identity Vertical Slice (`features/identity/`)
-- [ ] Create `apps/web/src/features/identity/types/`: `user.ts`, `auth.ts`, `role.ts`.
-- [ ] Create `apps/web/src/features/identity/api/`: `authApi.ts`, `userApi.ts`, `identityDto.ts`.
-- [ ] Create `apps/web/src/features/identity/hooks/`: `useAuth.ts`, `useUsers.ts`.
-- [ ] Move `features/auth/LoginPage.tsx` and `features/user/UserManagementPage.tsx` into `features/identity/`.
-- [ ] Create `apps/web/src/features/identity/index.ts` with public barrel exports (`LoginPage`, `UserManagementPage`, `useAuth`, `getUserInfo`, `canUploadDocuments`).
-- [ ] Remove deprecated `features/auth/` and `features/user/` directories.
-- [ ] Update `app/App.tsx` imports to use `@/features/identity`.
-- [ ] Run `npm test --prefix apps/web` to verify tests pass.
-- [ ] Commit: `git commit -m "refactor(identity): migrate auth and user management to identity vertical slice"`
+- [x] Create `apps/web/src/features/identity/types/`: `user.ts`, `auth.ts`, `role.ts`.
+- [x] Create `apps/web/src/features/identity/api/`: `authApi.ts`, `userApi.ts`, `identityDto.ts`.
+- [x] Create `apps/web/src/features/identity/hooks/`: `useAuth.ts`, `useUsers.ts`.
+- [x] Move `features/auth/LoginPage.tsx` and `features/user/UserManagementPage.tsx` into `features/identity/`.
+- [x] Create `apps/web/src/features/identity/index.ts` with public barrel exports (`LoginPage`, `UserManagementPage`, `useAuth`, `getUserInfo`, `canUploadDocuments`).
+- [x] Remove deprecated `features/auth/` and `features/user/` directories.
+- [x] Update `app/App.tsx` imports to use `@/features/identity`.
+- [x] Run `npm test --prefix apps/web` to verify tests pass.
+- [x] Commit: `git commit -m "refactor(identity): migrate auth and user management to identity vertical slice"`
 
 ---
 

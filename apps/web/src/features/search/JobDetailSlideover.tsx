@@ -34,14 +34,8 @@ export interface JobDetailSlideoverProps {
   onClose: () => void;
 }
 
-export function canUploadDocuments(role: string): boolean {
-  const norm = role.toLowerCase();
-  return norm === 'admin' || norm === 'staff';
-}
-
-export function canDeleteDocuments(role: string): boolean {
-  return role.toLowerCase() === 'admin';
-}
+import { canUploadDocuments, canDeleteDocuments } from '../identity';
+export { canUploadDocuments, canDeleteDocuments };
 
 const DOCUMENT_TYPES = [
   { id: 1, name: 'Bill of Lading (B/L)', code: 'BL' },
