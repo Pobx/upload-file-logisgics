@@ -10,17 +10,10 @@ import {
   AlertCircle, 
   Loader2 
 } from 'lucide-react';
-import { apiClient, ResponseEnvelope, getUserInfo } from '../../lib/api-client';
+import { apiClient, ResponseEnvelope, getUserInfo } from '../../../lib/api-client';
 
-export interface DocumentItem {
-  id: string;
-  job_order_id: string;
-  document_type_id: number;
-  file_name: string;
-  mime_type: string;
-  size_bytes: number;
-  created_at: string;
-}
+import { DocumentItem } from '../types/shipment';
+export type { DocumentItem };
 
 export interface JobDetailSlideoverProps {
   jobOrder: {
@@ -34,7 +27,7 @@ export interface JobDetailSlideoverProps {
   onClose: () => void;
 }
 
-import { canUploadDocuments, canDeleteDocuments } from '../identity';
+import { canUploadDocuments, canDeleteDocuments } from '../../identity';
 export { canUploadDocuments, canDeleteDocuments };
 
 const DOCUMENT_TYPES = [

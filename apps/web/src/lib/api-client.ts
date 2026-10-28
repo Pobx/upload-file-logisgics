@@ -13,3 +13,6 @@ export type {
   PreviewSummary,
   PreviewRow,
 } from '../features/document-ingest';
+export { shipmentApi } from '../features/shipments';
+export { shipmentApi as searchDocuments } from '../features/shipments';
+export type { Shipment, SearchItem, DocumentItem, Carrier } from '../features/shipments';

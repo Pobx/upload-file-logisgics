@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ActionQueueCards } from './ActionQueueCards';
-import type { SearchItem } from '../SearchPage';
+import type { SearchItem } from '../types/shipment';
 
 expect.extend({
   toBeInTheDocument(received: HTMLElement | null) {

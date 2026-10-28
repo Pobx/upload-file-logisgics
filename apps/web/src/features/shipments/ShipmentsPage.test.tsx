@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SearchPage, filterSearchItems, SearchItem } from './SearchPage';
+import { ShipmentsPage, filterSearchItems, SearchItem } from './ShipmentsPage';
 import { apiClient, setAuthToken } from '../../lib/api-client';
 
 expect.extend({
@@ -54,7 +54,7 @@ const makeAuthToken = (roles: string[]) => {
   return `header.${payload}.signature`;
 };
 
-describe('SearchPage Filter Tabs', () => {
+describe('SearchPage / ShipmentsPage Filter Tabs', () => {
   it('filters all items when tab is all', () => {
     expect(filterSearchItems(sampleItems, 'all')).toHaveLength(2);
   });
@@ -72,7 +72,7 @@ describe('SearchPage Filter Tabs', () => {
   });
 });
 
-describe('SearchPage Integration & Bento Triage', () => {
+describe('SearchPage / ShipmentsPage Integration & Bento Triage', () => {
   let queryClient: QueryClient;
 
   beforeEach(() => {
@@ -100,7 +100,7 @@ describe('SearchPage Integration & Bento Triage', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <SearchPage />
+          <ShipmentsPage />
         </MemoryRouter>
       </QueryClientProvider>
     );
@@ -114,7 +114,7 @@ describe('SearchPage Integration & Bento Triage', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <SearchPage />
+          <ShipmentsPage />
         </MemoryRouter>
       </QueryClientProvider>
     );
@@ -132,7 +132,7 @@ describe('SearchPage Integration & Bento Triage', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <SearchPage />
+          <ShipmentsPage />
         </MemoryRouter>
       </QueryClientProvider>
     );
@@ -155,7 +155,7 @@ describe('SearchPage Integration & Bento Triage', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <SearchPage />
+          <ShipmentsPage />
         </MemoryRouter>
       </QueryClientProvider>
     );
@@ -174,7 +174,7 @@ describe('SearchPage Integration & Bento Triage', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <SearchPage />
+          <ShipmentsPage />
         </MemoryRouter>
       </QueryClientProvider>
     );
@@ -193,7 +193,7 @@ describe('SearchPage Integration & Bento Triage', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <SearchPage />
+          <ShipmentsPage />
         </MemoryRouter>
       </QueryClientProvider>
     );
@@ -216,7 +216,7 @@ describe('SearchPage Integration & Bento Triage', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <SearchPage />
+          <ShipmentsPage />
         </MemoryRouter>
       </QueryClientProvider>
     );
@@ -275,7 +275,7 @@ describe('SearchPage Integration & Bento Triage', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <SearchPage />
+          <ShipmentsPage />
         </MemoryRouter>
       </QueryClientProvider>
     );

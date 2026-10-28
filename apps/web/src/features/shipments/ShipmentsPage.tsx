@@ -1,84 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 import { Search, Loader2 } from 'lucide-react';
-import { apiClient, getUserInfo } from '../../lib/api-client';
-import { JobDetailSlideover, canUploadDocuments } from './JobDetailSlideover';
-import { BentoTriageHeader } from './charts/BentoTriageHeader';
-import { TopKPIRibbon } from './charts/TopKPIRibbon';
-import { ActionQueueCards } from './charts/ActionQueueCards';
+import { getUserInfo } from '@/shared/lib/tokenStorage';
+import { canUploadDocuments } from '../identity';
+import { useShipmentSearch } from './hooks/useShipmentSearch';
+import { useShipmentTriage } from './hooks/useShipmentTriage';
+import { TopKPIRibbon } from './components/TopKPIRibbon';
+import { BentoTriageHeader } from './components/BentoTriageHeader';
+import { ActionQueueCards } from './components/ActionQueueCards';
+import { JobDetailSlideover } from './components/JobDetailSlideover';
+import { Shipment, SearchItem } from './types/shipment';
+import { filterShipmentItems } from './utils/partitionMath';
 
-export interface SearchItem {
-  id: string;
-  job_no: string;
-  bl_no?: string | null;
-  invoice_no?: string | null;
-  customer_name: string;
-  document_count: number;
-  assignee_name?: string | null;
-  created_at: string;
-  match_tier: number;
-}
+// Backwards-compatible exports for existing tests/consumers
+export type { Shipment, SearchItem };
+export { filterShipmentItems as filterSearchItems };
 
-export function filterSearchItems(items: SearchItem[], tab: string): SearchItem[] {
-  if (tab === 'missing') {
-    return items.filter(item => item.document_count < 4);
-  }
-  if (tab === 'complete') {
-    return items.filter(item => item.document_count >= 4);
-  }
-  return items;
-}
+export const ShipmentsPage: React.FC = () => {
+  const {
+    query,
+    setQuery,
+    field,
+    setField,
+    activeTab,
+    setActiveTab,
+    selectedJob,
+    setSelectedJob,
+    allItems,
+    filteredItems,
+    isLoading,
+    handleSearchSubmit,
+  } = useShipmentSearch();
 
-export const SearchPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const urlQuery = searchParams.get('q') || '';
-  const [query, setQuery] = useState(urlQuery);
-  const [field, setField] = useState('all');
-  const [activeTab, setActiveTab] = useState<'all' | 'missing' | 'complete'>('all');
-  const [selectedJob, setSelectedJob] = useState<SearchItem | null>(null);
+  const {
+    totalCount,
+    missingBLCount,
+    completeCount,
+    pendingCount,
+    missingCount,
+  } = useShipmentTriage(allItems);
 
   const userInfo = getUserInfo();
   const roles = userInfo?.roles || ['viewer'];
   const userRole = roles.includes('admin') ? 'admin' : roles.includes('staff') ? 'staff' : 'viewer';
   const allowUpload = canUploadDocuments(userRole);
-
-  useEffect(() => {
-    if (urlQuery !== query) {
-      setQuery(urlQuery);
-    }
-  }, [urlQuery]);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['search', query, field],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (query) params.append('q', query);
-      if (field !== 'all') params.append('field', field);
-      params.append('size', '50');
-
-      const res = await apiClient.get(`/search?${params.toString()}`);
-      return (res.data?.data || []) as SearchItem[];
-    },
-  });
-
-  const allItems = data || [];
-  const filteredItems = filterSearchItems(allItems, activeTab);
-
-  const totalCount = allItems.length;
-  const missingBLCount = allItems.filter(i => !i.bl_no).length;
-  const completeCount = allItems.filter(i => !!i.bl_no && i.document_count >= 4).length;
-  const pendingCount = allItems.filter(i => !!i.bl_no && i.document_count < 4).length;
-  const missingCount = allItems.filter(i => i.document_count < 4).length;
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query) {
-      setSearchParams({ q: query });
-    } else {
-      setSearchParams({});
-    }
-  };
 
   return (
     <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto font-sans">
@@ -197,3 +161,6 @@ export const SearchPage: React.FC = () => {
     </div>
   );
 };
+
+// SearchPage alias pointing to ShipmentsPage
+export const SearchPage = ShipmentsPage;

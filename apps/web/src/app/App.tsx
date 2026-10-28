@@ -4,7 +4,7 @@ import { AppLayout } from '@/shared/components/layout/AppLayout';
 import { LoginPage, UserManagementPage } from '../features/identity';
 import { CustomerManagementPage } from '../features/partners';
 import { CSVImportPage } from '../features/document-ingest';
-import { SearchPage } from '../features/search/SearchPage';
+import { ShipmentsPage } from '../features/shipments';
 import { getAuthToken } from '../lib/api-client';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -30,7 +30,7 @@ export const App: React.FC = () => {
             </ProtectedRoute>
           }
         >
-          <Route path="/" element={<SearchPage />} />
+          <Route path="/" element={<ShipmentsPage />} />
           <Route path="/import" element={<CSVImportPage />} />
           <Route path="/customers" element={<CustomerManagementPage />} />
           <Route path="/users" element={<UserManagementPage />} />
