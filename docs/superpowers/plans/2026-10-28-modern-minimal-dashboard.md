@@ -43,19 +43,19 @@
 
 ### Task 2: ActionQueueCards Component with TDD
 
-- [ ] Write failing test suite in `apps/web/src/features/search/charts/ActionQueueCards.test.tsx`:
+- [x] Write failing test suite in `apps/web/src/features/search/charts/ActionQueueCards.test.tsx`:
   - Renders list of jobs as mobile cards (`md:hidden`) and desktop rows (`hidden md:block`).
   - Displays job number, customer name, invoice, and status badge.
   - Displays micro progress dots for 3 document types.
   - Omit 1-Click Action buttons when `allowUpload === false` (Viewer role).
   - Triggers `onSelectJob` when card or button is clicked.
-- [ ] Run `npm test --prefix apps/web ActionQueueCards.test.tsx` to verify test fails.
-- [ ] Implement `apps/web/src/features/search/charts/ActionQueueCards.tsx`:
+- [x] Run `npm test --prefix apps/web ActionQueueCards.test.tsx` to verify test fails.
+- [x] Implement `apps/web/src/features/search/charts/ActionQueueCards.tsx`:
   - Dedicated mobile card layout with `truncate` on text to guarantee zero horizontal overflow.
   - Desktop table row layout with hover transitions.
   - 1-Click buttons (`แนบ B/L`, `ยืนยันพิกัด`, `ดูเอกสาร`) respecting `allowUpload`.
-- [ ] Run `npm test --prefix apps/web ActionQueueCards.test.tsx` to verify all tests pass.
-- [ ] Commit changes: `git commit -m "feat(ui): add ActionQueueCards component with zero-overflow mobile cards"`
+- [x] Run `npm test --prefix apps/web ActionQueueCards.test.tsx` to verify all tests pass.
+- [x] Commit changes: `git commit -m "feat(ui): add ActionQueueCards component with zero-overflow mobile cards"`
 
 ---
 
