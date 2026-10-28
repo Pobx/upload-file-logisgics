@@ -61,17 +61,17 @@
 
 ### Task 3: Integration into SearchPage & Updated Tests
 
-- [ ] Update `apps/web/src/features/search/SearchPage.tsx`:
+- [x] Update `apps/web/src/features/search/SearchPage.tsx`:
   - Import and mount `TopKPIRibbon` above the triage header.
   - Replace legacy card/table mapping with `ActionQueueCards`.
   - Add `no-scrollbar` style to quick filter pills for smooth horizontal scrolling.
   - Connect `onSelectJob` to `setSelectedJob` for 1-click slideover activation.
-- [ ] Update and run `apps/web/src/features/search/SearchPage.test.tsx`:
+- [x] Update and run `apps/web/src/features/search/SearchPage.test.tsx`:
   - Assert `TopKPIRibbon` renders with calculated counts.
   - Assert `ActionQueueCards` renders items.
   - Assert viewer role hides action buttons across both ribbon and action queue.
-- [ ] Run full test suite: `npm test --prefix apps/web`
-- [ ] Commit changes: `git commit -m "feat(search): integrate TopKPIRibbon and ActionQueueCards into SearchPage"`
+- [x] Run full test suite: `npm test --prefix apps/web`
+- [x] Commit changes: `git commit -m "feat(search): integrate TopKPIRibbon and ActionQueueCards into SearchPage"`
 
 ---
 

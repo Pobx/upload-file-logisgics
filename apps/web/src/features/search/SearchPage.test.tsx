@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SearchPage, filterSearchItems, SearchItem } from './SearchPage';
@@ -141,12 +141,13 @@ describe('SearchPage Integration & Bento Triage', () => {
       expect(screen.getAllByText('JOB-2026-001').length).toBeGreaterThan(0);
     });
 
-    // Should NOT have "ดู & แนบไฟล์" or "+ ดู & แนบไฟล์"
-    expect(screen.queryByText(/แนบไฟล์/i)).toBeNull();
-    // Should NOT have camera scan trigger
-    expect(screen.queryByLabelText(/สแกนหรือแนบไฟล์ด้วยกล้อง/i)).toBeNull();
-    // Should have read-only "ดูรายละเอียด"
-    expect(screen.getAllByText('ดูรายละเอียด').length).toBeGreaterThan(0);
+    // Write actions like "แนบ B/L" and "ยืนยันพิกัด" are strictly omitted
+    expect(screen.queryByText('แนบ B/L')).toBeNull();
+    expect(screen.queryByText('ยืนยันพิกัด')).toBeNull();
+    // Desktop shows dash placeholder for restricted action
+    expect(screen.getByText('—')).toBeInTheDocument();
+    // Non-write actions like "ดูเอกสาร" remain accessible
+    expect(screen.getAllByText('ดูเอกสาร').length).toBeGreaterThan(0);
   });
 
   it('staff role displays upload action buttons and camera scan trigger', async () => {
@@ -163,8 +164,9 @@ describe('SearchPage Integration & Bento Triage', () => {
       expect(screen.getAllByText('JOB-2026-001').length).toBeGreaterThan(0);
     });
 
-    expect(screen.getAllByText(/แนบไฟล์/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByLabelText(/สแกนหรือแนบไฟล์ด้วยกล้อง/i).length).toBeGreaterThan(0);
+    // 1-Click Action buttons are visible for write roles
+    expect(screen.getAllByText('แนบ B/L').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('ดูเอกสาร').length).toBeGreaterThan(0);
   });
 
   it('unauthenticated session defaults to viewer role (least privilege principle)', async () => {
@@ -181,9 +183,58 @@ describe('SearchPage Integration & Bento Triage', () => {
       expect(screen.getAllByText('JOB-2026-001').length).toBeGreaterThan(0);
     });
 
-    expect(screen.queryByText(/แนบไฟล์/i)).toBeNull();
-    expect(screen.queryByLabelText(/สแกนหรือแนบไฟล์ด้วยกล้อง/i)).toBeNull();
-    expect(screen.getAllByText('ดูรายละเอียด').length).toBeGreaterThan(0);
+    expect(screen.queryByText('แนบ B/L')).toBeNull();
+    expect(screen.queryByText('ยืนยันพิกัด')).toBeNull();
+    expect(screen.getByText('—')).toBeInTheDocument();
+  });
+
+  it('renders TopKPIRibbon with executive summary KPI labels and counts', async () => {
+    setAuthToken(makeAuthToken(['staff']));
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('JOB-2026-001').length).toBeGreaterThan(0);
+    });
+
+    expect(screen.getByText('งานทั้งหมดวันนี้')).toBeInTheDocument();
+    expect(screen.getAllByText('ขาด House B/L').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('รอตรวจพิกัด').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('พร้อมปล่อยตู้').length).toBeGreaterThanOrEqual(1);
+
+    // TopKPIRibbon percentage: 1 ready out of 2 total = 50%
+    expect(screen.getByText('(50%)')).toBeInTheDocument();
+  });
+
+  it('renders ActionQueueCards with desktop rows and mobile cards and handles job selection', async () => {
+    setAuthToken(makeAuthToken(['staff']));
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId('job-card-mobile').length).toBe(2);
+    });
+
+    expect(screen.getAllByTestId('job-row-desktop').length).toBe(2);
+
+    // Clicking a job card triggers JobDetailSlideover
+    const mobileCards = screen.getAllByTestId('job-card-mobile');
+    fireEvent.click(mobileCards[0]);
+
+    // Slideover opens and displays Job Inspector header
+    await waitFor(() => {
+      expect(screen.getByText('Job Inspector')).toBeInTheDocument();
+    });
   });
 
   it('partitions items mutually exclusively into missingBL, complete, and pending counts', async () => {
