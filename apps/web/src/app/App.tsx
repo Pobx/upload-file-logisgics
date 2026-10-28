@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/shared/components/layout/AppLayout';
 import { LoginPage, UserManagementPage } from '../features/identity';
 import { CustomerManagementPage } from '../features/partners';
-import { CSVImportPage } from '../features/import/CSVImportPage';
+import { CSVImportPage } from '../features/document-ingest';
 import { SearchPage } from '../features/search/SearchPage';
 import { getAuthToken } from '../lib/api-client';
 

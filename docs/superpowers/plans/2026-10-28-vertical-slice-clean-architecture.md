@@ -69,15 +69,15 @@ apps/web/src/
 ---
 
 ### Task 4: Document Ingestion Vertical Slice (`features/document-ingest/`)
-- [ ] Create `apps/web/src/features/document-ingest/types/`: `import.ts`.
-- [ ] Create `apps/web/src/features/document-ingest/api/`: `ingestApi.ts`.
-- [ ] Create `apps/web/src/features/document-ingest/hooks/`: `useCSVImport.ts`.
-- [ ] Move `features/import/CSVImportPage.tsx` into `features/document-ingest/`.
-- [ ] Create `apps/web/src/features/document-ingest/index.ts` with public barrel exports (`CSVImportPage`).
-- [ ] Remove deprecated `features/import/` directory.
-- [ ] Update `app/App.tsx` imports to use `@/features/document-ingest`.
-- [ ] Run `npm test --prefix apps/web` to verify tests pass.
-- [ ] Commit: `git commit -m "refactor(ingest): migrate csv import to document-ingest vertical slice"`
+- [x] Create `apps/web/src/features/document-ingest/types/`: `import.ts`.
+- [x] Create `apps/web/src/features/document-ingest/api/`: `ingestApi.ts`.
+- [x] Create `apps/web/src/features/document-ingest/hooks/`: `useCSVImport.ts`.
+- [x] Move `features/import/CSVImportPage.tsx` into `features/document-ingest/`.
+- [x] Create `apps/web/src/features/document-ingest/index.ts` with public barrel exports (`CSVImportPage`).
+- [x] Remove deprecated `features/import/` directory.
+- [x] Update `app/App.tsx` imports to use `@/features/document-ingest`.
+- [x] Run `npm test --prefix apps/web` to verify tests pass.
+- [x] Commit: `git commit -m "refactor(ingest): migrate csv import to document-ingest vertical slice"`
 
 ---
 

@@ -1,75 +1,25 @@
-import React, { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '../../lib/api-client';
+import React from 'react';
 import { Upload, CheckCircle2, FileSpreadsheet, Play, AlertCircle } from 'lucide-react';
-
-interface PreviewSummary {
-  batch_id: string;
-  file_name: string;
-  total_rows: number;
-  new_rows: number;
-  matched_rows: number;
-  fills_blank: number;
-  conflicts: number;
-  errors: number;
-  preview_rows: Array<{
-    row_no: number;
-    job_no: string;
-    bl_no: string;
-    invoice_no: string;
-    customer_name: string;
-  }>;
-}
+import { useCSVImport } from './hooks/useCSVImport';
 
 export const CSVImportPage: React.FC = () => {
-  const [summary, setSummary] = useState<PreviewSummary | null>(null);
-  const [conflictPolicy, setConflictPolicy] = useState('keep_existing');
-  const [committedBatchId, setCommittedBatchId] = useState<string | null>(null);
-
-  const uploadMutation = useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const idemKey = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
-      const res = await apiClient.post('/imports', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Idempotency-Key': idemKey,
-        },
-      });
-      return res.data?.data as PreviewSummary;
-    },
-    onSuccess: (data) => {
-      setSummary(data);
-    },
-  });
-
-  const commitMutation = useMutation({
-    mutationFn: async ({ batchId, policy }: { batchId: string; policy: string }) => {
-      await apiClient.post(`/imports/${batchId}/commit`, {
-        conflict_policy: policy,
-      });
-      return batchId;
-    },
-    onSuccess: (batchId) => {
-      setCommittedBatchId(batchId);
-    },
-  });
+  const {
+    summary,
+    conflictPolicy,
+    setConflictPolicy,
+    committedBatchId,
+    uploadMutation,
+    commitMutation,
+    handleFileSelect,
+    handleCommit,
+    reset,
+  } = useCSVImport();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      uploadMutation.mutate(file);
+      handleFileSelect(file);
     }
-  };
-
-  const handleCommit = () => {
-    if (!summary) return;
-    commitMutation.mutate({
-      batchId: summary.batch_id,
-      policy: conflictPolicy,
-    });
   };
 
   return (
@@ -177,7 +127,7 @@ export const CSVImportPage: React.FC = () => {
 
             <div className="flex gap-2 w-full md:w-auto">
               <button
-                onClick={() => setSummary(null)}
+                onClick={reset}
                 className="px-4 py-2 border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg text-xs font-medium cursor-pointer"
               >
                 ยกเลิก
@@ -238,10 +188,7 @@ export const CSVImportPage: React.FC = () => {
           </div>
           <div className="pt-2">
             <button
-              onClick={() => {
-                setSummary(null);
-                setCommittedBatchId(null);
-              }}
+              onClick={reset}
               className="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold cursor-pointer shadow-xs"
             >
               นำเข้าไฟล์ใหม่ต่อ
